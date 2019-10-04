@@ -1,0 +1,354 @@
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Varela Round', sans-serif;
+}
+
+body{
+    font-family: 'Noto Sans', sans-serif;
+    color: #545252;
+    /*background: #8E2DE2;
+    background: -webkit-linear-gradient(to right, #4A00E0, #8E2DE2);
+    background: linear-gradient(to right, #4A00E0, #8E2DE2);*/
+}
+
+h1{
+    font-size: 36px;
+}
+
+h2{
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+h3{
+    font-size: 17px;
+}
+
+h4{
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+h5{
+    font-size: 14px;
+}
+
+h6{
+    font-size: 13px;
+}
+
+p{
+    font-size: 14px;
+}
+
+a{
+    color: #9b04ea;
+    text-decoration: none;
+}
+
+a:hover{
+    color: #9b04ea;
+    text-decoration: underline;
+}
+
+i{
+    color: #AFAFAF;
+    margin-right: 5px;
+}
+
+.container{
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.row{
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+header .container{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+header{
+    background: #8E2DE2;
+    color: #fefefe;
+    background: -webkit-linear-gradient(to right, #2b0084, #8E2DE2);
+    background: linear-gradient(to right, #2b0084, #8E2DE2);
+}
+
+.header-shadow{
+    box-shadow: 1px 1px 11px 3px #351d4c33;
+}
+
+.fixed-top .row{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.tagline{
+    visibility: hidden;
+    display: none;
+}
+
+.tagline-visible{
+    visibility: visible;
+    display: block;
+}
+
+.modal{
+    color: #2d0076;
+}
+
+.modal-header{
+    border: none;
+}
+
+.modal-header .close{
+    margin-left: 90%;
+}
+
+.modal-title{
+    position: absolute;
+}
+
+.modal-dialog{
+    margin: 6rem auto;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.margintop200{
+    margin-top: 200px;
+}
+
+.margintop100{
+    margin-top: 100px;
+}
+
+.margintop50{
+    margin-top: 50px;
+}
+
+.margintop30{
+    margin-top: 30px;
+}
+
+.marginright15{
+    margin-right: 15px;
+}
+
+.marginbottom10{
+    margin-bottom: 10px;
+}
+
+
+.button{
+    background-color: #00FFD4;
+    border-radius: 50px;
+    color: #fff;
+    padding: 5px 20px;
+    border: 2px solid #00FFD4;
+}
+
+.button:hover{
+    background-color: transparent;
+    color: #00FFD4;
+    text-decoration: none;
+
+}
+
+
+.blue{
+    background-color: #2b0084;
+}
+
+.bluelight{
+    background-color: #7200c5;
+}
+
+.green{
+    background-color: #9b04ea;
+}
+
+.grey{
+    background-color: #d6d6d6;
+}
+
+.greytext{
+    color: #d6d6d6;
+}
+
+h2.subtitle{
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    background: -webkit-linear-gradient(to right, #2b0084, #8E2DE2);
+    background: linear-gradient(to right, #2b0084, #8E2DE2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+}
+
+.container.margintop200 h3{
+    color: #2b0084;
+}
+
+.tag{
+    height: 16px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.padding-left-0{
+    padding-left: 0px;
+}
+
+.tagwidth30bluelight::before{
+    width: 30%;
+    height: 16px;
+    width: 100%;
+    box-shadow: 1px 1px 11px 3px #351d4c33;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: #3C99FC;
+}
+
+
+.data {
+    font-size: 40px;
+    margin-right: 5px;
+}
+
+
+.studies {
+    margin-bottom: 35px;
+}
+
+.studies-container{
+    border-left: 1px dotted #2b0084;
+}
+
+
+.studies h3::before{
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    -moz-border-radius: 7.5px;
+    -webkit-border-radius: 7.5px;
+    border-radius: 7.5px;
+    background-color: #2b0084;
+    margin-right: 5px;
+    margin-left: -5px;
+}
+
+.studies h4{
+    margin-left: 30px;
+}
+
+.formation{
+    box-shadow: 1px 1px 11px 3px #351d4c33;
+    border-radius: 10px;
+    padding: 15px 30px;
+    text-align: left;
+}
+
+.formation i{
+    color: #AFAFAF;
+}
+
+.formation ul{
+    padding-left: 0;
+    list-style-type: none;
+    font-size: 13px;
+}
+
+.formation .row{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.formation img{
+    width: 70px;
+}
+
+.img-profil{
+    background-image: url(mathieu.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 120px;
+    width: 120px;
+    border-radius: 10px;
+}
+
+.container-profil{
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background: #8E2DE2;
+    color: #fefefe;
+    background: -webkit-linear-gradient(to right, #2b0084, #8E2DE2);
+    background: linear-gradient(to right, #2b0084, #8E2DE2);
+}
+
+.container-profil h2{
+    margin-bottom: .5rem;
+}
+
+.container-profil .row{
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px){
+    h2.subtitle{
+        text-align: left;
+    }
+
+    h2{
+        text-align: center;
+    }
+    .competence-container .col-md-3{
+        margin-top: 20px;
+    }
+
+    .xperience{
+        text-align: center;
+    }
+
+    .studies{
+        text-align: left;
+    }
+
+    .studies-container{
+        max-width: 300px;
+        margin: auto;
+    }
+    .formation{
+        margin-bottom: 30px;
+    }
+    .container-profil .row{
+        max-width: 400px;
+        margin: auto;
+        text-align: center;
+    }
+    .img-profil{
+        margin: 20px auto;
+    }
+}
+
+
+@media screen and (max-width: 570px){
+    .tagline-visible{
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 450px){
+    .tagline-visible{
+        font-size: 10px;
+        padding-left: 10px;
+    }
+}

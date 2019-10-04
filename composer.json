@@ -1,0 +1,12 @@
+{
+    "name": "mathieudelrot/siteweb",
+    "authors": [
+        {
+            "name": "MathieuDelrot",
+            "email": "mathieuhdb@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^2.0"
+    }
+}
