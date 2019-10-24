@@ -275,7 +275,7 @@ h2.subtitle{
 }
 
 .img-profil{
-    background-image: url(mathieu.jpg);
+    background-image: url("/siteweb/public/image/mathieu.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -301,6 +301,10 @@ h2.subtitle{
     margin-top: 10px;
     margin-bottom: 0;
 }
+.message-error{
+    color: #ff0837;
+}
+
 
 @media screen and (max-width: 768px){
     h2.subtitle{

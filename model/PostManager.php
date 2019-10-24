@@ -1,11 +1,13 @@
 <?php
 
-namespace OpenClassrooms\Blog\Model;
+namespace Model;
 
 require_once("model/Manager.php");
 
 class PostManager extends Manager
 {
+
+
     public function getPosts()
     {
         $db = $this->dbConnect();
@@ -14,13 +16,12 @@ class PostManager extends Manager
         return $req;
     }
 
-    public function getPost($postId)
+    public function getPost($id)
     {
         $db = $this->dbConnect();
         $req = $db->prepare('SELECT * FROM portfolio_post WHERE id = ?');
-        $req->execute(array($postId));
+        $req->execute(array($id));
         $post = $req->fetch();
-
         return $post;
     }
 }
