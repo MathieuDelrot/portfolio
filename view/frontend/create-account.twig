@@ -1,0 +1,25 @@
+{% extends "template.twig" %}
+
+{% block content %}
+    <div class="container margintop200">
+        <div class="row">
+            <div class="col-md-12">
+                {% if exist is defined %}
+                    <h4 class="message-error">{{ exist }}</h4>
+                {% endif %}
+                {% if format is defined %}
+                    <h4 class="message-error">{{ format }}</h4>
+                {% endif %}
+                <form action="index.php?action=addAccount" method="post">
+                    {% autoescape %}
+                        {{ accountform.first_name_account|raw }}
+                        {{ accountform.email|raw }}
+                        {{ accountform.password|raw }}
+                        {{ accountform.submit|raw }}
+                    {% endautoescape %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
