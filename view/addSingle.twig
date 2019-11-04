@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"
+            <form action="index.php?action=addPost" method="post">
+                {% autoescape %}
+                    {{ addpostform.title|raw }}
+                    {{ addpostform.intro|raw }}
+                    {{ addpostform.url|raw }}
+                    {{ addpostform.technologies|raw }}
+                    {{ addpostform.realisation_date|raw }}
+                    {{ addpostform.content|raw }}
+                    {{ addpostform.submit|raw }}
+                {% endautoescape %}
+            </form>
+        </div>
+    </div>
+</div>
