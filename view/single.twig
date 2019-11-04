@@ -1,0 +1,95 @@
+{% extends "template.twig" %}
+
+{% block content %}
+    <div class="container margintop200">
+        <div class="row">
+            <div class="col-md-12">
+                {% if error_connection is defined %}
+                    <div class="alert alert-danger">
+                        {{ error_connection }}
+                    </div>
+                {% endif %}
+                {% if success_connection is defined %}
+                    <div class="alert alert-success">
+                        {{ success_connection }}
+                    </div>
+                {% endif %}
+                {% if error_inscription is defined %}
+                    <div class="alert alert-danger">
+                        {{ error_inscription }}
+                    </div>
+                {% endif %}
+                {% if success_inscription is defined %}
+                    <div class="alert alert-success">
+                        {{ success_inscription }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ post.title }}</h1>
+                <p>{{ post.content }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Les commentaires</h3>
+                {% for comment in commentlist  %}
+                    <h4>{{ comment.pseudo }}</h4>
+                    <h5>{{ comment.comment_date }}</h5>
+                    <p>{{ comment.content }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if connectionform is defined %}
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="connection-tab" data-toggle="tab" role="tab" href="#connection">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="inscription-tab" data-toggle="tab" role="tab" href="#inscription">Inscription</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="connection" role="tabpanel" aria-labelledby="connection-tab">
+                            <form action="index.php?action=askConnection&amp;id={{ post.id }}" method="post">
+                                {% autoescape %}
+                                    {{ connectionform.email|raw }}
+                                    {{ connectionform.password|raw }}
+                                    {{ connectionform.submit|raw }}
+                                {% endautoescape %}
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
+                            <form action="index.php?action=addAccount&amp;id={{ post.id }}" method="post">
+                                {% autoescape %}
+                                    {{ accountform.first_name_account|raw }}
+                                    {{ accountform.email|raw }}
+                                    {{ accountform.password|raw }}
+                                    {{ accountform.submit|raw }}
+                                {% endautoescape %}
+                            </form>
+                        </div>
+                    </div>
+                {% endif  %}
+                {% if commentform is defined %}
+                    <h3>Laissez votre commentaire {{ member.first_name }}</h3>
+                    <form action="index.php?action=addComment&amp;id={{ post.id }}" method="post">
+                        {% autoescape %}
+                            {{ commentform.comment|raw }}
+                            {{ commentform.submit|raw }}
+                        {% endautoescape %}
+                    </form>
+                    <a href="index.php?action=disconnection&amp;id={{ post.id }}">déconnexion</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
