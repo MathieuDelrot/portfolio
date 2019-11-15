@@ -137,7 +137,7 @@ try {
                 $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
             echo $twig->render('homeAdmin.twig', ['success_connection' => $success_connection]);
         }else {
-                echo $twig->render('addSingle.twig', ['adminconnectionform' => adminConnectionForm()]);
+                echo $twig->render('homeAdmin.twig', ['adminconnectionform' => adminConnectionForm()]);
             }
 
         }

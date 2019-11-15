@@ -24,17 +24,20 @@
             </div>
         </div>
         {% if adminconnectionform is defined %}
-            <div class="row">
-                <div class="col-md-12">
-                    <form action="index.php?action=askAdminConnection" method="post">
-                        {% autoescape %}
-                            {{ adminconnectionform.email|raw }}
-                            {{ adminconnectionform.password|raw }}
-                            {{ adminconnectionform.submit|raw }}
-                        {% endautoescape %}
-                    </form>
+            <div class="container margintop100">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="index.php?action=askAdminConnection" method="post">
+                            {% autoescape %}
+                                {{ adminconnectionform.email|raw }}
+                                {{ adminconnectionform.password|raw }}
+                                {{ adminconnectionform.submit|raw }}
+                            {% endautoescape %}
+                        </form>
+                    </div>
                 </div>
-            </div>
         {% endif %}
+        </div>
     </div>
+</div>
 {% endblock %}
