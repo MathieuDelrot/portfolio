@@ -212,12 +212,11 @@
     </div>
     </div>
     <div class="container">
-        <h2>Mes derniers projets</h2>
-        {% for post in postlist  %}
-            <a href="index.php?action=post&amp;id={{ post.id }}"><h3>{{ post.title }}</h3></a>
-            <p>{{ post.content }}</p>
-
-        {% endfor %}
-    </div>
+    <h2>Mes derniers projets</h2>
+    {% for post in postlist  %}
+        <a href="index.php?action=post&amp;id={{ post.id }}"><h3>{{ post.title }}</h3></a>
+        <p>{{ post.intro }}</p>
+    {% endfor %}
+</div>
 
 {% endblock %}

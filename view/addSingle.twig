@@ -1,6 +1,37 @@
+{% extends "template.twig" %}
+{% block content %}
+{{ block("menuadmin", "adminMenu.twig") }}
 <div class="container">
+    {% if error_connection is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger">
+                    {{ error_connection }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if success_connection is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    {{ success_connection }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if success_add_post is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    {{ success_add_post }}<a href="/">Voir les portolios</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if addpostform is defined %}
     <div class="row">
-        <div class="col-md-12"
+        <div class="col-md-12">
             <form action="index.php?action=addPost" method="post">
                 {% autoescape %}
                     {{ addpostform.title|raw }}
@@ -14,4 +45,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </div>
+
+{% endblock %}
