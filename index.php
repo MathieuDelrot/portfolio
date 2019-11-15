@@ -132,7 +132,6 @@ try {
             echo $twig->render('contact.twig', ['contactform' => form()]);
         }
         elseif ($_GET['action'] == 'admin'){
-
             if (Auth::adminIsLogged() ){
                 $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
             echo $twig->render('homeAdmin.twig', ['success_connection' => $success_connection]);
@@ -148,11 +147,11 @@ try {
             }
             elseif (!empty($_POST['email']) && !empty($_POST['password']) && askAdminConnection() ){
                 $success_connection = 'Vous êtes connecté vous pouvez ajouter des portfolios et modérer les commentaires';
-                echo $twig->render('addSingle.twig', ['success_connection' => $success_connection]);
+                echo $twig->render('homeAdmin.twig', ['success_connection' => $success_connection]);
             }
             else{
                 $error_connection = 'Mauvais identifiant ou mot de passe !';
-                    echo $twig->render('addSingle.twig', ['adminconnectionform' => adminConnectionForm(), 'error_connection' => $error_connection]);
+                    echo $twig->render('homeAdmin.twig', ['adminconnectionform' => adminConnectionForm(), 'error_connection' => $error_connection]);
             }
         }  elseif ($_GET['action'] == 'askPostsListAdmin'){
             if (Auth::adminIsLogged()){
