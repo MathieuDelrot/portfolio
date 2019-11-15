@@ -27,8 +27,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <h1>{{ post.title }}</h1>
+                <p>{{ post.intro }}</p>
+            </div>
+            <div class="col-md-4">
+                <p><strong>Date de mise en ligne: </strong>{{ post.realisation_date }}<br>
+                <strong>Technologies: </strong>{{ post.technologies }}<br>
+                <a href="{{ post.url }}" target="_blank">Voir le site web</a></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
                 <p>{{ post.content }}</p>
             </div>
         </div>
@@ -36,12 +46,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h3>Les commentaires</h3>
-                {% for comment in commentlist  %}
-                    <h4>{{ comment.pseudo }}</h4>
-                    <h5>{{ comment.comment_date }}</h5>
-                    <p>{{ comment.content }}</p>
-                {% endfor %}
+                {% if connectionform is defined %}
+                    <h3>Les commentaires</h3>
+                    {% for comment in commentlist  %}
+                        <h4>{{ comment.pseudo }}</h4>
+                        <h5>{{ comment.comment_date }}</h5>
+                        <p>{{ comment.content }}</p>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -66,6 +78,15 @@
                                     {{ connectionform.submit|raw }}
                                 {% endautoescape %}
                             </form>
+                            <a href="index.php?action=forgetPassword&amp;id={{ post.id }}">Mot de passe oublié ?</a>
+                            {% if resetpasswordform is defined %}
+                                <form action="index.php?action=askNewPassword&amp;id={{ post.id }}" method="post">
+                                    {% autoescape %}
+                                        {{ resetpasswordform.email|raw }}
+                                        {{ resetpasswordform.submit|raw }}
+                                    {% endautoescape %}
+                                </form>
+                            {% endif %}
                         </div>
                         <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
                             <form action="index.php?action=addAccount&amp;id={{ post.id }}" method="post">
@@ -79,6 +100,16 @@
                         </div>
                     </div>
                 {% endif  %}
+                {% if newpasswordform is defined %}
+                    <h3>Saisissez votre nouveau mot de passe</h3>
+                    <form action="index.php?action=changePassword&amp;id={{ post.id }}&amp;key={{ key }}" method="post">
+                        {% autoescape %}
+                            {{ newpasswordform.password|raw }}
+                            {{ newpasswordform.submit|raw }}
+                        {% endautoescape %}
+                    </form>
+                    <a href="index.php?action=disconnection&amp;id={{ post.id }}">déconnexion</a>
+                {% endif %}
                 {% if commentform is defined %}
                     <h3>Laissez votre commentaire {{ member.first_name }}</h3>
                     <form action="index.php?action=addComment&amp;id={{ post.id }}" method="post">

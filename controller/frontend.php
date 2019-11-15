@@ -7,6 +7,7 @@ use Model\ComManager;
 use Model\FormManager;
 use Model\Manager;
 use Model\PostManager;
+use Model\Logout;
 
 
 require('model/Manager.php');
@@ -14,6 +15,33 @@ require_once('model/PostManager.php');
 require('model/FormManager.php');
 require('model/ComManager.php');
 require('model/AccountManager.php');
+
+
+function postForm()
+{
+    $form = new FormManager();
+    $post_form = $form->getPostForm();
+
+    return $post_form;
+}
+
+
+function addPost($title, $content, $realisation_date, $technologies, $url, $intro)
+{
+
+    $postManager = new PostManager();
+
+    $affectedLinesPost = $postManager->post($title, $content, $realisation_date, $technologies, $url, $intro);
+
+    if ($affectedLinesPost === false) {
+        throw new Exception('Impossible d\'ajouter le poat !');
+    }
+    else {
+
+    }
+
+}
+
 
 function listPosts()
 {
@@ -27,6 +55,7 @@ function post()
 {
     $postManager = new PostManager();
     $post = $postManager->getPost($_GET['id']);
+
     return $post;
 }
 
@@ -34,6 +63,7 @@ function listComment()
 {
     $form = new ComManager();
     $comments = $form->getComments($_GET['id']);
+
     return $comments;
 
 }
@@ -42,6 +72,7 @@ function commentForm()
 {
     $form = new FormManager();
     $comment_form = $form->getCommentForm();
+
     return $comment_form;
 }
 
@@ -49,14 +80,14 @@ function form()
 {
     $form = new FormManager();
     $contact_form = $form->getContactForm();
+
     return $contact_form;
 }
 
-function addComment($postId, $pseudo, $comment)
+function addComment($postId, $first_name, $comment)
 {
     $commentManager = new ComManager();
-
-    $affectedLines = $commentManager->postComment($postId, $pseudo, $comment);
+    $affectedLines = $commentManager->postComment($postId, $first_name, $comment);
 
     if ($affectedLines === false) {
         throw new Exception('Impossible d\'ajouter le commentaire !');
@@ -84,6 +115,7 @@ function addAccount($firstName, $email, $password)
         throw new Exception('Impossible de créer votre compte !');
     }
     else {
+        $accountManger->sendEmailSuccess($firstName, $email);
     }
 
 }
@@ -100,10 +132,61 @@ function connectionForm()
 function askConnection()
 {
     $accountManager = new AccountManager();
-
     $member = $accountManager->connection($_POST['email'], $_POST['password']);
 
     return $member;
-
 }
 
+function askResetingPassword()
+{
+    $form = new FormManager();
+    $ask_reseting_form = $form->getResetPasswordForm();
+
+    return $ask_reseting_form;
+}
+
+function askNewPassword()
+{
+    $accountManager = new AccountManager();
+    $findAccount = $accountManager->forgotPassword($_POST['email']);
+
+    return $findAccount;
+}
+
+function checkIfPasswordKeyExist(){
+    $accountManager = new AccountManager();
+    $findPassworKey = $accountManager->findPasswordKey($_GET['key']);
+    return $findPassworKey;
+}
+
+function newPasswordForm()
+{
+    $form = new FormManager();
+    $reset_form = $form->getNewPasswordForm();
+
+    return $reset_form;
+}
+
+function changePassword()
+{
+    $accountManager = new AccountManager();
+    $resetPassword = $accountManager->changePassword($_POST['password'], $_GET['key']);
+    return $resetPassword;
+}
+
+function adminConnectionForm()
+{
+    $form = new FormManager();
+    $admin_connection_form = $form->getAdminConnectionForm();
+
+    return $admin_connection_form;
+}
+
+
+function askAdminConnection()
+{
+    $accountManager = new AccountManager();
+    $admin = $accountManager->connectionAdmin($_POST['email'], $_POST['password']);
+
+    return $admin;
+}

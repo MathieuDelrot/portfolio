@@ -1,0 +1,25 @@
+{% extends "template.twig" %}
+{% block content %}
+    {{ block("menuadmin", "adminMenu.twig") }}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-dark" href="index.php?action=askAddPost">Ajouter un projet</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Les projets</h2>
+                {% for post in postlist  %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="index.php?action=editPost&amp;id={{ post.id }}"><h3>{{ post.title }}</h3></a>
+                            <p>{{ post.intro }}</p>
+                            <a class="btn btn-dark" href="index.php?action=editPost&amp;id={{ post.id }}">Editer l'article</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

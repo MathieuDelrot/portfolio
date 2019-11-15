@@ -47,17 +47,26 @@ class FormManager extends Manager
 
     }
 
-    public function addMessage()
+    public function getPostForm()
     {
-        $bdd = $this->dbConnect();
-        $req = $bdd->prepare('INSERT INTO message (first_name, last_name, email, textarea) VALUES(?, ?, ?, ?)');
-        $req->execute(array($_POST['firstname'], $_POST['lastname'], $_POST['email'], $_POST['message']));
+
+        $post_form = array(
+            "title" => $this->input('text', 'title', 'Titre'),
+            "intro" => $this->textarea('intro', 'Introduction'),
+            "url" => $this->input('text', 'url', 'URL du projet'),
+            "technologies" => $this->input('text', 'technologies', 'Languages web'),
+            "realisation_date" => $this->input('text', 'realisation_date', 'Mois de mise en ligne'),
+            "content" => $this->textarea('content', 'Présentation du projet'),
+            "submit" => $this->submit()
+        );
+
+        return $post_form;
     }
+
 
     public function getCommentForm()
     {
         $comment_form = array(
-            "pseudo" => $this->input('text', 'pseudo', 'Pseudo'),
             "comment" => $this->textarea('comment', 'Votre commentaire'),
             "submit" => $this->submit()
         );
@@ -66,6 +75,7 @@ class FormManager extends Manager
 
     public function getCreateAccountForm()
     {
+
         $account_form = array(
             "first_name_account" => $this->input('text', 'first_name_account', 'Prénom'),
             "email" => $this->input('email', 'email', 'Votre e-mail'),
@@ -78,8 +88,39 @@ class FormManager extends Manager
 
 
     public function getConnectionForm(){
+
         $connection_form = array(
             "first_name_account" => $this->input('text', 'first_name_account', 'Prénom'),
+            "email" => $this->input('email', 'email', 'Votre e-mail'),
+            "password" => $this->input('password', 'password', 'Votre mots de passe'),
+            "submit" => $this->submit()
+        );
+
+        return $connection_form;
+    }
+
+    public function getResetPasswordForm(){
+
+        $reset_password_form = array(
+            "email" => $this->input('email', 'email', 'Votre e-mail'),
+            "submit" => $this->submit()
+        );
+
+        return $reset_password_form;
+    }
+
+    public function getNewPasswordForm(){
+        $new_password_form = array(
+            "password" => $this->input('password', 'password', 'Votre mots de passe'),
+            "submit" => $this->submit()
+        );
+
+        return $new_password_form;
+    }
+
+    public function getAdminConnectionForm(){
+
+        $connection_form = array(
             "email" => $this->input('email', 'email', 'Votre e-mail'),
             "password" => $this->input('password', 'password', 'Votre mots de passe'),
             "submit" => $this->submit()

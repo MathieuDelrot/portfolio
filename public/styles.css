@@ -123,6 +123,10 @@ header{
     margin-top: 200px;
 }
 
+.margintop150{
+    margin-top: 150px;
+}
+
 .margintop100{
     margin-top: 100px;
 }
@@ -156,7 +160,6 @@ header{
     background-color: transparent;
     color: #00FFD4;
     text-decoration: none;
-
 }
 
 
@@ -301,8 +304,30 @@ h2.subtitle{
     margin-top: 10px;
     margin-bottom: 0;
 }
-.message-error{
-    color: #ff0837;
+
+form{
+    margin-top: 40px;
+}
+
+button{
+    background-color: #00FFD4;
+    border-radius: 50px;
+    color: #fff;
+    padding: 5px 20px;
+    border: 2px solid #00FFD4;
+}
+
+button:hover{
+    background-color: transparent;
+    color: #00FFD4;
+    text-decoration: none;
+}
+
+input, textarea{
+    padding: 5px 20px;
+    border-radius: 5px;
+    background-color: #fff !important;
+    border: 1px solid #ced4da;
 }
 
 

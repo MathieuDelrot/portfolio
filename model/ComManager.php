@@ -16,11 +16,11 @@ public function getComments($postId)
 
          return $comments;
      }
-public function postComment($postId, $pseudo, $content)
+public function postComment($postId, $first_name, $content)
 {
     $bdd = $this->dbConnect();
     $req = $bdd->prepare('INSERT INTO comment (portfolio_id, comment_date, pseudo, content, validate) VALUES(?, NOW(),?, ?, 0)');
-    $req->execute(array($postId, $pseudo, $content));
+    $req->execute(array($postId, $first_name, $content));
 }
 
 
