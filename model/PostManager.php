@@ -13,6 +13,13 @@ class PostManager extends Manager
         $req->execute(array($title, $content, $realisation_date, $technologies, $url, $intro));
     }
 
+    public function editPost ($id, $title, $content, $realisation_date, $technologies, $url, $intro)
+    {
+        $bdd = $this->dbConnect();
+        $req = $bdd->prepare('UPDATE portfolio_post SET title=?, content=?, modification_date=NOW(), author_id=1, status=1, realisation_date=?, technologies=?, url=?, intro=? WHERE id = ?');
+        $req->execute(array($title, $content, $realisation_date, $technologies, $url, $intro, $id));
+    }
+
 
     public function getPosts()
     {
