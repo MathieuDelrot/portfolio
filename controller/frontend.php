@@ -17,6 +17,14 @@ require('model/ComManager.php');
 require('model/AccountManager.php');
 
 
+function get($param)
+{
+    if (isset($_GET['action'])){
+        htmlspecialchars($_GET['action'] == $param);
+    }
+}
+
+
 function postForm()
 {
     $form = new FormManager();
