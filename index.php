@@ -22,9 +22,9 @@ try {
     if (get('action','listPosts')) {
         echo $twig->render('home.twig', ['postlist' => listPosts()]);
     } elseif (get('action','post')) {
-        if (isset($_GET['id']) && $_GET['id'] > 0 && Auth::isLogged()) {
+        if (get('', 'id') > 0 && Auth::isLogged()) {
             echo $twig->render('single.twig', ['post' => post(), 'commentform' => commentForm(), 'commentlist' => listComment()]);
-        } elseif (isset($_GET['id']) && $_GET['id'] > 0) {
+        } elseif (get('', 'id') > 0) {
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'accountform' => accountForm()]);
         } else {
             throw new Exception('Aucun identifiant de portfolio envoyé');
@@ -81,16 +81,16 @@ try {
         }
     } elseif (get('action','resetPassword')) {
         checkIfPasswordKeyExist();
-        if ($_GET['key'] && checkIfPasswordKeyExist() == true) {
+        if (get('', 'key') && checkIfPasswordKeyExist() == true) {
             $success_connection = 'Renseignez votre nouveau mot de passe';
-            echo $twig->render('single.twig', ['post' => post(), 'newpasswordform' => newPasswordForm(), 'key' => $_GET['key'], 'success_connection' => $success_connection]);
+            echo $twig->render('single.twig', ['post' => post(), 'newpasswordform' => newPasswordForm(), 'key' => get('','key'), 'success_connection' => $success_connection]);
         } else {
             $error_connection = 'Votre lien n\'est pas reconnu ou n\'est plus valide';
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'resetpasswordform' => askResetingPassword(), 'accountform' => accountForm(), 'error_connection' => $error_connection]);
         }
     } elseif (get('action','resetPassword')) {
         changePassword();
-        if ($_POST['password'] && $_GET['key'] && changePassword() == true) {
+        if ($_POST['password'] && get('', 'key') && changePassword() == true) {
             $success_connection = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'accountform' => accountForm(), 'success_connection' => $success_connection]);
         } else {
@@ -99,9 +99,9 @@ try {
         }
 
     } elseif (get('action','addComment')) {
-        if (isset($_GET['id']) && $_GET['id'] > 0) {
-            if (!empty($_GET['id']) && !empty($_POST['comment'])) {
-                addComment($_GET['id'], $_SESSION['Auth']['first_name'], $_POST['comment']);
+        if (get('', 'id') > 0) {
+            if (!empty($_POST['comment'])) {
+                addComment(get('', 'id')], $_SESSION['Auth']['first_name'], $_POST['comment']);
             } else {
                 throw new Exception('Tous les champs ne sont pas remplis !');
             }
@@ -165,7 +165,7 @@ try {
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
     } elseif (get('action','askEditPost')) {
-        if (Auth::adminIsLogged() && isset($_GET['id']) && $_GET['id'] > 0) {
+        if (Auth::adminIsLogged() && get('', 'id') > 0) {
             editPostForm(get('','id'));
             $success_add_post = 'Vous pouvez ajouter un projet';
             echo $twig->render('addSingle.twig', ['editpostform' => editPostForm()]);
