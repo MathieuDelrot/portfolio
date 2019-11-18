@@ -19,17 +19,17 @@ $twig->addExtension(new \Twig\Extension\DebugExtension());
 session_start();
 
 try {
-    if (get('action','listPosts')) {
+    if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'listPosts') {
         echo $twig->render('home.twig', ['postlist' => listPosts()]);
-    } elseif (get('action','post')) {
-        if (get('', 'id') > 0 && Auth::isLogged()) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'post') {
+        if (filter_input(INPUT_GET, '', FILTER_SANITIZE_SPECIAL_CHARS) == 'id' > 0 && Auth::isLogged()) {
             echo $twig->render('single.twig', ['post' => post(), 'commentform' => commentForm(), 'commentlist' => listComment()]);
-        } elseif (get('', 'id') > 0) {
+        } elseif (filter_input(INPUT_GET, '', FILTER_SANITIZE_SPECIAL_CHARS) == 'id' > 0) {
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'accountform' => accountForm()]);
         } else {
             throw new Exception('Aucun identifiant de portfolio envoyé');
         }
-    } elseif (get('action','addAccount')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'addAccount') {
         if (!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
             $error_inscription = "Format d'email erroné";
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'accountform' => accountForm(), 'error_inscription' => $error_inscription]);
@@ -50,7 +50,7 @@ try {
         } else {
             throw new Exception('Tous les champs ne sont pas remplis !');
         }
-    } elseif (get('action','askConnection')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askConnection') {
         if (isset($_POST['email']) and isset($_POST['password'])) {
             if (!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
                 $error_connection = "Format d'email erroné";
@@ -68,9 +68,9 @@ try {
         } else {
             throw new Exception('Vous n\'avez pas renseigné toutes les données');
         }
-    } elseif (get('action','forgetPassword')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'forgetPassword') {
         echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'resetpasswordform' => askResetingPassword(), 'accountform' => accountForm()]);
-    } elseif (get('action','askNewPassword')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askNewPassword') {
         askNewPassword();
         if (!empty($_POST['email']) && askNewPassword() == true) {
             $success_connection = 'Vous allez recevoir un email pour réinitialiser votre mot de passe';
@@ -79,18 +79,18 @@ try {
             $error_connection = 'Votre e-mail n\'est pas reconnu';
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'resetpasswordform' => askResetingPassword(), 'accountform' => accountForm(), 'error_connection' => $error_connection]);
         }
-    } elseif (get('action','resetPassword')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'resetPassword') {
         checkIfPasswordKeyExist();
-        if (get('', 'key') && checkIfPasswordKeyExist() == true) {
+        if (filter_input(INPUT_GET, '', FILTER_SANITIZE_SPECIAL_CHARS) == 'key' && checkIfPasswordKeyExist() == true) {
             $success_connection = 'Renseignez votre nouveau mot de passe';
             echo $twig->render('single.twig', ['post' => post(), 'newpasswordform' => newPasswordForm(), 'key' => get('','key'), 'success_connection' => $success_connection]);
         } else {
             $error_connection = 'Votre lien n\'est pas reconnu ou n\'est plus valide';
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'resetpasswordform' => askResetingPassword(), 'accountform' => accountForm(), 'error_connection' => $error_connection]);
         }
-    } elseif (get('action','resetPassword')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'resetPassword') {
         changePassword();
-        if ($_POST['password'] && get('', 'key') && changePassword() == true) {
+        if ($_POST['password'] && filter_input(INPUT_GET, '', FILTER_SANITIZE_SPECIAL_CHARS) == 'key' && changePassword() == true) {
             $success_connection = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'accountform' => accountForm(), 'success_connection' => $success_connection]);
         } else {
@@ -98,24 +98,24 @@ try {
             echo $twig->render('single.twig', ['post' => post(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'resetpasswordform' => askResetingPassword(), 'accountform' => accountForm(), 'error_connection' => $error_connection]);
         }
 
-    } elseif (get('action','addComment')) {
-        if (get('', 'id') > 0) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'addComment') {
+        if (filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0) {
             if (!empty($_POST['comment'])) {
-                addComment(get('', 'id')], $_SESSION['Auth']['first_name'], $_POST['comment']);
+                addComment(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS), $_SESSION['Auth']['first_name'], $_POST['comment']);
             } else {
                 throw new Exception('Tous les champs ne sont pas remplis !');
             }
         } else {
             throw new Exception('Aucun identifiant de billet envoyé');
         }
-    } elseif (get('action','addComment')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'addComment') {
         $_SESSION = array();
         session_destroy();
         $success_connection = 'Vous êtes déconnecté vous pouvez laisser des commentaires';
         echo $twig->render('home.twig', ['postlist' => listPosts(), 'success_connection' => $success_connection]);
-    } elseif (get('action','contact')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'contact') {
         echo $twig->render('contact.twig', ['contactform' => form()]);
-    } elseif (get('action','admin')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'admin') {
         if (Auth::adminIsLogged()) {
             $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
             echo $twig->render('homeAdmin.twig', ['success_connection' => $success_connection]);
@@ -123,7 +123,7 @@ try {
             echo $twig->render('homeAdmin.twig', ['adminconnectionform' => adminConnectionForm()]);
         }
 
-    } elseif (get('action','askAdminConnection')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askAdminConnection') {
         if (!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $_POST['email'])) {
             $error_connection = "Format d'email erroné";
             echo $twig->render('homeAdmin.twig', ['adminconnectionform' => adminConnectionForm(), 'error_connection' => $error_connection]);
@@ -134,21 +134,21 @@ try {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             echo $twig->render('homeAdmin.twig', ['adminconnectionform' => adminConnectionForm(), 'error_connection' => $error_connection]);
         }
-    } elseif (get('action','askPostsListAdmin')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askPostsListAdmin') {
         if (Auth::adminIsLogged()) {
             echo $twig->render('postsListAdmin.twig', ['postlist' => listPosts()]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','askCommentsListAdmin')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askCommentsListAdmin') {
         if (Auth::adminIsLogged()) {
             echo $twig->render('commentsListAdmin.twig', ['commentlist' => listNewComments()]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','validCom')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'validCom') {
         if (Auth::adminIsLogged()) {
             validComment();
             echo $twig->render('commentsListAdmin.twig', ['commentlist' => listNewComments()]);
@@ -156,7 +156,7 @@ try {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','deleteCom')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'deleteCom') {
         if (Auth::adminIsLogged()) {
             deleteComment();
             echo $twig->render('commentsListAdmin.twig', ['commentlist' => listNewComments()]);
@@ -164,16 +164,16 @@ try {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','askEditPost')) {
-        if (Auth::adminIsLogged() && get('', 'id') > 0) {
-            editPostForm(get('','id'));
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askEditPost') {
+        if (Auth::adminIsLogged() && filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0) {
+            editPostForm(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS));
             $success_add_post = 'Vous pouvez ajouter un projet';
             echo $twig->render('addSingle.twig', ['editpostform' => editPostForm()]);
         } else {
             $error_connection = 'Vous n\'êtes pas autorisé à modifier cet article';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','editPost')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'editPost') {
         if (Auth::adminIsLogged() && isset($_POST['id']) && $_POST['id'] > 0 && !empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['realisation_date']) && !empty($_POST['technologies']) && !empty($_POST['url']) && !empty($_POST['intro'])) {
             if (editPost($_POST['id'], $_POST['title'], $_POST['content'], $_POST['realisation_date'], $_POST['technologies'], $_POST['url'], $_POST['intro'])) {
                 $success_add_post = 'Le projet est modifié';
@@ -183,7 +183,7 @@ try {
             $error_connection = 'Vous n\'êtes pas autorisé à modifier cet article ou les champs ne sont pas remplis';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','askAddPost')) {
+    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'askAddPost') {
         if (Auth::adminIsLogged()) {
             $success_add_post = 'Vous pouvez ajouter un projet';
             echo $twig->render('addSingle.twig', ['addpostform' => postForm()]);
@@ -191,7 +191,7 @@ try {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
-    } elseif (get('action','addPost')) {
+    } elseif ( filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'addPost') {
         if (!empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['realisation_date']) && !empty($_POST['technologies']) && !empty($_POST['url']) && !empty($_POST['intro'])) {
             if (addPost($_POST['title'], $_POST['content'], $_POST['realisation_date'], $_POST['technologies'], $_POST['url'], $_POST['intro'])) {
                 $success_add_post = 'Le projet est ajouté';
