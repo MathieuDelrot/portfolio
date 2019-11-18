@@ -17,13 +17,6 @@ require('model/ComManager.php');
 require('model/AccountManager.php');
 
 
-function get($action, $param)
-{
-    if (isset($_GET['$action'])){
-        htmlspecialchars($_GET['$action'] == $param);
-    }
-}
-
 
 function postForm()
 {
@@ -53,7 +46,7 @@ function addPost($title, $content, $realisation_date, $technologies, $url, $intr
 function editPostForm()
 {
     $dataManager = new PostManager();
-    $datas = $dataManager->getPost($_GET['id']);
+    $datas = $dataManager->getPost(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS));
     $form = new FormManager();
     $post_form = $form->getEditPostForm($datas['id'],$datas['title'],$datas['content'], $datas['realisation_date'], $datas['technologies'], $datas['url'], $datas['intro']);
 
@@ -86,7 +79,7 @@ function listPosts()
 function post()
 {
     $postManager = new PostManager();
-    $post = $postManager->getPost($_GET['id']);
+    $post = $postManager->getPost(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $post;
 }
@@ -94,7 +87,7 @@ function post()
 function listComment()
 {
     $comManager = new ComManager();
-    $comments = $comManager->getComments($_GET['id']);
+    $comments = $comManager->getComments(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $comments;
 
@@ -111,7 +104,7 @@ function listNewComments()
 function validComment()
 {
     $comManager = new ComManager();
-    $comments = $comManager->validComment($_GET['id']);
+    $comments = $comManager->validComment(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $comments;
 }
@@ -120,7 +113,7 @@ function validComment()
 function deleteComment()
 {
     $comManager = new ComManager();
-    $comments = $comManager->deleteComment($_GET['id']);
+    $comments = $comManager->deleteComment(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $comments;
 
@@ -190,7 +183,7 @@ function connectionForm()
 function askConnection()
 {
     $accountManager = new AccountManager();
-    $member = $accountManager->connection($_POST['email'], $_POST['password']);
+    $member = $accountManager->connection(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $member;
 }
@@ -206,14 +199,14 @@ function askResetingPassword()
 function askNewPassword()
 {
     $accountManager = new AccountManager();
-    $findAccount = $accountManager->forgotPassword($_POST['email']);
+    $findAccount = $accountManager->forgotPassword(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $findAccount;
 }
 
 function checkIfPasswordKeyExist(){
     $accountManager = new AccountManager();
-    $findPassworKey = $accountManager->findPasswordKey($_GET['key']);
+    $findPassworKey = $accountManager->findPasswordKey(filter_input(INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS));
     return $findPassworKey;
 }
 
@@ -228,7 +221,7 @@ function newPasswordForm()
 function changePassword()
 {
     $accountManager = new AccountManager();
-    $resetPassword = $accountManager->changePassword($_POST['password'], $_GET['key']);
+    $resetPassword = $accountManager->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS));
     return $resetPassword;
 }
 
@@ -244,7 +237,7 @@ function adminConnectionForm()
 function askAdminConnection()
 {
     $accountManager = new AccountManager();
-    $admin = $accountManager->connectionAdmin($_POST['email'], $_POST['password']);
+    $admin = $accountManager->connectionAdmin(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
 
     return $admin;
 }
