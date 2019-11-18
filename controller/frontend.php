@@ -42,6 +42,30 @@ function addPost($title, $content, $realisation_date, $technologies, $url, $intr
 
 }
 
+function editPostForm()
+{
+    $dataManager = new PostManager();
+    $datas = $dataManager->getPost($_GET['id']);
+    $form = new FormManager();
+    $post_form = $form->getEditPostForm($datas['id'],$datas['title'],$datas['content'], $datas['realisation_date'], $datas['technologies'], $datas['url'], $datas['intro']);
+
+    return $post_form;
+}
+
+function editPost($id, $title, $content, $realisation_date, $technologies, $url, $intro)
+{
+    $postManager = new PostManager();
+
+    $affectedLinesPost = $postManager->editPost($id, $title, $content, $realisation_date, $technologies, $url, $intro);
+
+    if ($affectedLinesPost === false) {
+        throw new Exception('Impossible d\'ajouter le poat !');
+    }
+    else {
+        return true;
+    }
+}
+
 
 function listPosts()
 {
@@ -61,8 +85,34 @@ function post()
 
 function listComment()
 {
-    $form = new ComManager();
-    $comments = $form->getComments($_GET['id']);
+    $comManager = new ComManager();
+    $comments = $comManager->getComments($_GET['id']);
+
+    return $comments;
+
+}
+
+function listNewComments()
+{
+    $comManager = new ComManager();
+    $comments = $comManager->getNewComments();
+
+    return $comments;
+}
+
+function validComment()
+{
+    $comManager = new ComManager();
+    $comments = $comManager->validComment($_GET['id']);
+
+    return $comments;
+}
+
+
+function deleteComment()
+{
+    $comManager = new ComManager();
+    $comments = $comManager->deleteComment($_GET['id']);
 
     return $comments;
 

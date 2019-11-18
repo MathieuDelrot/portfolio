@@ -49,9 +49,13 @@
                 {% if connectionform is defined %}
                     <h3>Les commentaires</h3>
                     {% for comment in commentlist  %}
-                        <h4>{{ comment.pseudo }}</h4>
-                        <h5>{{ comment.comment_date }}</h5>
-                        <p>{{ comment.content }}</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>{{ comment.pseudo }}</h4>
+                                <h5>{{ comment.comment_date }}</h5>
+                                <p>{{ comment.content }}</p>
+                            </div>
+                        </div>
                     {% endfor %}
                 {% endif %}
             </div>

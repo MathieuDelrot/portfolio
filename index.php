@@ -161,7 +161,53 @@ try {
                 $error_connection = 'Mauvais identifiant ou mot de passe !';
                 echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
             }
-        } elseif ($_GET['action'] == 'askAddPost'){
+        } elseif ($_GET['action'] == 'askCommentsListAdmin'){
+            if (Auth::adminIsLogged()){
+                echo $twig->render('commentsListAdmin.twig', ['commentlist' => listNewComments()]);
+            }
+            else{
+                $error_connection = 'Mauvais identifiant ou mot de passe !';
+                echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
+            }
+        }  elseif ($_GET['action'] == 'validCom'){
+            if (Auth::adminIsLogged()){
+                validComment();
+                echo $twig->render('commentsListAdmin.twig', ['commentlist' => listNewComments()]);
+            }
+            else{
+                $error_connection = 'Mauvais identifiant ou mot de passe !';
+                echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
+            }
+        } elseif ($_GET['action'] == 'deleteCom'){
+            if (Auth::adminIsLogged()){
+                deleteComment();
+                echo $twig->render('commentsListAdmin.twig', ['commentlist' => listNewComments()]);
+            }
+            else{
+                $error_connection = 'Mauvais identifiant ou mot de passe !';
+                echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
+            }
+        } elseif ($_GET['action'] == 'askEditPost'){
+            if (Auth::adminIsLogged() && isset($_GET['id']) && $_GET['id'] > 0){
+                editPostForm($_GET['id']);
+                $success_add_post = 'Vous pouvez ajouter un projet';
+                echo $twig->render('addSingle.twig', ['editpostform' => editPostForm()]);
+            }
+            else{
+                $error_connection = 'Vous n\'êtes pas autorisé à modifier cet article';
+                echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
+            }
+        }elseif ($_GET['action'] == 'editPost') {
+            if (Auth::adminIsLogged() && isset($_POST['id']) && $_POST['id'] > 0 && !empty($_POST['title']) && !empty($_POST['content']) && !empty($_POST['realisation_date']) && !empty($_POST['technologies']) && !empty($_POST['url']) && !empty($_POST['intro'])) {
+                if (editPost($_POST['id'], $_POST['title'], $_POST['content'], $_POST['realisation_date'], $_POST['technologies'], $_POST['url'], $_POST['intro'])) {
+                    $success_add_post = 'Le projet est modifié';
+                    echo $twig->render('addSingle.twig', ['success_add_post' => $success_add_post]);
+                }
+            } else {
+                $error_connection = 'Vous n\'êtes pas autorisé à modifier cet article ou les champs ne sont pas remplis';
+                echo $twig->render('homeAdmin.twig', ['error_connection' => $error_connection]);
+            }
+        }elseif ($_GET['action'] == 'askAddPost'){
            if (Auth::adminIsLogged()){
                $success_add_post = 'Vous pouvez ajouter un projet';
                 echo $twig->render('addSingle.twig', ['addpostform' => postForm()]);
