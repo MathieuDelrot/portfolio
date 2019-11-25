@@ -69,12 +69,6 @@ class AccountManager extends Manager
         $first_name = $data['first_name'];
         password_verify($password, $data['password']);
         if(password_verify($password, $data['password'])) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $_SESSION['Auth']= array(
-                'first_name' => $first_name,
-                'email' => $email,
-                'password' => $password
-            );
             return true;
         }
         return false;
@@ -145,11 +139,6 @@ class AccountManager extends Manager
         var_dump($data);
         password_verify($password, $data['password']);
         if(password_verify($password, $data['password'])) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $_SESSION['AuthAdmin']= array(
-                'email' => $email,
-                'password' => $password
-            );
             return true;
         }
         return false;

@@ -4,12 +4,10 @@ use Model\AccountManager;
 use Model\Auth;
 use Model\Logout;
 use Model\Manager;
-use Model\SessionManager;
 
 require('controller/frontend.php');
 require ('vendor/autoload.php');
 require ('model/Auth.php');
-require_once("model/SessionManager.php");
 
 $loader = new \Twig\Loader\FilesystemLoader('view');
 $twig = new \Twig\Environment($loader, [
@@ -17,7 +15,6 @@ $twig = new \Twig\Environment($loader, [
 ]);
 print_r ($twig->addExtension(new Twig_Extension_Session()));
 print_r ($twig->addExtension(new \Twig\Extension\DebugExtension()));
-session_start();
 
 try {
     if (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'listPosts') {
@@ -102,8 +99,7 @@ try {
     } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'addComment') {
         if (filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0) {
             if (!empty(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS))) {
-                $session = new SessionManager();
-                addComment(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS),  $session->vars['Auth']['first_name'], filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS));
+                addComment(filter_input(INPUT_GET, 'id', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS));
             }
             else {
                 throw new Exception('Tous les champs ne sont pas remplis !');
@@ -112,8 +108,6 @@ try {
             throw new Exception('Aucun identifiant de billet envoyé');
         }
     } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'addComment') {
-        $_SESSION = array();
-        session_destroy();
         $success_connection = 'Vous êtes déconnecté vous pouvez laisser des commentaires';
         print_r ($twig->render('view/home.twig', ['postlist' => listPosts(), 'success_connection' => $success_connection]));
     } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'contact') {
@@ -208,5 +202,5 @@ try {
     }
 }
 catch(Exception $e) {
-    echo 'Erreur : ' . $e->getMessage();
+    print_r( 'Erreur : ' . $e->getMessage());
 }
