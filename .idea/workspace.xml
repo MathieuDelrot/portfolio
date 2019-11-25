@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="063ea126-fc2a-46a0-b31a-9fffc5af1970" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/frontend.php" beforeDir="false" afterPath="$PROJECT_DIR$/controller/frontend.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Auth.php" beforeDir="false" afterPath="$PROJECT_DIR$/model/Auth.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/SessionManager.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sendform.php" beforeDir="false" />
-    </list>
+    <list default="true" id="063ea126-fc2a-46a0-b31a-9fffc5af1970" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +62,7 @@
       <workItem from="1574085064239" duration="13000" />
       <workItem from="1574085112874" duration="602000" />
       <workItem from="1574161503678" duration="4000" />
-      <workItem from="1574428527633" duration="3710000" />
+      <workItem from="1574428527633" duration="4057000" />
     </task>
     <servers />
   </component>
