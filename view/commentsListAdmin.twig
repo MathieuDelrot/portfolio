@@ -1,7 +1,7 @@
 {% extends "template.twig" %}
 {% block content %}
-{{ block("menuadmin", "adminMenu.twig") }}
-    <div class="container">
+<div class="container margintop200">
+    {{ block("menuadmin", "adminMenu.twig") }}
         <div class="row">
             <div class="col-md-12">
                 <h3>Les commentaires</h3>
@@ -13,14 +13,14 @@
                             <h4>Pseudo : {{ comment.pseudo }}</h4>
                             <h5>Date : {{ comment.comment_date }}</h5>
                             <p>Commentaire : {{ comment.content }}</p>
-                            <a class="btn btn-success" href="index.php?action=validCom&amp;id={{ comment.id }}">Valider</a>
-                            <a class="btn btn-danger" href="index.php?action=deleteCom&amp;id={{ comment.id }}">Supprimer</a>
+                            <a class="btn btn-success" href="/admin/commentaires/valider-{{ comment.id }}">Valider</a>
+                            <a class="btn btn-danger" href="/admin/commentaires/supprimer-{{ comment.id }}">Supprimer</a>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
-    </div>
+</div>
 
 
 {% endblock %}

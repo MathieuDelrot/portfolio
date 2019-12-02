@@ -1,11 +1,10 @@
 <?php
 
-
 namespace Model;
 
 class Logout
 {
-    static function disconnected(){
+    static function disconnection(){
         $_SESSION = array();
         session_destroy();
     }

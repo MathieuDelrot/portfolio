@@ -1,9 +1,9 @@
 {% extends "template.twig" %}
 {% block content %}
+<div class="container margintop200">
     {% if success_connection is defined %}
         {{ block("menuadmin", "adminMenu.twig") }}
     {% endif %}
-    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 {% if error_connection is defined %}
@@ -24,18 +24,16 @@
             </div>
         </div>
         {% if adminconnectionform is defined %}
-            <div class="container margintop100">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form action="index.php?action=askAdminConnection" method="post">
-                            {% autoescape %}
-                                {{ adminconnectionform.email|raw }}
-                                {{ adminconnectionform.password|raw }}
-                                {{ adminconnectionform.submit|raw }}
-                            {% endautoescape %}
-                        </form>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="/admin/home" method="post">
+                    {% autoescape %}
+                        {{ adminconnectionform.email|raw }}
+                        {{ adminconnectionform.password|raw }}
+                        {{ adminconnectionform.submit|raw }}
+                    {% endautoescape %}
+                </form>
+            </div>
         {% endif %}
         </div>
     </div>

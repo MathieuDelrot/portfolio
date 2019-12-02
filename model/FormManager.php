@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Model;
 
-require_once("model/Manager.php");
-require_once("model/PostManager.php");
-
-
+require_once 'Manager.php';
+require_once 'PostManager.php';
 
 class FormManager extends Manager
 {
