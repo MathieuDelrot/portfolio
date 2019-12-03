@@ -703,16 +703,16 @@ Tests can accept arguments too:
 
 .. code-block:: twig
 
-    {% if post.status is constant('Post::PUBLISHED') %}
+    {% if project.status is constant('Project::PUBLISHED') %}
 
 Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: twig
 
-    {% if post.status is not constant('Post::PUBLISHED') %}
+    {% if project.status is not constant('Project::PUBLISHED') %}
 
     {# is equivalent to #}
-    {% if not (post.status is constant('Post::PUBLISHED')) %}
+    {% if not (project.status is constant('Project::PUBLISHED')) %}
 
 Go to the :doc:`tests<tests/index>` page to learn more about the built-in
 tests.

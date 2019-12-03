@@ -196,10 +196,10 @@ importantly, how it does not work:
 
     {# base.twig #}
 
-    {% for post in posts %}
-        {% block post %}
-            <h1>{{ post.title }}</h1>
-            <p>{{ post.body }}</p>
+    {% for project in projects %}
+        {% block project %}
+            <h1>{{ project.title }}</h1>
+            <p>{{ project.body }}</p>
         {% endblock %}
     {% endfor %}
 
@@ -213,10 +213,10 @@ to make it overridable by a child template:
 
     {% extends "base.twig" %}
 
-    {% block post %}
+    {% block project %}
         <article>
-            <header>{{ post.title }}</header>
-            <section>{{ post.text }}</section>
+            <header>{{ project.title }}</header>
+            <section>{{ project.text }}</section>
         </article>
     {% endblock %}
 
@@ -226,10 +226,10 @@ executed template is then equivalent to the following one:
 
 .. code-block:: twig
 
-    {% for post in posts %}
+    {% for project in projects %}
         <article>
-            <header>{{ post.title }}</header>
-            <section>{{ post.text }}</section>
+            <header>{{ project.title }}</header>
+            <section>{{ project.text }}</section>
         </article>
     {% endfor %}
 
@@ -237,7 +237,7 @@ Let's take another example: a block included within an ``if`` statement:
 
 .. code-block:: twig
 
-    {% if posts is empty %}
+    {% if projects is empty %}
         {% block head %}
             {{ parent() }}
 
@@ -257,7 +257,7 @@ instead:
     {% block head %}
         {{ parent() }}
 
-        {% if posts is empty %}
+        {% if projects is empty %}
             <meta name="robots" content="noindex, follow">
         {% endif %}
     {% endblock head %}

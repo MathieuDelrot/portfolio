@@ -20,45 +20,54 @@
             </div>
         </div>
     {% endif %}
-    {% if success_add_post is defined %}
+    {% if success_add_project is defined %}
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-success">
-                    {{ success_add_post }}<a href="/admin/projets"> Voir les projets</a>
+                    {{ success_add_project }}<a href="/admin/projets"> Voir les projets</a>
                 </div>
             </div>
         </div>
     {% endif %}
-    {% if addpostform is defined %}
+    {% if error_add_project is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-success">
+                    {{ error_add_project }}<a href="/admin/projets"> Voir les projets</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if addprojectform is defined %}
     <div class="row">
         <div class="col-md-12">
-            <form action="/admin/ajout-projet" method="post">
+            <form action="/admin/ajout-projet" method="POST">
                 {% autoescape %}
-                    {{ addpostform.title|raw }}
-                    {{ addpostform.intro|raw }}
-                    {{ addpostform.url|raw }}
-                    {{ addpostform.technologies|raw }}
-                    {{ addpostform.realisation_date|raw }}
-                    {{ addpostform.content|raw }}
-                    {{ addpostform.submit|raw }}
+                    {{ addprojectform.title|raw }}
+                    {{ addprojectform.intro|raw }}
+                    {{ addprojectform.url|raw }}
+                    {{ addprojectform.technologies|raw }}
+                    {{ addprojectform.realisation_date|raw }}
+                    {{ addprojectform.content|raw }}
+                    {{ addprojectform.submit|raw }}
                 {% endautoescape %}
             </form>
         </div>
     </div>
     {% endif %}
-    {% if editpostform is defined %}
+    {% if editprojectform is defined %}
         <div class="row">
             <div class="col-md-12">
-                <form action="/admin/ajout-projet" method="post">
+                <form action="/admin/editer-projet" method="POST">
                     {% autoescape %}
-                        {{ editpostform.id|raw }}
-                        {{ editpostform.title|raw }}
-                        {{ editpostform.intro|raw }}
-                        {{ editpostform.url|raw }}
-                        {{ editpostform.technologies|raw }}
-                        {{ editpostform.realisation_date|raw }}
-                        {{ editpostform.content|raw }}
-                        {{ editpostform.submit|raw }}
+                        {{ editprojectform.id|raw }}
+                        {{ editprojectform.title|raw }}
+                        {{ editprojectform.intro|raw }}
+                        {{ editprojectform.url|raw }}
+                        {{ editprojectform.technologies|raw }}
+                        {{ editprojectform.realisation_date|raw }}
+                        {{ editprojectform.content|raw }}
+                        {{ editprojectform.submit|raw }}
                     {% endautoescape %}
                 </form>
             </div>

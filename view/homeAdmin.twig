@@ -16,9 +16,9 @@
                         {{ success_connection }}
                     </div>
                 {% endif %}
-                {% if success_add_post is defined %}
+                {% if success_add_project is defined %}
                     <div class="alert alert-success">
-                        {{ success_add_post }}<a href="/">Voir les portolios</a>
+                        {{ success_add_project }}<a href="/">Voir les portolios</a>
                     </div>
                 {% endif %}
             </div>
@@ -26,7 +26,7 @@
         {% if adminconnectionform is defined %}
         <div class="row">
             <div class="col-md-12">
-                <form action="/admin/home" method="post">
+                <form action="/admin/home" method="project">
                     {% autoescape %}
                         {{ adminconnectionform.email|raw }}
                         {{ adminconnectionform.password|raw }}

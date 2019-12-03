@@ -3,7 +3,7 @@
 namespace Model;
 
 require_once 'Manager.php';
-require_once 'PostManager.php';
+require_once 'ProjectManager.php';
 
 class FormManager extends Manager
 {
@@ -44,10 +44,10 @@ class FormManager extends Manager
 
     }
 
-    public function getPostForm()
+    public function getProjectForm()
     {
 
-        $post_form = array(
+        $project_form = array(
             "title" => $this->input('text', 'title', 'Titre'),
             "intro" => $this->textarea('intro', 'Introduction'),
             "url" => $this->input('text', 'url', 'URL du projet'),
@@ -57,13 +57,13 @@ class FormManager extends Manager
             "submit" => $this->submit()
         );
 
-        return $post_form;
+        return $project_form;
     }
 
-    public function getEditPostForm($id,$title, $content, $realisation_date, $technologies, $url, $intro)
+    public function getEditProjectForm($id,$title, $content, $realisation_date, $technologies, $url, $intro)
     {
 
-        $post_form = array(
+        $project_form = array(
             "id" => $this->input('hidden', 'id', 'id', $id),
             "title" => $this->input('text', 'title', 'Titre', $title),
             "intro" => $this->textarea('intro', 'Introduction', $intro),
@@ -74,7 +74,7 @@ class FormManager extends Manager
             "submit" => $this->submit()
         );
 
-        return $post_form;
+        return $project_form;
     }
 
 

@@ -5,7 +5,7 @@
 
 (nl2br is pre_escaped for "html" and declared safe for "html")
 
-1. Pre-escape and don't post-escape
+1. Pre-escape and don't project-escape
 ( var|escape|nl2br )
 {{ var|nl2br }}
 
@@ -36,7 +36,7 @@ return ['var' => "<Fabien>\nTwig"]
 
 (nl2br is pre_escaped for "html" and declared safe for "html")
 
-1. Pre-escape and don't post-escape
+1. Pre-escape and don't project-escape
 ( var|escape|nl2br )
 &lt;Fabien&gt;<br />
 Twig

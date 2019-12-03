@@ -1,5 +1,5 @@
 --TEST--
-Twig parses postfix expressions
+Twig parses projectfix expressions
 --TEMPLATE--
 {% import _self as macros %}
 

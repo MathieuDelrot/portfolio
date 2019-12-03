@@ -25,7 +25,7 @@
                     </div>
                 {% endif %}
                 {% if resetpasswordform is defined %}
-                    <form action="reinitialisation-mot-de-passe" method="post">
+                    <form action="reinitialisation-mot-de-passe" method="project">
                         {% autoescape %}
                             {{ resetpasswordform.email|raw }}
                             {{ resetpasswordform.submit|raw }}
@@ -34,7 +34,7 @@
                 {% endif %}
                 {% if newpasswordform is defined %}
                     <h3>Saisissez votre nouveau mot de passe</h3>
-                    <form action="index.php?action=changePassword&amp;id={{ post.id }}&amp;key={{ key }}" method="post">
+                    <form action="index.php?action=changePassword&amp;id={{ project.id }}&amp;key={{ key }}" method="project">
                         {% autoescape %}
                             {{ newpasswordform.password|raw }}
                             {{ newpasswordform.submit|raw }}
@@ -46,18 +46,18 @@
         </div>
         <div class="row">
             <div class="col-md-8">
-                <h1>{{ post.title }}</h1>
-                <p>{{ post.intro }}</p>
+                <h1>{{ project.title }}</h1>
+                <p>{{ project.intro }}</p>
             </div>
             <div class="col-md-4">
-                <p><strong>Date de mise en ligne: </strong>{{ post.realisation_date }}<br>
-                <strong>Technologies: </strong>{{ post.technologies }}<br>
-                <a href="{{ post.url }}" target="_blank">Voir le site web</a></p>
+                <p><strong>Date de mise en ligne: </strong>{{ project.realisation_date }}<br>
+                <strong>Technologies: </strong>{{ project.technologies }}<br>
+                <a href="{{ project.url }}" target="_blank">Voir le site web</a></p>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <p>{{ post.content }}</p>
+                <p>{{ project.content }}</p>
             </div>
         </div>
     </div>
@@ -96,7 +96,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="connection" role="tabpanel" aria-labelledby="connection-tab">
-                            <form action="{{ post.title }}-{{ post.id }}/connection" method="post">
+                            <form action="{{ project.title }}-{{ project.id }}/connection" method="project">
                                 {% autoescape %}
                                     {{ connectionform.email|raw }}
                                     {{ connectionform.password|raw }}
@@ -106,7 +106,7 @@
                             <a href="mot-de-passe-oublie">Mot de passe oublié ?</a>
                         </div>
                         <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
-                            <form action="{{ post.title }}-{{ post.id }}/inscription" method="post">
+                            <form action="{{ project.title }}-{{ project.id }}/inscription" method="project">
                                 {% autoescape %}
                                     {{ accountform.first_name_account|raw }}
                                     {{ accountform.email|raw }}
@@ -119,7 +119,7 @@
                 {% endif  %}
                 {% if commentform is defined %}
                     <h3>Laissez votre commentaire {{ member.first_name }}</h3>
-                    <form action="index.php?action=addComment&amp;id={{ post.id }}" method="post">
+                    <form action="index.php?action=addComment&amp;id={{ project.id }}" method="project">
                         {% autoescape %}
                             {{ commentform.comment|raw }}
                             {{ commentform.submit|raw }}
