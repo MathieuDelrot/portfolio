@@ -1,7 +1,7 @@
 RewriteEngine On
-RewriteBase /
+RewriteBase /portfolio/
 
-RewriteCond %{THE_REQUEST} /portfolio/public/([^\s?]*) [NC]
+RewriteCond %{THE_REQUEST} /public/([^\s?]*) [NC]
 RewriteRule ^ %1 [L,NE,R=302]
 
-RewriteRule ^((?!public/).*)$ portfolio/public/$1 [L,NC]
+RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
