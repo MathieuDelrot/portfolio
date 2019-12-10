@@ -10,7 +10,6 @@ require_once '../controller/backend.php';
 require_once '../vendor/autoload.php';
 require_once '../model/Auth.php';
 require_once '../model/Manager.php';
-require_once '../model/logout.php';
 
 $router = new AltoRouter();
 

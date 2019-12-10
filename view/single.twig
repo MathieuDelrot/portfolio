@@ -4,27 +4,17 @@
     <div class="container margintop200">
         <div class="row">
             <div class="col-md-12">
-                {% if error_connection is defined %}
+                {% if error is not empty %}
                     <div class="alert alert-danger">
-                        {{ error_connection }}
+                        {{ error }}
                     </div>
                 {% endif %}
-                {% if success_connection is defined %}
+                {% if success is not empty %}
                     <div class="alert alert-success">
-                        {{ success_connection }}
+                        {{ success }}
                     </div>
                 {% endif %}
-                {% if error_inscription is defined %}
-                    <div class="alert alert-danger">
-                        {{ error_inscription }}
-                    </div>
-                {% endif %}
-                {% if success_inscription is defined %}
-                    <div class="alert alert-success">
-                        {{ success_inscription }}
-                    </div>
-                {% endif %}
-                {% if resetpasswordform is defined %}
+                {% if resetpasswordform is not empty %}
                     <form action="/{{ project.title }}-{{ project.id }}/reinitialisation-mot-de-passe" method="POST">
                         {% autoescape %}
                             {{ resetpasswordform.email|raw }}
@@ -33,13 +23,14 @@
                     </form>
                 {% endif %}
                 {% if newpasswordform is defined %}
-                    {{ dump(key) }}
-                    <form action="/{{ project.title }}-{{ project.id }}/nouveau-mot-de-passe-{{ key }}" method="POST">
-                        {% autoescape %}
-                            {{ newpasswordform.password|raw }}
-                            {{ newpasswordform.submit|raw }}
-                        {% endautoescape %}
-                    </form>
+                    {% if key is defined %}
+                        <form action="/{{ project.title }}-{{ project.id }}/nouveau-mot-de-passe-{{ key }}" method="POST">
+                            {% autoescape %}
+                                {{ newpasswordform.password|raw }}
+                                {{ newpasswordform.submit|raw }}
+                            {% endautoescape %}
+                        </form>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -63,8 +54,10 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                {% if connectionform is defined %}
+                {% if connectionform is not empty %}
+                    {% if accountform is not empty %}
                         <h3>Connectez-vous ou inscrivez-vous pour laisser des commentaires</h3>
+                    {% endif %}
                 {% endif %}
                 {% if commentlist is defined %}
                     <h3>Les commentaires</h3>
@@ -84,47 +77,48 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                {% if connectionform is defined %}
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="connection-tab" data-toggle="tab" role="tab" href="#connection">Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="inscription-tab" data-toggle="tab" role="tab" href="#inscription">Inscription</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="connection" role="tabpanel" aria-labelledby="connection-tab">
-                            <form action="/{{ project.title }}-{{ project.id }}/connection" method="POST">
-                                {% autoescape %}
-                                    {{ connectionform.email|raw }}
-                                    {{ connectionform.password|raw }}
-                                    {{ connectionform.submit|raw }}
-                                {% endautoescape %}
-                            </form>
-                            <a href="/{{ project.title }}-{{ project.id }}/mot-de-passe-oublie">Mot de passe oublié ?</a>
+                {% if connectionform is not empty %}
+                    {% if accountform is not empty %}
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="connection-tab" data-toggle="tab" role="tab" href="#connection">Connexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="inscription-tab" data-toggle="tab" role="tab" href="#inscription">Inscription</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="connection" role="tabpanel" aria-labelledby="connection-tab">
+                                <form action="/{{ project.title }}-{{ project.id }}/connection" method="POST">
+                                    {% autoescape %}
+                                        {{ connectionform.email|raw }}
+                                        {{ connectionform.password|raw }}
+                                        {{ connectionform.submit|raw }}
+                                    {% endautoescape %}
+                                </form>
+                                <a href="/{{ project.title }}-{{ project.id }}/mot-de-passe-oublie">Mot de passe oublié ?</a>
+                            </div>
+                            <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
+                                <form action="/{{ project.title }}-{{ project.id }}/inscription" method="POST">
+                                    {% autoescape %}
+                                        {{ accountform.first_name_account|raw }}
+                                        {{ accountform.email|raw }}
+                                        {{ accountform.password|raw }}
+                                        {{ accountform.submit|raw }}
+                                    {% endautoescape %}
+                                </form>
+                            </div>
                         </div>
-                        <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
-                            <form action="/{{ project.title }}-{{ project.id }}/inscription" method="POST">
-                                {% autoescape %}
-                                    {{ accountform.first_name_account|raw }}
-                                    {{ accountform.email|raw }}
-                                    {{ accountform.password|raw }}
-                                    {{ accountform.submit|raw }}
-                                {% endautoescape %}
-                            </form>
-                        </div>
-                    </div>
+                    {% endif  %}
                 {% endif  %}
-                {% if commentform is defined %}
-                    <h3>Laissez votre commentaire {{ member.first_name }}</h3>
-                    <form action="/{{ project.title }}-{{ project.id }}/ajouter-un-commentaire" method="POST">
-                        {% autoescape %}
-                            {{ commentform.comment|raw }}
-                            {{ commentform.submit|raw }}
-                        {% endautoescape %}
-                    </form>
-                    <a href="deconnexion">déconnexion</a>
+                {% if commentform is not empty %}
+                        <form action="/{{ project.title }}-{{ project.id }}/ajouter-un-commentaire" method="POST">
+                            {% autoescape %}
+                                {{ commentform.comment|raw }}
+                                {{ commentform.submit|raw }}
+                            {% endautoescape %}
+                        </form>
+                        <a href="/{{ project.title }}-{{ project.id }}/deconnexion">déconnexion</a>
                 {% endif %}
             </div>
         </div>

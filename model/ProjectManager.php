@@ -7,6 +7,7 @@ require_once 'Manager.php';
 class ProjectManager extends Manager
 {
 
+
     public function project($title, $content, $realisation_date, $technologies, $url, $intro)
     {
         $stmt = $this->bdd->prepare('INSERT INTO portfolio_post (title, content, modification_date, author_id, status, realisation_date, technologies, url, intro) VALUES(?, ?, NOW(), 1, 1, ?, ?, ?, ?)');

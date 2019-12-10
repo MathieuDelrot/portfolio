@@ -7,6 +7,7 @@ require_once 'Manager.php';
 class ComManager extends Manager
 {
 
+
 public function getComments($id)
  {
      $comments = $this->bdd->prepare('SELECT pseudo, content, comment_date FROM comment WHERE portfolio_id = ? AND validate = 1');

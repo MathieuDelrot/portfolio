@@ -1,14 +1,15 @@
 <?php
 
+
 namespace Model;
 
 require_once 'Manager.php';
 require_once 'FormManager.php';
-require_once 'SessionObject.php';
+require_once 'SessionManager.php';
 
-class AccountManager extends Manager
+
+class MemberManager extends Manager
 {
-
 
     public function createAccount($first_name, $email, $password)
     {
@@ -18,7 +19,7 @@ class AccountManager extends Manager
         $stmt->bindParam(2, $email);
         $stmt->bindParam(3, $hash);
         $stmt->execute();
-        $session = new SessionObject();
+        $session = new SessionManager();
         $session->vars['Auth'] = array(
             'email' => $email,
             'password' => $password
@@ -37,6 +38,73 @@ class AccountManager extends Manager
 
         mail($to, $subject, $message, $headers);
     }
+
+    public function connection($email, $password)
+    {
+        $stmt = $this->bdd->prepare('SELECT id, password, first_name FROM member WHERE email = ?');
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        $data = $stmt->fetch();
+        $first_name = $data['first_name'];
+        password_verify($password, $data['password']);
+        if(password_verify($password, $data['password'])) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $session = new SessionManager();
+            $session->vars['Auth'] = array(
+                'email' => $email,
+                'first_name' => $first_name,
+                'password' => $password
+            );
+            return true;
+        }
+        return false;
+    }
+
+    public function findPasswordKey($key)
+    {
+        $validityDate = new \DateTime();
+        $validityDate->modify('-24 hours');
+        $v = $validityDate->format('Y-m-d H:i:s');
+        $vd = strtotime($v);
+        $stmt = $this->bdd->prepare('SELECT key_date FROM member WHERE password_key = ?');
+        $stmt->bindParam(1, $key);
+        $stmt->execute();
+        $date = $stmt->fetch();
+        $d = $date[0];
+        $dv = strtotime($d);
+        $difference = $vd - $dv;
+        if (isset($date) && $difference < 0){
+            $stmt = $this->bdd->prepare('SELECT * FROM member WHERE password_key = ?');
+            $stmt->bindParam(1, $key);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0){
+                return true;
+            } else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    public function forgotPassword($email, $id, $slug)
+    {
+        $stmt = $this->bdd->prepare('SELECT id, password, first_name, password_key FROM member WHERE email = ?');
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        if ($stmt->fetch()){
+            $password_key = uniqid();
+            $stmt = $this->bdd->prepare('UPDATE member SET password_key = ?, key_date = NOW() WHERE email = ?');
+            $stmt->bindParam(1, $password_key);
+            $stmt->bindParam(2, $email);
+            $stmt->execute();
+            $this->sendEmailResetPassword($email, $id, $slug, $password_key);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     public function sendEmailResetPassword($email, $key, $id, $slug)
     {
@@ -66,76 +134,6 @@ class AccountManager extends Manager
         mail($to, $subject, $message, $headers);
     }
 
-
-
-    public function connection($email, $password)
-    {
-        $stmt = $this->bdd->prepare('SELECT id, password, first_name FROM member WHERE email = ?');
-        $stmt->bindParam(1, $email);
-        $stmt->execute();
-        $data = $stmt->fetch();
-        $first_name = $data['first_name'];
-        password_verify($password, $data['password']);
-        if(password_verify($password, $data['password'])) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $session = new SessionObject();
-            $session->vars['Auth'] = array(
-                'email' => $email,
-                'first_name' => $first_name,
-                'password' => $password
-            );
-            return true;
-        }
-        return false;
-    }
-
-
-    public function forgotPassword($email, $id, $slug)
-    {
-        $stmt = $this->bdd->prepare('SELECT id, password, first_name, password_key FROM member WHERE email = ?');
-        $stmt->bindParam(1, $email);
-        $stmt->execute();
-        if ($stmt->fetch()){
-            $password_key = uniqid();
-            $stmt = $this->bdd->prepare('UPDATE member SET password_key = ?, key_date = NOW() WHERE email = ?');
-            $stmt->bindParam(1, $password_key);
-            $stmt->bindParam(2, $email);
-            $stmt->execute();
-            $this->sendEmailResetPassword($email, $id, $slug, $password_key);
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-
-    public function findPasswordKey($key)
-    {
-        $validityDate = new \DateTime();
-        $validityDate->modify('-24 hours');
-        $v = $validityDate->format('Y-m-d H:i:s');
-        $vd = strtotime($v);
-        $stmt = $this->bdd->prepare('SELECT key_date FROM member WHERE password_key = ?');
-        $stmt->bindParam(1, $key);
-        $stmt->execute();
-        $date = $stmt->fetch();
-        $d = $date[0];
-        $dv = strtotime($d);
-        $difference = $vd - $dv;
-        if (isset($date) && $difference < 0){
-            $stmt = $this->bdd->prepare('SELECT * FROM member WHERE password_key = ?');
-            $stmt->bindParam(1, $key);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0){
-                return true;
-            } else{
-                return false;
-            }
-        }else{
-            return false;
-        }
-    }
-
     public function changePassword($password, $key)
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -146,23 +144,5 @@ class AccountManager extends Manager
         return true;
     }
 
-
-    public function connectionAdmin($email, $password)
-    {
-        $stmt = $this->bdd->prepare('SELECT id, password FROM admin WHERE email = ?');
-        $stmt->bindParam(1, $email);
-        $stmt->execute();
-        $data = $stmt->fetch();
-        $ifAuthentificated = password_verify($password, $data['password']);
-        if($ifAuthentificated) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-            $session = new SessionObject();
-            $session->vars['AuthAdmin'] = array(
-                'email' => $email,
-                'password' => $password
-            );
-        }
-        return $ifAuthentificated;
-    }
 
 }

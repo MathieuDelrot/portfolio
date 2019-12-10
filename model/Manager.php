@@ -5,6 +5,8 @@ namespace Model;
 
 class Manager
 {
+
+
     protected $bdd;
 
     public function __construct()

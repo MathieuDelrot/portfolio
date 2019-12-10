@@ -1,7 +1,7 @@
 <?php
 
 
-use Model\AccountManager;
+use Model\AdminManager;
 use Model\ComManager;
 use Model\FormManager;
 use Model\Manager;
@@ -13,7 +13,6 @@ require_once '../model/Manager.php';
 require_once '../model/ProjectManager.php';
 require_once '../model/FormManager.php';
 require_once '../model/ComManager.php';
-require_once '../model/AccountManager.php';
 require_once '../vendor/autoload.php';
 require_once 'TwigController.php';
 
@@ -54,8 +53,8 @@ function getAdminHomePage()
             'error_connection' => $error_connection,
         ]);
     } elseif (!empty(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))) {
-        $AM = new AccountManager();
-        $connection = $AM->connectionAdmin(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+        $AM = new AdminManager();
+        $connection = $AM->adminConnection(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
         if ($connection == true) {
             $success_connection = 'Vous êtes connecté vous pouvez ajouter des portfolios et modérer les commentaires';
             useTwig('homeAdmin.twig', ['success_connection' => $success_connection]);

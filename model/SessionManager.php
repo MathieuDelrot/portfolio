@@ -4,8 +4,9 @@
 namespace Model;
 
 
-class SessionObject
+class SessionManager
 {
+
     public $vars;
 
     public function __construct() {
