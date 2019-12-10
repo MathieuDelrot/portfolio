@@ -7,14 +7,13 @@ require_once 'Manager.php';
 class ComManager extends Manager
 {
 
-public function getComments($projectId)
-     {
-         $comments = $this->bdd->prepare('SELECT pseudo, content, comment_date FROM comment WHERE portfolio_id = ? AND validate = 1');
-         $comments->bindParam(1, $projectId);
-         $comments->execute();
-
-         return $comments;
-     }
+public function getComments($id)
+ {
+     $comments = $this->bdd->prepare('SELECT pseudo, content, comment_date FROM comment WHERE portfolio_id = ? AND validate = 1');
+     $comments->bindParam(1, $id);
+     $comments->execute();
+     return $comments;
+ }
 
 public function getNewComments()
 {

@@ -193,7 +193,8 @@ class AltoRouter
 
         // set Request Url if it isn't passed as parameter
         if ($requestUrl === null) {
-            $requestUrl = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+
+            $requestUrl = !empty(filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL)) ? filter_input(INPUT_SERVER, 'REQUEST_URI', FILTER_SANITIZE_URL) : '/';
         }
 
         // strip base path from request url
@@ -208,7 +209,8 @@ class AltoRouter
 
         // set Request Method if it isn't passed as a parameter
         if ($requestMethod === null) {
-            $requestMethod = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+
+            $requestMethod = !empty(filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_URL)) ? filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_URL) : 'GET';
         }
 
         foreach ($this->routes as $handler) {

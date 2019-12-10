@@ -6,6 +6,7 @@ use Model\Manager;
 use Model\ProjectManager;
 use Model\Logout;
 use Model\Auth;
+use Model\SessionObject;
 
 require_once '../model/Manager.php';
 require_once '../model/ProjectManager.php';
@@ -14,6 +15,7 @@ require_once '../model/ComManager.php';
 require_once '../model/AccountManager.php';
 require_once '../vendor/autoload.php';
 require_once 'TwigController.php';
+require_once '../model/SessionObject.php';
 
 function getProject($id)
 {
@@ -66,6 +68,7 @@ function getCommentForm()
 
 function addAccount($firstName, $email, $password)
 {
+
     $accountManger = new AccountManager();
     $affectedLines = $accountManger->createAccount($firstName, $email, $password);
 
@@ -104,8 +107,8 @@ function getProjectPage($id)
         useTwig('single.twig', [
             'project' => getProject($id),
             'connectionform' => getConnectionForm() ,
+            'accountform' => getCreatAccountForm(),
             'commentlist' => getComments($id),
-            'accountform' => getCreatAccountForm()
         ]);
     } else
     {
@@ -122,13 +125,13 @@ function askConnection($slug, $id)
             useTwig('single.twig', [
                 'project' => getProject($id),
                 'connectionform' => getConnectionForm(),
-                'commentlist' => getComments($id),
                 'accountform' => getCreatAccountForm(),
+                'commentlist' => getComments($id),
                 'error_connection' => $error_connection
             ]);
         } else {
             getConnection();
-            if (getConnection() or Auth::adminIsLogged()) {
+            if (getConnection() or Auth::isLogged()) {
                 $success_connection = 'Vous êtes connecté vous pouvez laisser des commentaires';
                 useTwig('single.twig', [
                     'project' => getProject($id),
@@ -141,9 +144,9 @@ function askConnection($slug, $id)
                 useTwig('single.twig', [
                     'project' => getProject($id),
                     'connectionform' => getConnectionForm(),
+                    'accountform' => getCreatAccountForm(),
                     'commentlist' => getComments($id),
                     'member' => getConnection(),
-                    'accountform' => getConnectionForm(),
                     'error_connection' => $error_connection
 
                 ]);
@@ -163,8 +166,8 @@ function askInscription($slug, $id)
             useTwig('single.twig', [
                 'project' => getProject($id),
                 'connectionform' => getConnectionForm(),
+                'accountform' => getCreatAccountForm(),
                 'commentlist' => getComments($id),
-                'accountform' => getConnectionForm(),
                 'error_inscription' => $error_inscription
             ]);
         } elseif (getConnection()) {
@@ -172,8 +175,8 @@ function askInscription($slug, $id)
             useTwig('single.twig', [
                 'project' => getProject($id),
                 'connectionform' => getConnectionForm(),
+                'accountform' => getCreatAccountForm(),
                 'commentlist' => getComments($id),
-                'accountform' => getConnectionForm(),
                 'error_inscription' => $error_inscription
             ]);
         } else {
@@ -199,22 +202,36 @@ function askDisconnection($slug, $id)
     useTwig('single.twig', [
         'project' => getProject($id),
         'connectionform' => getConnectionForm(),
+        'accountform' => getCreatAccountForm(),
         'commentlist' => getComments($id),
-        'accountform' => getConnectionForm(),
         'success_connection' => $succes_connection
     ]);
 }
 
-function addComment($projectId, $first_name, $comment)
+function addComment($id)
 {
-    $commentManager = new ComManager();
-    $affectedLines = $commentManager->projectComment($projectId, $first_name, $comment);
 
-    if ($affectedLines === false) {
-        throw new Exception('Impossible d\'ajouter le commentaire !');
-    }
-    else {
-        return true;
+    if(Auth::isLogged()){
+
+        if(!empty(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS))){
+            $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS);
+            $session = new SessionObject();
+            $first_name = $session->vars['Auth']['first_name'];
+
+            $commentManager = new ComManager();
+            $affectedLines = $commentManager->projectComment($id, $first_name, $comment);
+
+            if ($affectedLines === false) {
+                throw new Exception('Impossible d\'ajouter le commentaire !');
+            }
+            else {
+                useTwig('single.twig', [
+                    'project' => getProject($id),
+                    'commentform' => getCommentForm(),
+                    'commentlist' => getComments($id),
+                ]);
+            }
+        }
     }
 
 }
@@ -227,6 +244,7 @@ function askResetingPassword($id)
     useTwig('single.twig', [
         'project' => getProject($id),
         'connectionform' => getConnectionForm(),
+        'accountform' => getCreatAccountForm(),
         'resetpasswordform' => $ask_reseting_form,
         'accountform' => getCreatAccountForm(),
         'success_connection' => $succes_connection
@@ -236,40 +254,72 @@ function askResetingPassword($id)
 function askNewPassword($id)
 {
     $accountManager = new AccountManager();
-    $findAccount = $accountManager->forgotPassword(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
-    return $findAccount;
-    if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) && $findAccount == true) {
+    $findAccount = $accountManager->forgotPassword(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), $id, $slug);
+    if ($findAccount == true) {
         $success_connection = 'Vous allez recevoir un email pour réinitialiser votre mot de passe';
         useTwig('single.twig', [
             'project' => getProject($id),
             'connectionform' => getConnectionForm(),
+            'accountform' => getCreatAccountForm(),
             'commentlist' => getComments($id),
             'success_connection' => $success_connection
         ]);
-    }
-    else {
+    } else {
         $error_connection = 'Votre e-mail n\'est pas reconnu';
         useTwig('single.twig', [
             'project' => getProject($id),
             'connectionform' => getConnectionForm(),
+            'accountform' => getCreatAccountForm(),
             'commentlist' => getComments($id),
             'resetpasswordform' => $ask_reseting_form,
-            'accountform' => getCreatAccountForm(),
             'success_connection' => $succes_connection
         ]);
     }
 }
 
+function resetingPassord($id, $key)
+{
+    $success_connection = "réinitialisez votre mot de passe";
+    useTwig('single.twig', [
+        'project' => getProject($id),
+        'connectionform' => getConnectionForm(),
+        'accountform' => getCreatAccountForm(),
+        'commentlist' => getComments($id),
+        'key' => $key,
+        'newpasswordform' => newPasswordForm(),
+        'success_connection' => $success_connection
+    ]);
 
-//    } elseif (filter_input(INPUT_GET, 'action', FILTER_SANITIZE_SPECIAL_CHARS) == 'resetPassword') {
-//        changePassword();
-//        if (filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS) && filter_input(INPUT_GET, '', FILTER_SANITIZE_SPECIAL_CHARS) == 'key' && changePassword() == true) {
-//            $success_connection = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
-//            print_r ($twig->render('single.twig', ['project' => project(), 'connectionform' => connectionForm(), 'accountform' => accountForm(), 'success_connection' => $success_connection]));
-//        } else {
-//            $error_connection = 'Votre mots de passe n\'est pas enregistré';
-//            print_r ($twig->render('single.twig', ['project' => project(), 'connectionform' => connectionForm(), 'commentlist' => listComment(), 'resetpasswordform' => askResetingPassword(), 'accountform' => accountForm(), 'error_connection' => $error_connection]));
-//        }
+}
+
+function newPassword($id, $key)
+{
+    changePassword($key);
+    if (changePassword($key) == true) {
+            $success_connection = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
+        useTwig('single.twig', [
+            'project' => getProject($id),
+            'connectionform' => getConnectionForm(),
+            'accountform' => getCreatAccountForm(),
+            'commentlist' => getComments($id),
+            'success_connection' => $success_connection
+        ]);
+    } else {
+            $error_connection = 'Votre mots de passe n\'est pas enregistré';
+            useTwig('single.twig', [
+                'project' => getProject($id),
+                'connectionform' => getConnectionForm(),
+                'accountform' => getCreatAccountForm(),
+                'commentlist' => getComments($id),
+                'newpasswordform' => newPasswordForm(),
+                'error_connection' => $error_connection
+            ]);
+    }
+
+}
+
+
+
 
 function checkIfPasswordKeyExist(){
     $accountManager = new AccountManager();
@@ -285,9 +335,11 @@ function newPasswordForm()
     return $reset_form;
 }
 
-function changePassword()
+function changePassword($key)
 {
-    $accountManager = new AccountManager();
-    $resetPassword = $accountManager->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS));
-    return $resetPassword;
+    if (filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS)){
+        $accountManager = new AccountManager();
+        $resetPassword = $accountManager->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS),$key);
+        return $resetPassword;
+    }
 }

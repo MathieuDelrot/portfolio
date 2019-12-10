@@ -53,22 +53,25 @@ function getAdminHomePage()
             'adminconnectionform' => getAdminConnectionForm(),
             'error_connection' => $error_connection,
         ]);
-    } elseif (!empty(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS)) && getAdminConnection()) {
-        $success_connection = 'Vous êtes connecté vous pouvez ajouter des portfolios et modérer les commentaires';
-        useTwig('homeAdmin.twig', ['success_connection' => $success_connection]);
-    } else {
-        $error_connection = 'Mauvais identifiant ou mot de passe !';
-        useTwig('homeAdmin.twig', [
-            'adminconnectionform' => getAdminConnectionForm(),
-            'error_connection' => $error_connection
-        ]);
+    } elseif (!empty(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))) {
+        $AM = new AccountManager();
+        $connection = $AM->connectionAdmin(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+        if ($connection == true) {
+            $success_connection = 'Vous êtes connecté vous pouvez ajouter des portfolios et modérer les commentaires';
+            useTwig('homeAdmin.twig', ['success_connection' => $success_connection]);
+        } else {
+            $error_connection = 'Mauvais identifiant ou mot de passe !';
+            useTwig('homeAdmin.twig', [
+                'adminconnectionform' => getAdminConnectionForm(),
+                'error_connection' => $error_connection
+            ]);
+        }
     }
 }
 
 function getProjectsPage()
 {
      if (Auth::adminIsLogged()) {
-         var_dump(getProjects());
          useTwig('projectsListAdmin.twig', ['projectlist' => getProjects()]);
      }
      else {
@@ -164,7 +167,6 @@ function editProject()
         if ($project->edit($id, $title, $content , $realisation_date, $technologies, $url, $intro)) {
             $success_add_project = 'Le projet est modifié';
             useTwig('addSingle.twig', ['success_add_project' => $success_add_project]);
-            print_r ($twig->render('addSingle.twig', ['success_add_project' => $success_add_project]));
         }
     } else {
         $error_connection = 'Vous n\'êtes pas autorisé à modifier cet article ou les champs ne sont pas remplis';

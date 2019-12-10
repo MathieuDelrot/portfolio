@@ -2,18 +2,25 @@
 
 namespace Model;
 
+require_once 'SessionObject.php';
+
 class Auth
 {
+
     static function isLogged()
     {
-        if (isset($_SESSION['Auth']) && isset($_SESSION['Auth']['email']) && isset($_SESSION['Auth']['password']) && isset($_SESSION['Auth']['first_name'])){
+        $session = new SessionObject();
+
+        if (isset($session->vars['Auth']) && isset($session->vars['Auth']['email']) && isset($session->vars['Auth']['password']) && isset($session->vars['Auth']['first_name'])){
             return true;
         }
         return false;
     }
     static function adminIsLogged()
     {
-        if (isset($_SESSION['AuthAdmin']) && isset($_SESSION['AuthAdmin']['email']) && isset($_SESSION['AuthAdmin']['password'])){
+        $session = new SessionObject();
+
+        if (isset($session->vars['AuthAdmin']) && isset($session->vars['AuthAdmin']['email']) && isset($session->vars['AuthAdmin']['password'])){
             return true;
         }
         return false;

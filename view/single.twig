@@ -25,7 +25,7 @@
                     </div>
                 {% endif %}
                 {% if resetpasswordform is defined %}
-                    <form action="reinitialisation-mot-de-passe" method="project">
+                    <form action="/{{ project.title }}-{{ project.id }}/reinitialisation-mot-de-passe" method="POST">
                         {% autoescape %}
                             {{ resetpasswordform.email|raw }}
                             {{ resetpasswordform.submit|raw }}
@@ -33,14 +33,13 @@
                     </form>
                 {% endif %}
                 {% if newpasswordform is defined %}
-                    <h3>Saisissez votre nouveau mot de passe</h3>
-                    <form action="index.php?action=changePassword&amp;id={{ project.id }}&amp;key={{ key }}" method="project">
+                    {{ dump(key) }}
+                    <form action="/{{ project.title }}-{{ project.id }}/nouveau-mot-de-passe-{{ key }}" method="POST">
                         {% autoescape %}
                             {{ newpasswordform.password|raw }}
                             {{ newpasswordform.submit|raw }}
                         {% endautoescape %}
                     </form>
-                    <a href="deconnexion">déconnexion</a>
                 {% endif %}
             </div>
         </div>
@@ -66,9 +65,9 @@
             <div class="col-md-12">
                 {% if connectionform is defined %}
                         <h3>Connectez-vous ou inscrivez-vous pour laisser des commentaires</h3>
-                    {% if comment is defined %}
-                        <h3>Les commentaires</h3>
-                    {% endif %}
+                {% endif %}
+                {% if commentlist is defined %}
+                    <h3>Les commentaires</h3>
                     {% for comment in commentlist  %}
                         <div class="row">
                             <div class="col-md-12">
@@ -96,17 +95,17 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="connection" role="tabpanel" aria-labelledby="connection-tab">
-                            <form action="{{ project.title }}-{{ project.id }}/connection" method="project">
+                            <form action="/{{ project.title }}-{{ project.id }}/connection" method="POST">
                                 {% autoescape %}
                                     {{ connectionform.email|raw }}
                                     {{ connectionform.password|raw }}
                                     {{ connectionform.submit|raw }}
                                 {% endautoescape %}
                             </form>
-                            <a href="mot-de-passe-oublie">Mot de passe oublié ?</a>
+                            <a href="/{{ project.title }}-{{ project.id }}/mot-de-passe-oublie">Mot de passe oublié ?</a>
                         </div>
                         <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
-                            <form action="{{ project.title }}-{{ project.id }}/inscription" method="project">
+                            <form action="/{{ project.title }}-{{ project.id }}/inscription" method="POST">
                                 {% autoescape %}
                                     {{ accountform.first_name_account|raw }}
                                     {{ accountform.email|raw }}
@@ -119,7 +118,7 @@
                 {% endif  %}
                 {% if commentform is defined %}
                     <h3>Laissez votre commentaire {{ member.first_name }}</h3>
-                    <form action="index.php?action=addComment&amp;id={{ project.id }}" method="project">
+                    <form action="/{{ project.title }}-{{ project.id }}/ajouter-un-commentaire" method="POST">
                         {% autoescape %}
                             {{ commentform.comment|raw }}
                             {{ commentform.submit|raw }}

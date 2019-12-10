@@ -55,6 +55,18 @@ $router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialisation-mot-de-passe', func
     askNewPassword($id);
 });
 
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialiser-mot-de-passe/[*:key]', function($slug, $id, $key){
+    resetingPassord($id, $key);
+});
+
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/nouveau-mot-de-passe-[*:key]', function($slug, $id, $key){
+    newPassword($id, $key);
+});
+
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/ajouter-un-commentaire', function($slug, $id){
+    addComment($id);
+});
+
 $router->map( 'GET|POST', '/admin', function(){
     getAdminConnection();
 });

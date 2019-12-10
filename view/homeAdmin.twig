@@ -26,7 +26,7 @@
         {% if adminconnectionform is defined %}
         <div class="row">
             <div class="col-md-12">
-                <form action="/admin/home" method="project">
+                <form action="/admin/home" method="POST">
                     {% autoescape %}
                         {{ adminconnectionform.email|raw }}
                         {{ adminconnectionform.password|raw }}

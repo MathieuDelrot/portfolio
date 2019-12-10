@@ -4,6 +4,7 @@ namespace Model;
 
 require_once 'Manager.php';
 require_once 'FormManager.php';
+require_once 'SessionObject.php';
 
 class AccountManager extends Manager
 {
@@ -17,7 +18,11 @@ class AccountManager extends Manager
         $stmt->bindParam(2, $email);
         $stmt->bindParam(3, $hash);
         $stmt->execute();
-
+        $session = new SessionObject();
+        $session->vars['Auth'] = array(
+            'email' => $email,
+            'password' => $password
+        );
     }
 
     public function sendEmailSuccess($first_name, $email)
@@ -33,7 +38,7 @@ class AccountManager extends Manager
         mail($to, $subject, $message, $headers);
     }
 
-    public function sendEmailResetPassword($email, $key)
+    public function sendEmailResetPassword($email, $key, $id, $slug)
     {
         //Mettre le message dans un template
         $to      = $email;
@@ -47,7 +52,7 @@ class AccountManager extends Manager
                 
                     <div>
                             <p>Vous souhaitez réinitialiser votre mot de passe</p>
-                            <p>"<a href ="https://www.mathieu-delrot.fr/index.php?action=resetPassword&id=1&key=' . $key . '">Cliquer sur le lien :</a>"</p>
+                            <p>"<a href ="https://www.mathieu-delrot.fr/' . $slug . '-' . $id . '/reinitialiser-mot-de-passe/' . $key . '">Cliquer sur le lien :</a>"</p>
                     
                     </div>
                 </body>
@@ -72,13 +77,20 @@ class AccountManager extends Manager
         $first_name = $data['first_name'];
         password_verify($password, $data['password']);
         if(password_verify($password, $data['password'])) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $session = new SessionObject();
+            $session->vars['Auth'] = array(
+                'email' => $email,
+                'first_name' => $first_name,
+                'password' => $password
+            );
             return true;
         }
         return false;
     }
 
 
-    public function forgotPassword($email)
+    public function forgotPassword($email, $id, $slug)
     {
         $stmt = $this->bdd->prepare('SELECT id, password, first_name, password_key FROM member WHERE email = ?');
         $stmt->bindParam(1, $email);
@@ -89,7 +101,7 @@ class AccountManager extends Manager
             $stmt->bindParam(1, $password_key);
             $stmt->bindParam(2, $email);
             $stmt->execute();
-            $this->sendEmailResetPassword($email, $password_key);
+            $this->sendEmailResetPassword($email, $id, $slug, $password_key);
             return true;
         }else{
             return false;
@@ -130,11 +142,7 @@ class AccountManager extends Manager
         $stmt = $this->bdd->prepare('UPDATE member SET password = ? WHERE password_key = ?');
         $stmt->bindParam(1, $hash);
         $stmt->bindParam(2, $key);
-        $stmt->execute();
-        $stmt2 = $this->bdd->prepare('UPDATE member SET password_key = ? WHERE password_key = ?');
-        $stmt2->bindParam(1, '');
-        $stmt2->bindParam(2, $key);
-        $stmt2->execute();
+        $stmt->exeute();
         return true;
     }
 
@@ -145,15 +153,16 @@ class AccountManager extends Manager
         $stmt->bindParam(1, $email);
         $stmt->execute();
         $data = $stmt->fetch();
-        //refactoriser avec des cookies
         $ifAuthentificated = password_verify($password, $data['password']);
         if($ifAuthentificated) {
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $_SESSION['AuthAdmin']= array(
+            $session = new SessionObject();
+            $session->vars['AuthAdmin'] = array(
                 'email' => $email,
                 'password' => $password
             );
         }
         return $ifAuthentificated;
     }
+
 }
