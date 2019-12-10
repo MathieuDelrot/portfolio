@@ -214,7 +214,7 @@
     <div class="container">
     <h2>Mes derniers projets</h2>
     {% for project in projectlist  %}
-        <a href="projet/{{ project.title }}-{{ project.id }}"><h3>{{ project.title }}</h3></a>
+        <a href="projet/{{ project.slug }}-{{ project.id }}"><h3>{{ project.title }}</h3></a>
         <p>{{ project.intro }}</p>
     {% endfor %}
 </div>

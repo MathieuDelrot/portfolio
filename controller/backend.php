@@ -115,7 +115,8 @@ function addProject()
         $url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS);
         $intro = filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS);
         $projectManager = new ProjectManager();
-        if ($projectManager->project($title, $content, $realisation_date, $technologies, $url, $intro)) {
+        $slug = preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($title));
+        if ($projectManager->project($title, $slug, $content, $realisation_date, $technologies, $url, $intro)) {
             $success_add_project = 'Le projet est ajouté';
             useTwig('addSingle.twig', ['success_add_project' => $success_add_project]);
         } else {
@@ -163,7 +164,8 @@ function editProject()
         $url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS);
         $intro = filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS);
         $project = new ProjectManager();
-        if ($project->edit($id, $title, $content , $realisation_date, $technologies, $url, $intro)) {
+        $slug = preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($title));
+        if ($project->edit($id, $title, $slug, $content , $realisation_date, $technologies, $url, $intro)) {
             $success_add_project = 'Le projet est modifié';
             useTwig('addSingle.twig', ['success_add_project' => $success_add_project]);
         }
