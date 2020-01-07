@@ -47,13 +47,19 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 d-flex justify-content-between align-items-xl-center">
-                <a href="/"><img width="100" height="82" src="/portfolio/public/image/logo-mathieu.svg"></a>
+                <div class="nav d-flex align-items-center">
+                    <a href="/"><img width="100" height="82" src="/portfolio/public/image/logo-mathieu.svg"></a>
+                    <a href="/">Accueil</a>
+                    <a href="/projets">Projets</a>
+                </div>
                 <div class="tagline">
                     <div class="marginbottom10">Développeur web PHP/Synfony 4</div>
                     <div class="d-flex align-items-center justify-content-between">
                                 <span>
                                     <!--<a href="https://twitter.com/hdbtechnology" target="_blank"><i class="fab fa-twitter"></i></a>-->
                                     <a href="https://www.linkedin.com/in/mathieu-delrot-20532986/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="/portfolio/public/image/cv-mathieu-delrot.pdf" class="icon-menu" target="_blank">CV</a>
+                                    <a href="https://github.com/MathieuDelrot" target="_blank"><i class="fab fa-github"></i></a>
                                 </span>
                         <a href="/contact" class="button">Me contacter</a>
                     </div>
@@ -93,6 +99,11 @@
                 <div class="col-md-3">
 
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Copyright © {{ "now"|date("Y") }} Mathieu DELROT - développeur web PHP / Symfony | <a href="/admin">Connexion admin</a></p>
             </div>
         </div>
     </div>

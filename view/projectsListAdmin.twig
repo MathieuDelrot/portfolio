@@ -13,8 +13,8 @@
             {% for project in projectlist  %}
                 <div class="row">
                     <div class="col-md-12">
-                        <a href="/admin/editer-un-projet/{{ project.id }}"><h3>{{ project.title }}</h3></a>
-                        <p>{{ project.intro }}</p>
+                        <a href="/admin/editer-un-projet/{{ project.id }}"><h3>{{ project.title|raw }}</h3></a>
+                        <p>{{ project.intro|raw }}</p>
                         <a class="btn btn-primary" href="/admin/editer-un-projet/{{ project.id }}">Editer</a>
                     </div>
                 </div>

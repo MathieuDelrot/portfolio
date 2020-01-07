@@ -26,12 +26,21 @@ function getProject($id)
     return $project;
 }
 
+function getLastProjects()
+{
+    $projectManager = new ProjectManager();
+    $projects = $projectManager->getLastProjects();
+    return $projects;
+}
+
 function getProjects()
 {
     $projectManager = new ProjectManager();
     $projects = $projectManager->getProjects();
     return $projects;
 }
+
+
 
 function getConnectionForm()
 {
@@ -85,8 +94,12 @@ function addAccount($firstName, $email, $password)
 
 function getHomePage()
 {
+    useTwig('home.twig', ['projectlist' => getLastProjects()]);
+}
 
-    useTwig('home.twig', ['projectlist' => getProjects()]);
+function getProjectsPage()
+{
+    useTwig('projects.twig', ['projectlist' => getProjects()]);
 }
 
 function getContactPage()
@@ -217,7 +230,7 @@ function addComment($id)
             $session = new SessionManager();
             $first_name = $session->vars['Auth']['first_name'];
             $commentManager = new ComManager();
-            $affectedLines = $commentManager->projectComment($id, $first_name, $comment);
+            $affectedLines = $commentManager->addComment($id, $first_name, $comment);
 
             if ($affectedLines === false) {
                 throw new Exception('Impossible d\'ajouter le commentaire !');
@@ -235,7 +248,7 @@ function addComment($id)
 function askResetingPassword($id)
 {
     $success = "renseignez votre e-mail pour réinitialiser votre mot de passe";
-    getSingleTemplate(true,true,false,true,$id,$success,true);
+    getSingleTemplate(true,true,false,true,$id,$success,false);
 }
 
 function askNewPassword($id)

@@ -25,6 +25,10 @@ $router->map( 'GET', '/', function() {
     getHomePage();
 });
 
+$router->map( 'GET|POST', '/projets', function() {
+    getProjectsPage();
+});
+
 $router->map( 'GET|POST', '/contact', function() {
     getContactPage();
 });
@@ -33,7 +37,7 @@ $router->map( 'GET|POST', '/projet/[*:slug]-[i:id]', function($slug, $id) {
     getProjectPage($id);
 });
 
-$router->map( 'GET|POST', '/[*:slug]-[i:id]/[connection:action]', function($slug, $id) {
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/[connexion:action]', function($slug, $id) {
     askConnection($slug, $id);
 });
 
@@ -75,7 +79,7 @@ $router->map( 'GET|POST', '/admin/home', function() {
 });
 
 $router->map( 'GET|POST', '/admin/projets', function() {
-    getProjectsPage();
+    getProjectsAdminPage();
 });
 $router->map( 'GET|POST', '/admin/ajouter-un-projet', function() {
     addProjectPage();

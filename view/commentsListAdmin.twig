@@ -10,9 +10,9 @@
                         <div class="col-md-12">
                             <h4>Id du commentaire : {{ comment.id }}</h4>
                             <h4>Id du portfolio : {{ comment.portfolio_id }}</h4>
-                            <h4>Pseudo : {{ comment.pseudo }}</h4>
+                            <h4>Pseudo : {{ comment.pseudo|raw }}</h4>
                             <h5>Date : {{ comment.comment_date }}</h5>
-                            <p>Commentaire : {{ comment.content }}</p>
+                            <p>Commentaire : {{ comment.content|raw }}</p>
                             <a class="btn btn-success" href="/admin/commentaires/valider-{{ comment.id }}">Valider</a>
                             <a class="btn btn-danger" href="/admin/commentaires/supprimer-{{ comment.id }}">Supprimer</a>
                         </div>

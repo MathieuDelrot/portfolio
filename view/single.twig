@@ -3,9 +3,27 @@
 {% block content %}
     <div class="container margintop200">
         <div class="row">
+            <div class="col-md-8">
+                <h1>{{ project.title }}</h1>
+                <p><strong>Modifié le : </strong>{{ project.modification_date|date("d/m/Y")  }}<br>
+                <strong>Auteur : </strong> Mathieu DELROT</p>
+                <p>{{ project.intro|raw }}</p>
+                <div>
+                    <p>{{ project.content|raw }}</p>
+                </div>
+            </div>
+            <div class="col-md-4 info-project">
+                <p><strong>Date de mise en ligne : </strong>{{ project.realisation_date|raw }}<br>
+                <strong>Technologies : </strong>{{ project.technologies|raw }}<br>
+                <a href="{{ project.url }}" target="_blank">Voir le site web</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
             <div class="col-md-12">
                 {% if error is not empty %}
-                    <div class="alert alert-danger">
+                    <div id="alert" class="alert alert-danger">
                         {{ error }}
                     </div>
                 {% endif %}
@@ -32,56 +50,11 @@
                         </form>
                     {% endif %}
                 {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <h1>{{ project.title }}</h1>
-                <p>{{ project.intro }}</p>
-            </div>
-            <div class="col-md-4">
-                <p><strong>Date de mise en ligne: </strong>{{ project.realisation_date }}<br>
-                <strong>Technologies: </strong>{{ project.technologies }}<br>
-                <a href="{{ project.url }}" target="_blank">Voir le site web</a></p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <p>{{ project.content }}</p>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                {% if connectionform is not empty %}
-                    {% if accountform is not empty %}
-                        <h3>Connectez-vous ou inscrivez-vous pour laisser des commentaires</h3>
-                    {% endif %}
-                {% endif %}
-                {% if commentlist is defined %}
-                    <h3>Les commentaires</h3>
-                    {% for comment in commentlist  %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4>{{ comment.pseudo }}</h4>
-                                <h5>{{ comment.comment_date }}</h5>
-                                <p>{{ comment.content }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                {% if connectionform is not empty %}
+                {% if connectionform is not empty%}
                     {% if accountform is not empty %}
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="connection-tab" data-toggle="tab" role="tab" href="#connection">Connexion</a>
+                                <a class="nav-link active" id="connection-tab" data-toggle="tab" role="tab" href="#connexion">Connexion</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="inscription-tab" data-toggle="tab" role="tab" href="#inscription">Inscription</a>
@@ -89,17 +62,17 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="connection" role="tabpanel" aria-labelledby="connection-tab">
-                                <form action="/{{ project.title }}-{{ project.id }}/connection" method="POST">
+                                <form action="/{{ project.slug }}-{{ project.id }}/connexion" method="POST">
                                     {% autoescape %}
                                         {{ connectionform.email|raw }}
                                         {{ connectionform.password|raw }}
                                         {{ connectionform.submit|raw }}
                                     {% endautoescape %}
                                 </form>
-                                <a href="/{{ project.title }}-{{ project.id }}/mot-de-passe-oublie">Mot de passe oublié ?</a>
+                                <a href="/{{ project.slug }}-{{ project.id }}/mot-de-passe-oublie">Mot de passe oublié ?</a>
                             </div>
-                            <div class="tab-pane fade" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
-                                <form action="/{{ project.title }}-{{ project.id }}/inscription" method="POST">
+                            <div class="tab-pane fade show" id="inscription" role="tabpanel" aria-labelledby="inscription-tab">
+                                <form action="/{{ project.slug }}-{{ project.id }}/inscription" method="POST">
                                     {% autoescape %}
                                         {{ accountform.first_name_account|raw }}
                                         {{ accountform.email|raw }}
@@ -112,13 +85,13 @@
                     {% endif  %}
                 {% endif  %}
                 {% if commentform is not empty %}
-                        <form action="/{{ project.title }}-{{ project.id }}/ajouter-un-commentaire" method="POST">
+                        <form action="/{{ project.slug }}-{{ project.id }}/ajouter-un-commentaire" method="POST">
                             {% autoescape %}
                                 {{ commentform.comment|raw }}
                                 {{ commentform.submit|raw }}
                             {% endautoescape %}
                         </form>
-                        <a href="/{{ project.title }}-{{ project.id }}/deconnexion">déconnexion</a>
+                        <a href="/{{ project.slug }}-{{ project.id }}/deconnexion">déconnexion</a>
                 {% endif %}
             </div>
         </div>

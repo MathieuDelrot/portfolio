@@ -1,3 +1,17 @@
+window.onload=scroolFunction ;
+
+function scroolFunction(){
+    var element = document.getElementById('alert');
+    var headerOffset = 130;
+    var elementPosition = element.getBoundingClientRect().top;
+    var offsetPosition = elementPosition - headerOffset;
+
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+    });
+}
+
 $(function() {
     var header = $(".fixed-top");
     $(window).scroll(function() {

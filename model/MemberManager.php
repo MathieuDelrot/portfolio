@@ -60,6 +60,24 @@ class MemberManager extends Manager
         return false;
     }
 
+    public function forgotPassword($email, $id, $slug)
+    {
+        $stmt = $this->bdd->prepare('SELECT id, password, first_name, password_key FROM member WHERE email = ?');
+        $stmt->bindParam(1, $email);
+        $stmt->execute();
+        if ($stmt->fetch()){
+            $password_key = uniqid();
+            $stmt = $this->bdd->prepare('UPDATE member SET password_key = ?, key_date = NOW() WHERE email = ?');
+            $stmt->bindParam(1, $password_key);
+            $stmt->bindParam(2, $email);
+            $stmt->execute();
+            $this->sendEmailResetPassword($email, $id, $slug, $password_key);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public function findPasswordKey($key)
     {
         $validityDate = new \DateTime();
@@ -87,23 +105,6 @@ class MemberManager extends Manager
         }
     }
 
-    public function forgotPassword($email, $id, $slug)
-    {
-        $stmt = $this->bdd->prepare('SELECT id, password, first_name, password_key FROM member WHERE email = ?');
-        $stmt->bindParam(1, $email);
-        $stmt->execute();
-        if ($stmt->fetch()){
-            $password_key = uniqid();
-            $stmt = $this->bdd->prepare('UPDATE member SET password_key = ?, key_date = NOW() WHERE email = ?');
-            $stmt->bindParam(1, $password_key);
-            $stmt->bindParam(2, $email);
-            $stmt->execute();
-            $this->sendEmailResetPassword($email, $id, $slug, $password_key);
-            return true;
-        }else{
-            return false;
-        }
-    }
 
 
     public function sendEmailResetPassword($email, $key, $id, $slug)

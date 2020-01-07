@@ -37,7 +37,7 @@ class FormManager extends Manager
             "first_name" => $this->input('text', 'firstname', 'Prénom'),
             "last_name" => $this->input('text', 'lastname', 'Nom'),
             "email" => $this->input('email', 'email', 'E-mail'),
-            "textarea" => $this->textarea('message', 'Votre message'),
+            "message" => $this->textarea('message', 'Votre message'),
             "submit" => $this->submit()
         );
         return $contact_form;

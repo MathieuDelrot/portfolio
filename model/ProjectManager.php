@@ -7,10 +7,9 @@ require_once 'Manager.php';
 class ProjectManager extends Manager
 {
 
-
-    public function project($title, $slug, $content, $realisation_date, $technologies, $url, $intro)
+    public function createProject($title, $slug, $content, $realisation_date, $technologies, $url, $intro)
     {
-        $stmt = $this->bdd->prepare('INSERT INTO portfolio_post (title, slug, content, modification_date, author_id, status, realisation_date, technologies, url, intro) VALUES(?, ?, ?, NOW(), 1, 1, ?, ?, ?, ?)');
+        $stmt = $this->bdd->prepare('INSERT INTO portfolio_post (title, slug, content, modification_date, author_id, realisation_date, technologies, url, intro) VALUES(?, ?, ?, NOW(), 1, ?, ?, ?, ?)');
         $stmt->bindParam(1, $title);
         $stmt->bindParam(2, $slug);
         $stmt->bindParam(3, $content);
@@ -22,9 +21,9 @@ class ProjectManager extends Manager
         return true;
     }
 
-    public function edit($id, $title, $slug, $content, $realisation_date, $technologies, $url, $intro)
+    public function editProject($id, $title, $slug, $content, $realisation_date, $technologies, $url, $intro)
     {
-        $stmt = $this->bdd->prepare('UPDATE portfolio_post SET title=?, slug=?, content=?, modification_date=NOW(), author_id=1, status=1, realisation_date=?, technologies=?, url=?, intro=? WHERE id = ?');
+        $stmt = $this->bdd->prepare('UPDATE portfolio_post SET title=?, slug=?, content=?, modification_date=NOW(), author_id=1, realisation_date=?, technologies=?, url=?, intro=? WHERE id = ?');
         $stmt->bindParam(1, $title);
         $stmt->bindParam(2, $slug);
         $stmt->bindParam(3, $content);
@@ -35,6 +34,12 @@ class ProjectManager extends Manager
         $stmt->bindParam(8, $id);
         $stmt->execute();
         return true;
+    }
+
+    public function getLastProjects()
+    {
+        $req = $this->bdd->query('SELECT * FROM portfolio_post ORDER BY id DESC LIMIT 2');
+        return $req;
     }
 
 
