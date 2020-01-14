@@ -5,9 +5,9 @@ h1,h2,h3,h4,h5,h6{
 body{
     font-family: 'Noto Sans', sans-serif;
     color: #545252;
-    /*background: #8E2DE2;
-    background: -webkit-linear-gradient(to right, #4A00E0, #8E2DE2);
-    background: linear-gradient(to right, #4A00E0, #8E2DE2);*/
+    /*background: #65ebd5;
+    background: -webkit-linear-gradient(to right, #4A00E0, #65ebd5);
+    background: linear-gradient(to right, #4A00E0, #65ebd5);*/
 }
 
 h1{
@@ -41,12 +41,12 @@ p{
 }
 
 a{
-    color: #9b04ea;
+    color: #aea8b1;
     text-decoration: none;
 }
 
 a:hover{
-    color: #9b04ea;
+    color: #aea8b1;
     text-decoration: underline;
 }
 
@@ -83,10 +83,10 @@ header .container{
 }
 
 header{
-    background: #8E2DE2;
+    background: #65ebd5;
     color: #fefefe;
-    background: -webkit-linear-gradient(to right, #2b0084, #8E2DE2);
-    background: linear-gradient(to right, #2b0084, #8E2DE2);
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
+    background: linear-gradient(to right, #23c7ac, #65ebd5);
 }
 
 .header-shadow{
@@ -184,15 +184,15 @@ header .nav a{
 
 
 .blue{
-    background-color: #2b0084;
+    background-color: #23c7ac;
 }
 
 .bluelight{
-    background-color: #7200c5;
+    background-color: #05ffd4;
 }
 
 .green{
-    background-color: #9b04ea;
+    background-color: #aea8b1;
 }
 
 .grey{
@@ -206,15 +206,15 @@ header .nav a{
 h2.subtitle{
     text-transform: uppercase;
     margin-bottom: 15px;
-    background: -webkit-linear-gradient(to right, #2b0084, #8E2DE2);
-    background: linear-gradient(to right, #2b0084, #8E2DE2);
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
+    background: linear-gradient(to right, #23c7ac, #65ebd5);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
 }
 
 .container.margintop200 h3{
-    color: #2b0084;
+    color: #23c7ac;
 }
 
 .tag{
@@ -250,7 +250,7 @@ h2.subtitle{
 }
 
 .studies-container{
-    border-left: 1px dotted #2b0084;
+    border-left: 1px dotted #23c7ac;
 }
 
 
@@ -262,7 +262,7 @@ h2.subtitle{
     -moz-border-radius: 7.5px;
     -webkit-border-radius: 7.5px;
     border-radius: 7.5px;
-    background-color: #2b0084;
+    background-color: #23c7ac;
     margin-right: 5px;
     margin-left: -5px;
 }
@@ -310,10 +310,10 @@ h2.subtitle{
 
 .container-profil{
     padding-top: 100px;
-    background: #8E2DE2;
+    background: #65ebd5;
     color: #fefefe;
-    background: -webkit-linear-gradient(to right, #2b0084, #8E2DE2);
-    background: linear-gradient(to right, #2b0084, #8E2DE2);
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
+    background: linear-gradient(to right, #23c7ac, #65ebd5);
 }
 
 .container-profil h2{
