@@ -33,6 +33,11 @@ $router->map( 'GET|POST', '/contact', function() {
     getContactPage();
 });
 
+$router->map( 'GET|POST', '/contact/[message:action]', function() {
+   sendMessage();
+});
+
+
 $router->map( 'GET|POST', '/projet/[*:slug]-[i:id]', function($slug, $id) {
     getProjectPage($id);
 });
@@ -54,15 +59,15 @@ $router->map( 'GET|POST', '/[*:slug]-[i:id]/mot-de-passe-oublie', function($slug
     askResetingPassword($id);
 });
 
-$router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialisation-mot-de-passe', function($slug, $id){
-    askNewPassword($id);
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialiser-mot-de-passe', function($slug, $id){
+    askNewPassword($slug, $id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialiser-mot-de-passe/[*:key]', function($slug, $id, $key){
-    resetingPassord($id, $key);
+    resetingPassword($id,$key);
 });
 
-$router->map( 'GET|POST', '/[*:slug]-[i:id]/nouveau-mot-de-passe-[*:key]', function($slug, $id, $key){
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/nouveau-mot-de-passe/[*:key]', function($slug, $id, $key){
     newPassword($id, $key);
 });
 
@@ -100,7 +105,6 @@ $router->map( 'GET|POST', '/admin/editer-projet', function(){
 $router->map( 'GET|POST', '/admin/commentaires', function(){
     getAdminComments();
 });
-
 
 $router->map( 'GET|POST', '/admin/commentaires/valider-[i:id]', function($id){
     validComment($id);

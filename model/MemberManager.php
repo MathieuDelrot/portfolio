@@ -71,7 +71,7 @@ class MemberManager extends Manager
             $stmt->bindParam(1, $password_key);
             $stmt->bindParam(2, $email);
             $stmt->execute();
-            $this->sendEmailResetPassword($email, $id, $slug, $password_key);
+            $this->sendEmailResetPassword($email, $password_key, $slug, $id);
             return true;
         }else{
             return false;
@@ -107,7 +107,7 @@ class MemberManager extends Manager
 
 
 
-    public function sendEmailResetPassword($email, $key, $id, $slug)
+    public function sendEmailResetPassword($email, $key, $slug, $id)
     {
         //Mettre le message dans un template
         $to      = $email;
@@ -121,7 +121,7 @@ class MemberManager extends Manager
                 
                     <div>
                             <p>Vous souhaitez réinitialiser votre mot de passe</p>
-                            <p>"<a href ="https://www.mathieu-delrot.fr/' . $slug . '-' . $id . '/reinitialiser-mot-de-passe/' . $key . '">Cliquer sur le lien :</a>"</p>
+                            <p>"<a href ="https://www.mathieu-delrot.fr/' . $slug . '-' . $id . '/reinitialiser-mot-de-passe/' . $key . '">Cliquer ici</a>"</p>
                     
                     </div>
                 </body>
@@ -141,7 +141,7 @@ class MemberManager extends Manager
         $stmt = $this->bdd->prepare('UPDATE member SET password = ? WHERE password_key = ?');
         $stmt->bindParam(1, $hash);
         $stmt->bindParam(2, $key);
-        $stmt->exeute();
+        $stmt->execute();
         return true;
     }
 

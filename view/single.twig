@@ -22,18 +22,27 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                {% if commentlist is not empty %}
+                    {% for comment in commentlist %}
+                        <div class="mb-5">
+                            <h4>{{ comment.pseudo|raw }}</h4>
+                            <h5>Date : {{ comment.comment_date }}</h5>
+                            <p>Commentaire : {{ comment.content|raw }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 {% if error is not empty %}
                     <div id="alert" class="alert alert-danger">
                         {{ error }}
                     </div>
                 {% endif %}
                 {% if success is not empty %}
-                    <div class="alert alert-success">
+                    <div id="alert" class="alert alert-success">
                         {{ success }}
                     </div>
                 {% endif %}
                 {% if resetpasswordform is not empty %}
-                    <form action="/{{ project.title }}-{{ project.id }}/reinitialisation-mot-de-passe" method="POST">
+                    <form action="/{{ project.slug }}-{{ project.id }}/reinitialiser-mot-de-passe" method="POST">
                         {% autoescape %}
                             {{ resetpasswordform.email|raw }}
                             {{ resetpasswordform.submit|raw }}
@@ -42,7 +51,7 @@
                 {% endif %}
                 {% if newpasswordform is defined %}
                     {% if key is defined %}
-                        <form action="/{{ project.title }}-{{ project.id }}/nouveau-mot-de-passe-{{ key }}" method="POST">
+                        <form action="/{{ project.slug }}-{{ project.id }}/nouveau-mot-de-passe/{{ key }}" method="POST">
                             {% autoescape %}
                                 {{ newpasswordform.password|raw }}
                                 {{ newpasswordform.submit|raw }}

@@ -1,5 +1,6 @@
 <?php
 use Model\ComManager;
+use Model\MessageManager;
 use Model\FormManager;
 use Model\Manager;
 use Model\MemberManager;
@@ -12,6 +13,7 @@ use Model\AdminManager;
 require_once '../model/Manager.php';
 require_once '../model/AdminManager.php';
 require_once '../model/MemberManager.php';
+require_once '../model/MessageManager.php';
 require_once '../model/ProjectManager.php';
 require_once '../model/FormManager.php';
 require_once '../model/ComManager.php';
@@ -39,8 +41,6 @@ function getProjects()
     $projects = $projectManager->getProjects();
     return $projects;
 }
-
-
 
 function getConnectionForm()
 {
@@ -102,42 +102,79 @@ function getProjectsPage()
     useTwig('projects.twig', ['projectlist' => getProjects()]);
 }
 
-function getContactPage()
+function getContactPage($error = null, $success = null)
 {
     $form = new FormManager();
     $contact_form = $form->getContactForm();
-    useTwig('contact.twig', ['contactform' => $contact_form]);
+    if(isset($error)){
+        useTwig('contact.twig', [
+            'error' => $error,
+            'contactform' => $contact_form
+        ]);
+    }elseif (isset($success)){
+        useTwig('contact.twig', [
+            'success' => $success,
+            'contactform' => $contact_form
+        ]);
+    }else{
+        useTwig('contact.twig', ['contactform' => $contact_form]);
+    }
+}
+
+
+function sendMessage()
+{
+    if (!empty(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS)) and !empty(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS) and !empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS)))) {
+        $firstName = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS);
+        $lastName = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS);
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
+        $emailManager = new MessageManager();
+        $affectedLines = $emailManager->addMessage($firstName, $lastName, $email, $message);
+
+        if ($affectedLines === false) {
+            $error = "Votre message n'a pas été envoyé";
+            $success = null;
+        }
+        else {
+            $error = null;
+            $success = "Votre message à bien été envoyé";
+        }
+
+        getContactPage($error, $success);
+
+    }
 }
 
 function getSingleTemplate($connection = false, $createAccount = false, $commentForm = false, $resetPasswordForm = false, $id, $error = false, $success = false, $key = false, $newPasswordForm = false)
 {
-        if($connection == true){
-            $connection = getConnectionForm();
-        }
+    if($connection == true){
+        $connection = getConnectionForm();
+    }
 
-        if( $createAccount == true) {
-            $createAccount = getCreatAccountForm();
-        }
+    if( $createAccount == true) {
+        $createAccount = getCreatAccountForm();
+    }
 
-        if($commentForm == true) {
-            $commentForm = getCommentForm();
-        }
+    if($commentForm == true) {
+        $commentForm = getCommentForm();
+    }
 
-        if($resetPasswordForm == true) {
-            $form = new FormManager();
-            $resetPasswordForm = $form->getResetPasswordForm();
-        }
+    if($resetPasswordForm == true) {
+        $form = new FormManager();
+        $resetPasswordForm = $form->getResetPasswordForm();
+    }
 
-        if($key == true) {
-            return $key;
-        }
+    if($key == true) {
+        $k = $key;
+    }
 
-        if($newPasswordForm == true) {
-            $newPasswordForm = newPasswordForm();
-        }
+    if($newPasswordForm == true) {
+        $newPasswordForm = newPasswordForm();
+    }
 
 
-        useTwig('single.twig', [
+    useTwig('single.twig', [
         'project' => getProject($id),
         'commentlist' => getComments($id),
         'error' => $error,
@@ -146,9 +183,9 @@ function getSingleTemplate($connection = false, $createAccount = false, $comment
         'accountform' => $createAccount,
         'commentform' => $commentForm,
         'resetpasswordform' => $resetPasswordForm,
-        'key' => $key,
+        'key' => $k,
         'newpasswordform' => $newPasswordForm,
-        ]);
+    ]);
 }
 
 
@@ -251,7 +288,7 @@ function askResetingPassword($id)
     getSingleTemplate(true,true,false,true,$id,$success,false);
 }
 
-function askNewPassword($id)
+function askNewPassword($slug, $id)
 {
     $MM = new MemberManager();
     $findAccount = $MM->forgotPassword(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), $id, $slug);
@@ -265,7 +302,7 @@ function askNewPassword($id)
     }
 }
 
-function resetingPassord($id, $key)
+function resetingPassword($id, $key)
 {
     $success = "réinitialisez votre mot de passe";
     getSingleTemplate(true,true,false,false,$id,false,$success, $key, true);
@@ -273,8 +310,16 @@ function resetingPassord($id, $key)
 
 function newPassword($id, $key)
 {
-    changePassword($key);
-    if (changePassword($key) == true) {
+    $resetPassword = false;
+    if (!empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
+        $MM = new MemberManager();
+        $resetPassword = $MM->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS), $key);
+//        return $resetPassword;
+        $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
+        getSingleTemplate(true,true,false,false,$id,false,$success);
+        var_dump($resetPassword);
+    }
+    if ($resetPassword == true) {
         $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
         getSingleTemplate(true,true,false,false,$id,false,$success);
     } else {
@@ -297,13 +342,4 @@ function newPasswordForm()
     $reset_form = $form->getNewPasswordForm();
 
     return $reset_form;
-}
-
-function changePassword($key)
-{
-    if (filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS)){
-        $MM = new MemberManager();
-        $resetPassword = $MM->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS),$key);
-        return $resetPassword;
-    }
 }
