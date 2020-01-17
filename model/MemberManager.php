@@ -24,6 +24,7 @@ class MemberManager extends Manager
             'email' => $email,
             'password' => $password
         );
+        return true;
     }
 
     public function sendEmailSuccess($first_name, $email)

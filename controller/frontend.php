@@ -82,13 +82,7 @@ function addAccount($firstName, $email, $password)
 
     $MM = new MemberManager();
     $affectedLines = $MM->createAccount($firstName, $email, $password);
-
-    if ($affectedLines === false) {
-        throw new Exception('Impossible de créer votre compte !');
-    }
-    else {
-        $MM->sendEmailSuccess($firstName, $email);
-    }
+    return $affectedLines;
 
 }
 
@@ -237,13 +231,19 @@ function askInscription($slug, $id)
             $error = "Vous avez déja un compte, veuillez vous connecter";
             getSingleTemplate(true,true,false,false,$id,$error,false);
         } else {
-            addAccount(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
-            $success = 'Votre compte est créé vous pouvez laisser des commentaires';
-            getSingleTemplate(false,false,true,false,$id,$success,true);
+            $inscription = addAccount(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+            if($inscription == true){
+                $success = 'Votre compte est créé vous pouvez laisser des commentaires';
+                getSingleTemplate(false,false,true,false,$id, false,$success);
+            }else{
+                $error = 'Votre compte n\'a pas été créé';
+                getSingleTemplate(true,true,false,false,$id,$error,false);
+            }
         }
     }
     else {
-        throw new Exception('Tous les champs ne sont pas remplis !');
+        $error = 'Tous les champs n\'ont pas été remplis';
+        getSingleTemplate(true,true,false,false,$id,$error,false);
     }
 }
 

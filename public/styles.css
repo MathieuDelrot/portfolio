@@ -85,8 +85,11 @@ header .container{
 header{
     background: #65ebd5;
     color: #fefefe;
-    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
-    background: linear-gradient(to right, #23c7ac, #65ebd5);
+    background: -moz-linear-gradient(to right, #23c7ac, #65ebd5); /* FF3.6+ */
+    background: -webkit-gradient(to right, #23c7ac, #65ebd5); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(to right, #23c7ac, #65ebd5); /* Opera 11.10+ */
+    background: -ms-linear-gradient(to right, #23c7ac, #65ebd5); /* IE10+ */
 }
 
 .header-shadow{
@@ -206,8 +209,11 @@ header .nav a{
 h2.subtitle{
     text-transform: uppercase;
     margin-bottom: 15px;
-    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
-    background: linear-gradient(to right, #23c7ac, #65ebd5);
+    background: -moz-linear-gradient(to right, #23c7ac, #65ebd5); /* FF3.6+ */
+    background: -webkit-gradient(to right, #23c7ac, #65ebd5); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(to right, #23c7ac, #65ebd5); /* Opera 11.10+ */
+    background: -ms-linear-gradient(to right, #23c7ac, #65ebd5); /* IE10+ */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
@@ -312,8 +318,11 @@ h2.subtitle{
     padding-top: 100px;
     background: #65ebd5;
     color: #fefefe;
-    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
-    background: linear-gradient(to right, #23c7ac, #65ebd5);
+    background: -moz-linear-gradient(to right, #23c7ac, #65ebd5); /* FF3.6+ */
+    background: -webkit-gradient(to right, #23c7ac, #65ebd5); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(to right, #23c7ac, #65ebd5); /* Opera 11.10+ */
+    background: -ms-linear-gradient(to right, #23c7ac, #65ebd5); /* IE10+ */
 }
 
 .container-profil h2{
