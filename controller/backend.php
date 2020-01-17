@@ -27,16 +27,16 @@ function getAdminConnectionForm()
 
 function getAdminConnection()
 {
-     if (Auth::adminIsLogged()) {
-         $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
-         useTwig('homeAdmin.twig', [
-             'success_connection' => $success_connection
-         ]);
-     } else {
-         useTwig('homeAdmin.twig', [
-             'adminconnectionform' => getAdminConnectionForm()
-         ]);
-     }
+    if (Auth::adminIsLogged()) {
+        $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
+        useTwig('homeAdmin.twig', [
+            'success_connection' => $success_connection
+        ]);
+    } else {
+        useTwig('homeAdmin.twig', [
+            'adminconnectionform' => getAdminConnectionForm()
+        ]);
+    }
 }
 
 function getAdminHomePage()
@@ -70,13 +70,13 @@ function getAdminHomePage()
 
 function getProjectsAdminPage()
 {
-     if (Auth::adminIsLogged()) {
-         useTwig('projectsListAdmin.twig', ['projectlist' => getProjects()]);
-     }
-     else {
-         $error_connection = 'Mauvais identifiant ou mot de passe !';
-         useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
-     }
+    if (Auth::adminIsLogged()) {
+        useTwig('projectsListAdmin.twig', ['projectlist' => getProjects()]);
+    }
+    else {
+        $error_connection = 'Mauvais identifiant ou mot de passe !';
+        useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
+    }
 }
 
 function projectForm()
@@ -146,7 +146,7 @@ function editProjectPage($id)
         useTwig('addSingle.twig', [
             'editprojectform' => editProjectForm($id),
             'success_add_project' => $success_add_project
-            ]);
+        ]);
     } else {
         $error_connection = 'Vous n\'êtes pas autorisé à modifier ce projet';
         useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
@@ -210,7 +210,7 @@ function deleteComment($id)
     if (Auth::adminIsLogged()) {
         $comManager = new ComManager();
         $comManager->deleteComment($id);
-        useTwig('commentsListAdmin.twig', ['commentlist' => commentsList()]);
+        print_r($twig->render('commentsListAdmin.twig', ['commentlist' => commentsList()]));
     } else {
         $error_connection = 'Mauvais identifiant ou mot de passe !';
         print_r($twig->render('homeAdmin.twig', ['error_connection' => $error_connection]));

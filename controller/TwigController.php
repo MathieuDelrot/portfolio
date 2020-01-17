@@ -1,5 +1,6 @@
 <?php
 
+
 function useTwig($template, array $variables){
     $loader = new \Twig\Loader\FilesystemLoader('../view');
     $twig = new \Twig\Environment($loader, [

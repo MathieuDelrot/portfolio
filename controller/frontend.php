@@ -82,7 +82,7 @@ function addAccount($firstName, $email, $password)
 
     $MM = new MemberManager();
     $affectedLines = $MM->createAccount($firstName, $email, $password);
-    return $affectedLines;
+    var_dump($affectedLines);
 
 }
 

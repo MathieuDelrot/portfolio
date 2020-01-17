@@ -34,7 +34,7 @@ $router->map( 'GET|POST', '/contact', function() {
 });
 
 $router->map( 'GET|POST', '/contact/[message:action]', function() {
-   sendMessage();
+    sendMessage();
 });
 
 
@@ -67,7 +67,7 @@ $router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialiser-mot-de-passe/[*:key]',
     resetingPassword($id,$key);
 });
 
-$router->map( 'GET|POST', '/[*:slug]-[i:id]/nouveau-mot-de-passe/[*:key]', function($slug, $id, $key){
+$router->map( 'GET|POST', '/[*:slug]-[i:id]/nouveau-mot-de-passe-[*:key]', function($slug, $id, $key){
     newPassword($id, $key);
 });
 
@@ -95,7 +95,7 @@ $router->map( 'GET|POST', '/admin/ajout-projet', function() {
 });
 
 $router->map( 'GET|POST', '/admin/editer-un-projet/[i:id]', function($id) {
-   editProjectPage($id);
+    editProjectPage($id);
 });
 
 $router->map( 'GET|POST', '/admin/editer-projet', function(){

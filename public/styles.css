@@ -367,6 +367,10 @@ input, textarea{
 
 
 @media screen and (max-width: 768px){
+    .tagline{
+        display: none;
+        visibility: hidden;
+    }
     h2.subtitle{
         text-align: left;
     }
