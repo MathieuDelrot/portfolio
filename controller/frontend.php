@@ -82,8 +82,7 @@ function addAccount($firstName, $email, $password)
 
     $MM = new MemberManager();
     $affectedLines = $MM->createAccount($firstName, $email, $password);
-    var_dump($affectedLines);
-
+    return $affectedLines;
 }
 
 function getHomePage()
@@ -256,6 +255,8 @@ function askDisconnection($slug, $id)
         $success= "Vous êtes déconnecté";
         getSingleTemplate(true,true,false,false,$id,false,$success);
     }
+    getSingleTemplate(true,true,false,false,$id,false,false);
+
 
 }
 
