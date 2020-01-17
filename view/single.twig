@@ -51,7 +51,7 @@
                 {% endif %}
                 {% if newpasswordform is defined %}
                     {% if key is defined %}
-                        <form action="/{{ project.slug }}-{{ project.id }}/nouveau-mot-de-passe/{{ key }}" method="POST">
+                            <input type="hidden" name="<?= \Volnix\CSRF\CSRF::TOKEN_NAME ?>" value="<?= \Volnix\CSRF\CSRF::getToken() ?>"/>
                             {% autoescape %}
                                 {{ newpasswordform.password|raw }}
                                 {{ newpasswordform.submit|raw }}

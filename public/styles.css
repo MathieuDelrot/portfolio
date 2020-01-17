@@ -85,11 +85,8 @@ header .container{
 header{
     background: #65ebd5;
     color: #fefefe;
-    background: -moz-linear-gradient(to right, #23c7ac, #65ebd5); /* FF3.6+ */
-    background: -webkit-gradient(to right, #23c7ac, #65ebd5); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(to right, #23c7ac, #65ebd5); /* Opera 11.10+ */
-    background: -ms-linear-gradient(to right, #23c7ac, #65ebd5); /* IE10+ */
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
+    background: linear-gradient(to right, #23c7ac, #65ebd5);
 }
 
 .header-shadow{
@@ -209,11 +206,8 @@ header .nav a{
 h2.subtitle{
     text-transform: uppercase;
     margin-bottom: 15px;
-    background: -moz-linear-gradient(to right, #23c7ac, #65ebd5); /* FF3.6+ */
-    background: -webkit-gradient(to right, #23c7ac, #65ebd5); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(to right, #23c7ac, #65ebd5); /* Opera 11.10+ */
-    background: -ms-linear-gradient(to right, #23c7ac, #65ebd5); /* IE10+ */
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
+    background: linear-gradient(to right, #23c7ac, #65ebd5);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
@@ -318,11 +312,8 @@ h2.subtitle{
     padding-top: 100px;
     background: #65ebd5;
     color: #fefefe;
-    background: -moz-linear-gradient(to right, #23c7ac, #65ebd5); /* FF3.6+ */
-    background: -webkit-gradient(to right, #23c7ac, #65ebd5); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(to right, #23c7ac, #65ebd5); /* Opera 11.10+ */
-    background: -ms-linear-gradient(to right, #23c7ac, #65ebd5); /* IE10+ */
+    background: -webkit-linear-gradient(to right, #23c7ac, #65ebd5);
+    background: linear-gradient(to right, #23c7ac, #65ebd5);
 }
 
 .container-profil h2{
@@ -367,10 +358,6 @@ input, textarea{
 
 
 @media screen and (max-width: 768px){
-    .tagline{
-        display: none;
-        visibility: hidden;
-    }
     h2.subtitle{
         text-align: left;
     }

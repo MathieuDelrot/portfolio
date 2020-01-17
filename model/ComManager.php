@@ -32,7 +32,7 @@ class ComManager extends Manager
 
     public function getComments($id)
     {
-        $comments = $this->bdd->prepare('SELECT pseudo, content, comment_date FROM comment WHERE project_id = ? AND validate = 1');
+        $comments = $this->bdd->prepare('SELECT pseudo, content, comment_date FROM comment WHERE project_id = ? AND validate = 1 DESC');
         $comments->bindParam(1, $id);
         $comments->execute();
         return $comments;

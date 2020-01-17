@@ -118,26 +118,27 @@ function getContactPage($error = null, $success = null)
 
 function sendMessage()
 {
-    if (!empty(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS)) and !empty(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS) and !empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS)))) {
-        $firstName = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS);
-        $lastName = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS);
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
-        $emailManager = new MessageManager();
-        $affectedLines = $emailManager->addMessage($firstName, $lastName, $email, $message);
+        if (!empty(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS)) and !empty(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS) and !empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS)))) {
+            $firstName = filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS);
+            $lastName = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS);
+            $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+            $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
+            $emailManager = new MessageManager();
+            $affectedLines = $emailManager->addMessage($firstName, $lastName, $email, $message);
 
-        if ($affectedLines === false) {
+            if ($affectedLines === false) {
+                $error = "Votre message n'a pas été envoyé";
+                $success = null;
+            } else {
+                $error = null;
+                $success = "Votre message à bien été envoyé";
+            }
+        } else {
             $error = "Votre message n'a pas été envoyé";
             $success = null;
         }
-        else {
-            $error = null;
-            $success = "Votre message à bien été envoyé";
-        }
-
         getContactPage($error, $success);
 
-    }
 }
 
 function getSingleTemplate($connection = false, $createAccount = false, $commentForm = false, $resetPasswordForm = false, $id, $error = false, $success = false, $key = false, $newPasswordForm = false)
@@ -199,6 +200,7 @@ function getProjectPage($id)
 
 function askConnection($slug, $id)
 {
+
     if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
         if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
             $error = "Format d'email erroné";

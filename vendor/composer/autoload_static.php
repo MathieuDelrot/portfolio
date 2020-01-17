@@ -14,6 +14,7 @@ class ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
+            'Twig\\Extensions\\' => 16,
             'Twig\\' => 5,
         ),
         'S' => 
@@ -24,6 +25,10 @@ class ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d
     );
 
     public static $prefixDirsPsr4 = array (
+        'Twig\\Extensions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/extensions/src',
+        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
@@ -41,11 +46,19 @@ class ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d
     public static $prefixesPsr0 = array (
         'T' => 
         array (
+            'Twig_Extensions_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/extensions/lib',
+            ),
             'Twig_' => 
             array (
                 0 => __DIR__ . '/..' . '/twig/twig/lib',
             ),
         ),
+    );
+
+    public static $classMap = array (
+        'AltoRouter' => __DIR__ . '/..' . '/altorouter/altorouter/AltoRouter.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -54,6 +67,7 @@ class ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d
             $loader->prefixLengthsPsr4 = ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d::$classMap;
 
         }, null, ClassLoader::class);
     }

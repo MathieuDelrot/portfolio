@@ -16,6 +16,7 @@
             {% endif %}
             <form action="/contact/message" method="POST">
                 {% autoescape %}
+                    {{ contactform.security|raw }}
                     {{ contactform.first_name|raw }}
                     {{ contactform.last_name|raw }}
                     {{ contactform.email|raw }}
