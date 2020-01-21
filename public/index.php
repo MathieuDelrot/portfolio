@@ -1,9 +1,12 @@
 <?php
 
-use App\Controller\FrontendController;
+use Controller\FrontendController;
 
+require_once '../Controller/FrontendController.php';
 require_once '../AltoRouter.php';
-require'vendor/autoload.php';
+require '../vendor/autoload.php';
+
+
 $router = new AltoRouter();
 
 session_start();

@@ -1,27 +1,29 @@
 <?php
 
-namespace App\Controller;
+namespace Controller;
 
 use Model\ComManager;
 use Model\MessageManager;
 use Model\FormManager;
 use Model\Manager;
 use Model\MemberManager;
-use App\Model\ProjectManager;
+use Model\ProjectManager;
 use Model\Logout;
 use Model\Auth;
 use Model\SessionManager;
 use Model\AdminManager;
 
+require_once '../Model/ProjectManager.php';
+
 
 class FrontendController{
 
     public function useTwig($template, array $variables){
-        $loader = new \Twig\Loader\FilesystemLoader('../view');
+        $loader = new \Twig\Loader\FilesystemLoader('../View');
         $twig = new \Twig\Environment($loader, [
             'debug' => true,
         ]);
-        $twig->addExtension(new Twig_Extension_Session());
+        $twig->addExtension(new \Twig_Extension_Session());
         $twig->addExtension(new \Twig\Extension\DebugExtension());
         print_r($twig->render($template, $variables));
     }
