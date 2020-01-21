@@ -78,7 +78,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	public function testAddRoutes()
 	{
 		$method = 'POST';
-		$route = '/[:controller]/[:action]';
+		$route = '/[:Controller]/[:action]';
 		$target = function(){};
 		
 		$this->router->addRoutes(array(
@@ -139,7 +139,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	public function testMap()
 	{
 		$method = 'POST';
-		$route = '/[:controller]/[:action]';
+		$route = '/[:Controller]/[:action]';
 		$target = function(){};
 		
 		$this->router->map($method, $route, $target);
@@ -155,7 +155,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	public function testMapWithName()
 	{
 		$method = 'POST';
-		$route = '/[:controller]/[:action]';
+		$route = '/[:Controller]/[:action]';
 		$target = function(){};
 		$name = 'myroute';
 		
@@ -182,17 +182,17 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	public function testGenerate()
 	{
 		$params = array(
-			'controller' => 'test',
+			'Controller' => 'test',
 			'action' => 'someaction'
 		);
 		
-		$this->router->map('GET', '/[:controller]/[:action]', function(){}, 'foo_route');
+		$this->router->map('GET', '/[:Controller]/[:action]', function(){}, 'foo_route');
 		
 		$this->assertEquals('/test/someaction',
 			$this->router->generate('foo_route', $params));
 		
 		$params = array(
-			'controller' => 'test',
+			'Controller' => 'test',
 			'action' => 'someaction',
 			'type' => 'json'
 		);
@@ -204,10 +204,10 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 
 	public function testGenerateWithOptionalUrlParts()
 	{
-		$this->router->map('GET', '/[:controller]/[:action].[:type]?', function(){}, 'bar_route');
+		$this->router->map('GET', '/[:Controller]/[:action].[:type]?', function(){}, 'bar_route');
 		
 		$params = array(
-			'controller' => 'test',
+			'Controller' => 'test',
 			'action' => 'someaction'
 		);
 		
@@ -215,7 +215,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 			$this->router->generate('bar_route', $params));
 		
 		$params = array(
-			'controller' => 'test',
+			'Controller' => 'test',
 			'action' => 'someaction',
 			'type' => 'json'
 		);
@@ -240,12 +240,12 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testMatch()
 	{
-		$this->router->map('GET', '/foo/[:controller]/[:action]', 'foo_action', 'foo_route');
+		$this->router->map('GET', '/foo/[:Controller]/[:action]', 'foo_action', 'foo_route');
 		
 		$this->assertEquals(array(
 			'target' => 'foo_action',
 			'params' => array(
-				'controller' => 'test',
+				'Controller' => 'test',
 				'action' => 'do'
 			),
 			'name' => 'foo_route'
@@ -256,7 +256,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array(
 			'target' => 'foo_action',
 			'params' => array(
-				'controller' => 'test',
+				'Controller' => 'test',
 				'action' => 'do'
 			),
 			'name' => 'foo_route'
@@ -284,7 +284,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	
 	public function testMatchWithServerVars()
 	{
-		$this->router->map('GET', '/foo/[:controller]/[:action]', 'foo_action', 'foo_route');
+		$this->router->map('GET', '/foo/[:Controller]/[:action]', 'foo_action', 'foo_route');
 		
 		$_SERVER['REQUEST_URI'] = '/foo/test/do';
 		$_SERVER['REQUEST_METHOD'] = 'GET';
@@ -292,7 +292,7 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array(
 			'target' => 'foo_action',
 			'params' => array(
-				'controller' => 'test',
+				'Controller' => 'test',
 				'action' => 'do'
 			),
 			'name' => 'foo_route'
@@ -301,12 +301,12 @@ class AltoRouterTest extends PHPUnit_Framework_TestCase
 	
 	public function testMatchWithOptionalUrlParts()
 	{
-		$this->router->map('GET', '/bar/[:controller]/[:action].[:type]?', 'bar_action', 'bar_route');
+		$this->router->map('GET', '/bar/[:Controller]/[:action].[:type]?', 'bar_action', 'bar_route');
 		
 		$this->assertEquals(array(
 			'target' => 'bar_action',
 			'params' => array(
-				'controller' => 'test',
+				'Controller' => 'test',
 				'action' => 'do',
 				'type' => 'json'
 			),

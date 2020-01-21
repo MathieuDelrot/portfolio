@@ -9,10 +9,10 @@ use Model\ProjectManager;
 use Model\Logout;
 use Model\Auth;
 
-require_once '../model/Manager.php';
-require_once '../model/ProjectManager.php';
-require_once '../model/FormManager.php';
-require_once '../model/ComManager.php';
+require_once '../Model/Manager.php';
+require_once '../Model/ProjectManager.php';
+require_once '../Model/FormManager.php';
+require_once '../Model/ComManager.php';
 require_once '../vendor/autoload.php';
 require_once 'TwigController.php';
 

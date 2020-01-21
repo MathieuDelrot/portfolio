@@ -1,45 +1,37 @@
 <?php
 
-use Model\Auth;
-use Model\Logout;
-use Model\Manager;
+use App\Controller\FrontendController;
 
 require_once '../AltoRouter.php';
-require_once '../controller/frontend.php';
-require_once '../controller/backend.php';
-require_once '../vendor/autoload.php';
-require_once '../model/Auth.php';
-require_once '../model/Manager.php';
-
+require'vendor/autoload.php';
 $router = new AltoRouter();
 
-$loader = new \Twig\Loader\FilesystemLoader('../view');
-$twig = new \Twig\Environment($loader, [
-    'debug' => true,
-]);
-$twig->addExtension(new Twig_Extension_Session());
-$twig->addExtension(new \Twig\Extension\DebugExtension());
 session_start();
 
 $router->map( 'GET', '/', function() {
-    getHomePage();
+    $frontController = new FrontendController();
+    $frontController->getHomePage();
 });
 
 $router->map( 'GET|POST', '/projets', function() {
-    getProjectsPage();
+    $frontController = new FrontendController();
+    $frontController->getProjectsPage();
 });
 
 $router->map( 'GET|POST', '/contact', function() {
-    getContactPage();
+    $frontController = new FrontendController();
+    $frontController->getContactPage();
 });
 
 $router->map( 'GET|POST', '/contact/[message:action]', function() {
-    sendMessage();
+    $frontController = new FrontendController();
+    $frontController->sendMessage();
 });
 
 
 $router->map( 'GET|POST', '/projet/[*:slug]-[i:id]', function($slug, $id) {
-    getProjectPage($id);
+    $frontController = new FrontendController();
+    $frontController->getProjectPage($id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/[connexion:action]', function($slug, $id) {

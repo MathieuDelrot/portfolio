@@ -7,7 +7,12 @@
         }
     ],
     "require": {
+        "altorouter/altorouter": "1.1.0",
+        "monolog/monolog": "1.0.*",
         "twig/twig": "^2.0",
-        "twig/extensions": "*"
+        "twig/extensions": "*",
+    },
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
     }
 }
