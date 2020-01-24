@@ -104,7 +104,7 @@ Named Block End-Tags
 --------------------
 
 Twig allows you to put the name of the block after the end tag for better
-readability:
+readability (the name after the ``endblock`` word must match the block name):
 
 .. code-block:: twig
 
@@ -113,8 +113,6 @@ readability:
             ...
         {% endblock inner_sidebar %}
     {% endblock sidebar %}
-
-Of course, the name after the ``endblock`` word must match the block name.
 
 Block Nesting and Scope
 -----------------------
@@ -196,10 +194,10 @@ importantly, how it does not work:
 
     {# base.twig #}
 
-    {% for project in projects %}
-        {% block project %}
-            <h1>{{ project.title }}</h1>
-            <p>{{ project.body }}</p>
+    {% for post in posts %}
+        {% block post %}
+            <h1>{{ post.title }}</h1>
+            <p>{{ post.body }}</p>
         {% endblock %}
     {% endfor %}
 
@@ -213,10 +211,10 @@ to make it overridable by a child template:
 
     {% extends "base.twig" %}
 
-    {% block project %}
+    {% block post %}
         <article>
-            <header>{{ project.title }}</header>
-            <section>{{ project.text }}</section>
+            <header>{{ post.title }}</header>
+            <section>{{ post.text }}</section>
         </article>
     {% endblock %}
 
@@ -226,10 +224,10 @@ executed template is then equivalent to the following one:
 
 .. code-block:: twig
 
-    {% for project in projects %}
+    {% for post in posts %}
         <article>
-            <header>{{ project.title }}</header>
-            <section>{{ project.text }}</section>
+            <header>{{ post.title }}</header>
+            <section>{{ post.text }}</section>
         </article>
     {% endfor %}
 
@@ -237,7 +235,7 @@ Let's take another example: a block included within an ``if`` statement:
 
 .. code-block:: twig
 
-    {% if projects is empty %}
+    {% if posts is empty %}
         {% block head %}
             {{ parent() }}
 
@@ -257,7 +255,7 @@ instead:
     {% block head %}
         {{ parent() }}
 
-        {% if projects is empty %}
+        {% if posts is empty %}
             <meta name="robots" content="noindex, follow">
         {% endif %}
     {% endblock head %}
