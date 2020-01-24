@@ -2,10 +2,12 @@
 
 namespace Model;
 
+require '../vendor/autoload.php';
 require_once 'Manager.php';
 
 class ProjectManager extends Manager
 {
+
     public function createProject($title, $slug, $content, $realisation_date, $technologies, $url, $intro)
     {
         $stmt = $this->bdd->prepare('INSERT INTO portfolio_post (title, slug, content, modification_date, author_id, realisation_date, technologies, url, intro) VALUES(?, ?, ?, NOW(), 1, ?, ?, ?, ?)');

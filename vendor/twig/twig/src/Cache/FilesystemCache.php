@@ -5,7 +5,7 @@
  *
  * (c) Fabien Potencier
  *
- * For the full copyright and license information, please View the LICENSE
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -67,8 +67,8 @@ class FilesystemCache implements CacheInterface
 
             if (self::FORCE_BYTECODE_INVALIDATION == ($this->options & self::FORCE_BYTECODE_INVALIDATION)) {
                 // Compile cached file into bytecode cache
-                if (\function_exists('opcache_invalidate')) {
-                    opcache_invalidate($key, true);
+                if (\function_exists('opcache_invalidate') && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) {
+                    @opcache_invalidate($key, true);
                 } elseif (\function_exists('apc_compile_file')) {
                     apc_compile_file($key);
                 }

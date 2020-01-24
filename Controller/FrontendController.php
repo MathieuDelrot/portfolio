@@ -2,117 +2,100 @@
 
 namespace Controller;
 
+require_once '../vendor/autoload.php';
+require_once '../Model/ProjectManager.php';
+require_once '../Model/FormManager.php';
+require_once '../Model/Auth.php';
+require_once '../Model/ComManager.php';
+require_once '../Model/MessageManager.php';
+require_once '../Model/Manager.php';
+require_once '../Model/MemberManager.php';
+require_once '../Model/SessionManager.php';
+require_once 'TwigController.php';
+
+
 use Model\ComManager;
 use Model\MessageManager;
 use Model\FormManager;
 use Model\Manager;
 use Model\MemberManager;
 use Model\ProjectManager;
-use Model\Logout;
 use Model\Auth;
 use Model\SessionManager;
 use Model\AdminManager;
-
-require_once '../Model/ProjectManager.php';
-
+use TwigController;
 
 class FrontendController{
 
-    public function useTwig($template, array $variables){
-        $loader = new \Twig\Loader\FilesystemLoader('../View');
-        $twig = new \Twig\Environment($loader, [
-            'debug' => true,
-        ]);
-        $twig->addExtension(new \Twig_Extension_Session());
-        $twig->addExtension(new \Twig\Extension\DebugExtension());
-        print_r($twig->render($template, $variables));
-    }
+
+    private $projectManager;
+
+    private $commentManager;
+
+    private $formManager;
+
+    private $memberManager;
+
+    private $messageManager;
+
+    private $sessionManager;
+
+    private $twigController;
 
 
-    public function getSingleTemplate($connection = false, $createAccount = false, $commentForm = false, $resetPasswordForm = false, $id, $error = false, $success = false, $key = false, $newPasswordForm = false)
+    public function __construct()
     {
         $projectManager = new ProjectManager();
-        $project = $projectManager->getProject($id);
+        $this->projectManager = $projectManager;
 
         $commentManager = new ComManager();
-        $comments = $commentManager->getComments($id);
+        $this->commentManager = $commentManager;
 
-        if($connection == true){
-            $form = new FormManager();
-            $connection = $form->getConnectionForm();
-        }
+        $formManager = new FormManager();
+        $this->formManager = $formManager;
 
-        if( $createAccount == true) {
-            $form = new FormManager();
-            $createAccount = $form->getCreateAccountForm();
-        }
+        $memberManager = new MemberManager();
+        $this->memberManager = $memberManager;
 
-        if($commentForm == true) {
-            $form = new FormManager();
-            $commentForm = $form->getCommentForm();
-        }
+        $messageManager = new MessageManager();
+        $this->messageManager = $messageManager;
 
-        if($resetPasswordForm == true) {
-            $form = new FormManager();
-            $resetPasswordForm = $form->getResetPasswordForm();
-        }
+        $sessionManager = new SessionManager();
+        $this->sessionManager = $sessionManager;
 
-        if($key == true) {
-            $k = $key;
-        }
-
-        if($newPasswordForm == true) {
-            $form = new FormManager();
-            $newPasswordForm = $form->newPasswordForm();
-        }
-
-
-        $this->useTwig('single.twig', [
-            'project' => $project,
-            'commentlist' => $comments,
-            'error' => $error,
-            'success' => $success,
-            'connectionform' => $connection,
-            'accountform' => $createAccount,
-            'commentform' => $commentForm,
-            'resetpasswordform' => $resetPasswordForm,
-            'key' => $k,
-            'newpasswordform' => $newPasswordForm,
-        ]);
+        $twigController = new TwigController();
+        $this->twigController = $twigController;
     }
 
 
     public function getHomePage()
     {
-        $projectManager = new ProjectManager();
-        $projects = $projectManager->getLastProjects();
-        $this->useTwig('home.twig', ['projectlist' => $projects]);
+        $projects = $this->projectManager->getLastProjects();
+        $this->twigController->useTwig('home.twig',['projectlist' => $projects]);
     }
 
 
-    function getProjectsPage()
+    public function getProjectsPage()
     {
-        $projectManager = new ProjectManager();
-        $project = $projectManager->getProject($id);
-        $this->useTwig('projects.twig', ['projectlist' => $project]);
+        $projects = $this->projectManager->getProjects();
+        $this->twigController->useTwig('projects.twig', ['projectlist' => $projects]);
     }
 
     function getContactPage($error = null, $success = null)
     {
-        $form = new FormManager();
-        $contact_form = $form->getContactForm();
+        $form = $this->formManager->getContactForm();
         if(isset($error)){
-            $this->useTwig('contact.twig', [
+            $this->twigController->useTwig('contact.twig', [
                 'error' => $error,
-                'contactform' => $contact_form
+                'contactform' => $form
             ]);
         }elseif (isset($success)){
-            $this->useTwig('contact.twig', [
+            $this->twigController->useTwig('contact.twig', [
                 'success' => $success,
-                'contactform' => $contact_form
+                'contactform' => $form
             ]);
         }else{
-            $this->useTwig('contact.twig', ['contactform' => $contact_form]);
+            $this->twigController->useTwig('contact.twig', ['contactform' => $form]);
         }
     }
 
@@ -123,8 +106,7 @@ class FrontendController{
             $lastName = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS);
             $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
             $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
-            $emailManager = new MessageManager();
-            $affectedLines = $emailManager->addMessage($firstName, $lastName, $email, $message);
+            $affectedLines = $this->messageManager->addMessage($firstName, $lastName, $email, $message);
 
             if ($affectedLines === false) {
                 $error = "Votre message n'a pas été envoyé";
@@ -143,65 +125,16 @@ class FrontendController{
 
     function getProjectPage($id)
     {
-
         if (Auth::isLogged() && $id > 0) {
-            $this->getSingleTemplate(false, false, true, false, $id);
+            $this->twigController->getSingleTemplate(false, false, true, false, $id);
 
         } elseif ($id > 0) {
-            $this->getSingleTemplate(true,true,false, false, $id);
-        } else
-        {
-            throw new Exception('Aucun identifiant de portfolio envoyé');
+            $this->twigController->getSingleTemplate(true,true,false, false, $id);
+        } else {
+            $error = 'Aucun identifiant de portfolio envoyé';
+            $this->twigController->getSingleTemplate(true,true,false, false, $id, $error);
         }
-
     }
-
-
-
-    function getProjects()
-    {
-        $projectManager = new ProjectManager();
-        $projects = $projectManager->getProjects();
-        return $projects;
-    }
-
-    function getComments($id)
-    {
-        $comManager = new ComManager();
-        $comments = $comManager->getComments($id);
-        return $comments;
-    }
-
-    function getConnection()
-    {
-        $MM = new MemberManager();
-        $member = $MM->connection(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
-        return $member;
-    }
-
-    function getCreatAccountForm()
-    {
-        $form = new FormManager();
-        $account_form = $form->getCreateAccountForm();
-        return $account_form;
-    }
-
-    function getCommentForm()
-    {
-        $form = new FormManager();
-        $comment_form = $form->getCommentForm();
-        return $comment_form;
-    }
-
-    function addAccount($firstName, $email, $password)
-    {
-
-        $MM = new MemberManager();
-        $affectedLines = $MM->createAccount($firstName, $email, $password);
-        return $affectedLines;
-    }
-
-
 
 
     function askConnection($slug, $id)
@@ -210,48 +143,53 @@ class FrontendController{
         if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
             if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
                 $error = "Format d'email erroné";
-                getSingleTemplate(true, true,false,false,$id,true, false);
+                $this->twigController->getSingleTemplate(true, true,false,false,$id,$error, false);
 
             } else {
-                getConnection();
-                if (getConnection() or Auth::isLogged()) {
+                $member = $this->memberManager->connection(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+
+                if ($member == true or Auth::isLogged()) {
                     $success = 'Vous êtes connecté vous pouvez laisser des commentaires';
-                    getSingleTemplate(false,false,true,false,$id,false, $success);
+                    $this->twigController->getSingleTemplate(false,false,true,false,$id,false, $success);
 
                 } else {
                     $error = 'Mauvais identifiant ou mot de passe !';
-                    getSingleTemplate(true,true,false,false,$id,$error,false);
+                    $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
                 }
             }
         } else {
-            throw new Exception('Vous n\'avez pas renseigné toutes les données');
+            $error = 'Toutes les donnés ne sont pas renseignées';
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
         }
     }
 
 
     function askInscription($slug, $id)
     {
+
+        $member = $this->memberManager->connection(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
             if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
                 $error = "Format d'email erroné";
-                getSingleTemplate(true,true,false,false,$id,$error,false);
-            } elseif (getConnection()) {
+                $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
+
+            } elseif ($member == true) {
                 $error = "Vous avez déja un compte, veuillez vous connecter";
-                getSingleTemplate(true,true,false,false,$id,$error,false);
+                $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
             } else {
-                $inscription = addAccount(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+                $inscription = $this->memberManager->createAccounts(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
                 if($inscription == true){
                     $success = 'Votre compte est créé vous pouvez laisser des commentaires';
-                    getSingleTemplate(false,false,true,false,$id, false,$success);
+                    $this->twigController->getSingleTemplate(false,false,true,false,$id, false,$success);
                 }else{
                     $error = 'Votre compte n\'a pas été créé';
-                    getSingleTemplate(true,true,false,false,$id,$error,false);
+                    $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
                 }
             }
         }
         else {
             $error = 'Tous les champs n\'ont pas été remplis';
-            getSingleTemplate(true,true,false,false,$id,$error,false);
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
         }
     }
 
@@ -260,12 +198,58 @@ class FrontendController{
         if(Auth::isLogged()){
             Auth::disconnect();
             $success= "Vous êtes déconnecté";
-            getSingleTemplate(true,true,false,false,$id,false,$success);
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
         }
-        getSingleTemplate(true,true,false,false,$id,false,false);
-
+        $this->twigController->getSingleTemplate(true,true,false,false,$id,false,false);
 
     }
+
+    function askResetingPassword($id)
+    {
+        $success = "renseignez votre e-mail pour réinitialiser votre mot de passe";
+        $this->twigController->getSingleTemplate(true,true,false,true,$id,$success,false);
+    }
+
+    function askNewPassword($slug, $id)
+    {
+        $findAccount = $this->memberManager->forgotPassword(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), $id, $slug);
+        if ($findAccount == true) {
+            $success = 'Vous allez recevoir un email pour réinitialiser votre mot de passe';
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
+
+        } else {
+            $error = 'Votre e-mail n\'est pas reconnu';
+            $this->twigController->getSingleTemplate(true,true,false,true,$id,$error,false);
+        }
+    }
+
+    function resetingPassword($id, $key)
+    {
+        $success = "réinitialisez votre mot de passe";
+        $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success, $key, true);
+    }
+
+    function newPassword($id, $key)
+    {
+        $resetPassword = false;
+        if (!empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
+            $resetPassword = $this->memberManager->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS), $key);
+//        return $resetPassword;
+            $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
+            var_dump($resetPassword);
+        }
+        if ($resetPassword == true) {
+            $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
+        } else {
+            $error = 'Votre mots de passe n\'est pas enregistré';
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false, $key, true);
+        }
+
+    }
+
+
 
     function addComment($id)
     {
@@ -274,17 +258,17 @@ class FrontendController{
 
             if(!empty(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS))){
                 $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS);
-                $session = new SessionManager();
-                $first_name = $session->vars['Auth']['first_name'];
-                $commentManager = new ComManager();
-                $affectedLines = $commentManager->addComment($id, $first_name, $comment);
+                $first_name = $this->sessionManager->vars['Auth']['first_name'];
+                $affectedLines = $this->commentManager->addComment($id, $first_name, $comment);
 
                 if ($affectedLines === false) {
-                    throw new Exception('Impossible d\'ajouter le commentaire !');
+                    $error = "Impossible d'ajouter votre commentaire";
+                    $this->twigController->getSingleTemplate(false,false,true,false,$id,$error);
+
                 }
                 else {
                     $success = "Votre commentaire à bien été pris en compte, nous allons le modérer";
-                    getSingleTemplate(false,false,true,false,$id,false,$success);
+                    $this->twigController->getSingleTemplate(false,false,true,false,$id,false,$success);
 
                 }
             }
@@ -292,66 +276,5 @@ class FrontendController{
 
     }
 
-    function askResetingPassword($id)
-    {
-        $success = "renseignez votre e-mail pour réinitialiser votre mot de passe";
-        getSingleTemplate(true,true,false,true,$id,$success,false);
-    }
-
-    function askNewPassword($slug, $id)
-    {
-        $MM = new MemberManager();
-        $findAccount = $MM->forgotPassword(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS), $id, $slug);
-        if ($findAccount == true) {
-            $success = 'Vous allez recevoir un email pour réinitialiser votre mot de passe';
-            getSingleTemplate(true,true,false,false,$id,false,$success);
-
-        } else {
-            $error = 'Votre e-mail n\'est pas reconnu';
-            getSingleTemplate(true,true,false,true,$id,$error,false);
-        }
-    }
-
-    function resetingPassword($id, $key)
-    {
-        $success = "réinitialisez votre mot de passe";
-        getSingleTemplate(true,true,false,false,$id,false,$success, $key, true);
-    }
-
-    function newPassword($id, $key)
-    {
-        $resetPassword = false;
-        if (!empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
-            $MM = new MemberManager();
-            $resetPassword = $MM->changePassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS), $key);
-//        return $resetPassword;
-            $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
-            getSingleTemplate(true,true,false,false,$id,false,$success);
-            var_dump($resetPassword);
-        }
-        if ($resetPassword == true) {
-            $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
-            getSingleTemplate(true,true,false,false,$id,false,$success);
-        } else {
-            $error = 'Votre mots de passe n\'est pas enregistré';
-            getSingleTemplate(true,true,false,false,$id,$error,false, $key, true);
-        }
-
-    }
-
-
-    function checkIfPasswordKeyExist(){
-        $MM = new MemberManager();
-        $findPassworKey = $MM->findPasswordKey(filter_input(INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS));
-        return $findPassworKey;
-    }
-
-    function newPasswordForm()
-    {
-        $form = new FormManager();
-        $reset_form = $form->getNewPasswordForm();
-
-        return $reset_form;
-    }
 
 }

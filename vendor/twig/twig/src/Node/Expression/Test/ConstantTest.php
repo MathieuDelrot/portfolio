@@ -5,7 +5,7 @@
  *
  * (c) Fabien Potencier
  *
- * For the full copyright and license information, please View the LICENSE
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -17,8 +17,8 @@ use Twig\Node\Expression\TestExpression;
 /**
  * Checks if a variable is the exact same value as a constant.
  *
- *    {% if project.status is constant('Project::PUBLISHED') %}
- *      the status attribute is exactly the same as Project::PUBLISHED
+ *    {% if post.status is constant('Post::PUBLISHED') %}
+ *      the status attribute is exactly the same as Post::PUBLISHED
  *    {% endif %}
  *
  * @author Fabien Potencier <fabien@symfony.com>

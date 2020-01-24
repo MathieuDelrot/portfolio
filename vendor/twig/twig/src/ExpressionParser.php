@@ -6,7 +6,7 @@
  * (c) Fabien Potencier
  * (c) Armin Ronacher
  *
- * For the full copyright and license information, please View the LICENSE
+ * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
@@ -163,13 +163,13 @@ class ExpressionParser
             $expr = $this->parseExpression($operator['precedence']);
             $class = $operator['class'];
 
-            return $this->parseProjectfixExpression(new $class($expr, $token->getLine()));
+            return $this->parsePostfixExpression(new $class($expr, $token->getLine()));
         } elseif ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '(')) {
             $this->parser->getStream()->next();
             $expr = $this->parseExpression();
             $this->parser->getStream()->expect(/* Token::PUNCTUATION_TYPE */ 9, ')', 'An opened parenthesis is not properly closed');
 
-            return $this->parseProjectfixExpression($expr);
+            return $this->parsePostfixExpression($expr);
         }
 
         return $this->parsePrimaryExpression();
@@ -286,7 +286,7 @@ class ExpressionParser
                 }
         }
 
-        return $this->parseProjectfixExpression($node);
+        return $this->parsePostfixExpression($node);
     }
 
     public function parseStringExpression()
@@ -386,7 +386,7 @@ class ExpressionParser
         return $node;
     }
 
-    public function parseProjectfixExpression($node)
+    public function parsePostfixExpression($node)
     {
         while (true) {
             $token = $this->parser->getCurrentToken();
