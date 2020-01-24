@@ -33,14 +33,14 @@ class FormManager extends Manager
 
     public function getContactForm()
     {
-        $contact_form = array(
+        $form= array(
             "first_name" => $this->input('text', 'firstname', 'Prénom'),
             "last_name" => $this->input('text', 'lastname', 'Nom'),
             "email" => $this->input('email', 'email', 'E-mail'),
             "message" => $this->textarea('message', 'Votre message'),
             "submit" => $this->submit()
         );
-        return $contact_form;
+        return $form;
 
     }
 

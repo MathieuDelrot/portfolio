@@ -22,6 +22,7 @@ class MemberManager extends Manager
         $session = new SessionManager();
         $session->vars['Auth'] = array(
             'email' => $email,
+            'first_name' => $first_name,
             'password' => $password
         );
         return true;
@@ -143,7 +144,6 @@ class MemberManager extends Manager
         $stmt->bindParam(1, $hash);
         $stmt->bindParam(2, $key);
         $stmt->execute();
-        return true;
     }
 
 

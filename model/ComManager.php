@@ -42,7 +42,6 @@ class ComManager extends Manager
     {
         $comments = $this->bdd->prepare('SELECT * FROM comment WHERE validate = 0');
         $comments->execute();
-
         return $comments;
     }
 
