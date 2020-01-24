@@ -1,130 +1,117 @@
 <?php
 
-require '../vendor/autoload.php';
+use Model\Auth;
+use Model\Logout;
+use Model\Manager;
+
 require_once '../AltoRouter.php';
-
-use Controller\FrontendController;
-use Controller\BackendController;
-
+require_once '../controller/frontend.php';
+require_once '../controller/backend.php';
+require_once '../vendor/autoload.php';
+require_once '../model/Auth.php';
+require_once '../model/Manager.php';
 
 $router = new AltoRouter();
 
+$loader = new \Twig\Loader\FilesystemLoader('../view');
+$twig = new \Twig\Environment($loader, [
+    'debug' => true,
+]);
+$twig->addExtension(new Twig_Extension_Session());
+$twig->addExtension(new \Twig\Extension\DebugExtension());
 session_start();
 
 $router->map( 'GET', '/', function() {
-    $frontController = new FrontendController();
-    $frontController->getHomePage();
+    getHomePage();
 });
 
 $router->map( 'GET|POST', '/projets', function() {
-    $frontController = new FrontendController();
-    $frontController->getProjectsPage();
+    getProjectsPage();
 });
 
 $router->map( 'GET|POST', '/contact', function() {
-    $frontController = new FrontendController();
-    $frontController->getContactPage();
+    getContactPage();
 });
 
 $router->map( 'GET|POST', '/contact/[message:action]', function() {
-    $frontController = new FrontendController();
-    $frontController->sendMessage();
+    sendMessage();
 });
 
 
 $router->map( 'GET|POST', '/projet/[*:slug]-[i:id]', function($slug, $id) {
-    $frontController = new FrontendController();
-    $frontController->getProjectPage($id);
+    getProjectPage($id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/[connexion:action]', function($slug, $id) {
-    $frontController = new FrontendController();
-    $frontController->askConnection($slug, $id);
+    askConnection($slug, $id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/[inscription:action]', function($slug, $id) {
-    $frontController = new FrontendController();
-    $frontController->askInscription($slug, $id);
+    askInscription($slug, $id);
 });
 
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/deconnexion', function($slug, $id){
-    $frontController = new FrontendController();
-    $frontController->askDisconnection($slug, $id);
+    askDisconnection($slug, $id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/mot-de-passe-oublie', function($slug, $id){
-    $frontController = new FrontendController();
-    $frontController->askResetingPassword($id);
+    askResetingPassword($id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialiser-mot-de-passe', function($slug, $id){
-    $frontController = new FrontendController();
-    $frontController->askNewPassword($slug, $id);
+    askNewPassword($slug, $id);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/reinitialiser-mot-de-passe/[*:key]', function($slug, $id, $key){
-    $frontController = new FrontendController();
-    $frontController->resetingPassword($id,$key);
+    resetingPassword($id,$key);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/nouveau-mot-de-passe-[*:key]', function($slug, $id, $key){
-    $frontController = new FrontendController();
-    $frontController->newPassword($id, $key);
+    newPassword($id, $key);
 });
 
 $router->map( 'GET|POST', '/[*:slug]-[i:id]/ajouter-un-commentaire', function($slug, $id){
-    $frontController = new FrontendController();
-    $frontController->addComment($id);
+    addComment($id);
 });
 
 $router->map( 'GET|POST', '/admin', function(){
-    $backendController = new BackendController();
-    $backendController->getAdminConnection();
+    getAdminConnection();
 });
 
 $router->map( 'GET|POST', '/admin/home', function() {
-    $backendController = new BackendController();
-    $backendController->getAdminHomePage();
+    getAdminHomePage();
 });
 
 $router->map( 'GET|POST', '/admin/projets', function() {
-    $backendController = new BackendController();
-    $backendController->getProjectsAdminPage();
+    getProjectsAdminPage();
 });
 $router->map( 'GET|POST', '/admin/ajouter-un-projet', function() {
-    $backendController = new BackendController();
-    $backendController->addProjectPage();
+    addProjectPage();
 });
 
 $router->map( 'GET|POST', '/admin/ajout-projet', function() {
-    $backendController = new BackendController();
-    $backendController->addProject();
+    addProject();
 });
 
 $router->map( 'GET|POST', '/admin/editer-un-projet/[i:id]', function($id) {
-    $backendController = new BackendController();
-    $backendController->editProjectPage($id);
+    editProjectPage($id);
 });
 
 $router->map( 'GET|POST', '/admin/editer-projet', function(){
-    $backendController = new BackendController();
-    $backendController->editProject();
+    editProject();
 });
 
 $router->map( 'GET|POST', '/admin/commentaires', function(){
-    $backendController = new BackendController();
-    $backendController->getAdminComments();
+    getAdminComments();
 });
 
 $router->map( 'GET|POST', '/admin/commentaires/valider-[i:id]', function($id){
-    $backendController = new BackendController();
-    $backendController->validComment($id);
+    validComment($id);
 });
 
 $router->map( 'GET|POST', '/admin/commentaires/supprimer-[i:id]', function($id){
-    $backendController = new BackendController();
-    $backendController->deleteComment($id);
+    deleteComment($id);
 });
 
 $match = $router->match();

@@ -17,8 +17,8 @@ use Twig\Node\Expression\TestExpression;
 /**
  * Checks if a variable is the exact same value as a constant.
  *
- *    {% if post.status is constant('Post::PUBLISHED') %}
- *      the status attribute is exactly the same as Post::PUBLISHED
+ *    {% if project.status is constant('Project::PUBLISHED') %}
+ *      the status attribute is exactly the same as Project::PUBLISHED
  *    {% endif %}
  *
  * @author Fabien Potencier <fabien@symfony.com>
