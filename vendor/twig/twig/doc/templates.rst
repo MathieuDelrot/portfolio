@@ -509,10 +509,10 @@ Twig allows expressions everywhere.
 
     The operator precedence is as follows, with the lowest-precedence operators
     listed first: ``?:`` (ternary operator), ``b-and``, ``b-xor``, ``b-or``,
-    ``or``, ``and``, ``==``, ``!=``, ``<=>``, ``<``, ``>``, ``>=``, ``<=``,
-    ``in``, ``matches``, ``starts with``, ``ends with``, ``..``, ``+``, ``-``,
-    ``~``, ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
-    (filters), ``[]``, and ``.``:
+    ``or``, ``and``, ``==``, ``!=``, ``<``, ``>``, ``>=``, ``<=``, ``in``,
+    ``matches``, ``starts with``, ``ends with``, ``..``, ``+``, ``-``, ``~``,
+    ``*``, ``/``, ``//``, ``%``, ``is`` (tests), ``**``, ``??``, ``|``
+    (filters), ``[]``, and ``.``.
 
     .. code-block:: twig
 
@@ -703,16 +703,16 @@ Tests can accept arguments too:
 
 .. code-block:: twig
 
-    {% if post.status is constant('Post::PUBLISHED') %}
+    {% if project.status is constant('Project::PUBLISHED') %}
 
 Tests can be negated by using the ``is not`` operator:
 
 .. code-block:: twig
 
-    {% if post.status is not constant('Post::PUBLISHED') %}
+    {% if project.status is not constant('Project::PUBLISHED') %}
 
     {# is equivalent to #}
-    {% if not (post.status is constant('Post::PUBLISHED')) %}
+    {% if not (project.status is constant('Project::PUBLISHED')) %}
 
 Go to the :doc:`tests<tests/index>` page to learn more about the built-in
 tests.
@@ -846,8 +846,11 @@ the modifiers on one side of a tag or on both sides:
 Extensions
 ----------
 
-Twig can be extended. If you want to create your own extensions, read the
-:ref:`Creating an Extension <creating_extensions>` chapter.
+Twig can be extended. If you are looking for new tags, filters, or functions,
+have a look at the Twig official `extension repository`_.
+
+If you want to create your own, read the :ref:`Creating an
+Extension<creating_extensions>` chapter.
 
 .. _`Twig bundle`:                https://github.com/Anomareh/PHP-Twig.tmbundle
 .. _`Jinja syntax plugin`:        http://jinja.pocoo.org/docs/integration/#vim
@@ -855,6 +858,7 @@ Twig can be extended. If you want to create your own extensions, read the
 .. _`Twig syntax plugin`:         http://plugins.netbeans.org/plugin/37069/php-twig
 .. _`Twig plugin`:                https://github.com/pulse00/Twig-Eclipse-Plugin
 .. _`Twig language definition`:   https://github.com/gabrielcorpse/gedit-twig-template-language
+.. _`extension repository`:       https://github.com/twigphp/Twig-extensions
 .. _`Twig syntax mode`:           https://github.com/bobthecow/Twig-HTML.mode
 .. _`other Twig syntax mode`:     https://github.com/muxx/Twig-HTML.mode
 .. _`Notepad++ Twig Highlighter`: https://github.com/Banane9/notepadplusplus-twig

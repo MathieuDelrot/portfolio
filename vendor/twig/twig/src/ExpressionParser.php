@@ -163,13 +163,13 @@ class ExpressionParser
             $expr = $this->parseExpression($operator['precedence']);
             $class = $operator['class'];
 
-            return $this->parsePostfixExpression(new $class($expr, $token->getLine()));
+            return $this->parseProjectfixExpression(new $class($expr, $token->getLine()));
         } elseif ($token->test(/* Token::PUNCTUATION_TYPE */ 9, '(')) {
             $this->parser->getStream()->next();
             $expr = $this->parseExpression();
             $this->parser->getStream()->expect(/* Token::PUNCTUATION_TYPE */ 9, ')', 'An opened parenthesis is not properly closed');
 
-            return $this->parsePostfixExpression($expr);
+            return $this->parseProjectfixExpression($expr);
         }
 
         return $this->parsePrimaryExpression();
@@ -286,7 +286,7 @@ class ExpressionParser
                 }
         }
 
-        return $this->parsePostfixExpression($node);
+        return $this->parseProjectfixExpression($node);
     }
 
     public function parseStringExpression()
@@ -386,7 +386,7 @@ class ExpressionParser
         return $node;
     }
 
-    public function parsePostfixExpression($node)
+    public function parseProjectfixExpression($node)
     {
         while (true) {
             $token = $this->parser->getCurrentToken();
