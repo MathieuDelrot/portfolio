@@ -19,7 +19,6 @@ class ProjectManager extends Manager
         $stmt->bindParam(6, $url);
         $stmt->bindParam(7, $intro);
         $stmt->execute();
-        return true;
     }
 
     public function editProject($id, $title, $slug, $content, $realisation_date, $technologies, $url, $intro)
@@ -34,7 +33,6 @@ class ProjectManager extends Manager
         $stmt->bindParam(7, $intro);
         $stmt->bindParam(8, $id);
         $stmt->execute();
-        return true;
     }
 
     public function getLastProjects()

@@ -2,21 +2,28 @@
 
 namespace Controller;
 
-use Model\AdminManager;
-use Model\ComManager;
-use Model\FormManager;
-use Model\Manager;
-use Model\ProjectManager;
-use Model\Logout;
-use Model\Auth;
-use TwigController;
-
-require_once '../Model/Manager.php';
+require_once '../vendor/autoload.php';
 require_once '../Model/ProjectManager.php';
 require_once '../Model/FormManager.php';
+require_once '../Model/Auth.php';
 require_once '../Model/ComManager.php';
-require_once '../vendor/autoload.php';
+require_once '../Model/MessageManager.php';
+require_once '../Model/Manager.php';
+require_once '../Model/MemberManager.php';
+require_once '../Model/SessionManager.php';
 require_once 'TwigController.php';
+
+
+use Model\ComManager;
+use Model\MessageManager;
+use Model\FormManager;
+use Model\Manager;
+use Model\MemberManager;
+use Model\ProjectManager;
+use Model\Auth;
+use Model\SessionManager;
+use Model\AdminManager;
+use TwigController;
 
 
 class BackendController{
@@ -150,24 +157,15 @@ class BackendController{
         }
     }
 
-
-    public function editProjectForm($id)
-    {
-        $project = $this->projectManager->getProject($id);
-
-        //try catch
-        $form = $this->formManager->getEditProjectForm($project['id'],$project['title'],$project['content'], $project['realisation_date'], $project['technologies'], $project['url'], $project['intro']);
-
-        return $form;
-    }
-
+    
     public function editProjectPage($id)
     {
-        $editProjectForm = $this->formManager->getEditProjectForm($id);
+        $project = $this->projectManager->getProject($id);
+        $form= $this->formManager->getEditProjectForm($project['id'],$project['title'],$project['content'], $project['realisation_date'], $project['technologies'], $project['url'], $project['intro']);
         if (Auth::adminIsLogged() && $id > 0) {
             $success_add_project = 'Vous pouvez modifier un projet';
             $this->twigController->useTwig('addSingle.twig', [
-                'editprojectform' => $editProjectForm,
+                'editprojectform' => $form,
                 'success_add_project' => $success_add_project
             ]);
         } else {

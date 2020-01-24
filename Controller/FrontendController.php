@@ -166,7 +166,6 @@ class FrontendController{
 
     function askInscription($slug, $id)
     {
-
         $member = $this->memberManager->connection(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
         if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
             if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
@@ -177,7 +176,7 @@ class FrontendController{
                 $error = "Vous avez déja un compte, veuillez vous connecter";
                 $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
             } else {
-                $inscription = $this->memberManager->createAccounts(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+                $inscription = $this->memberManager->createAccount(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
                 if($inscription == true){
                     $success = 'Votre compte est créé vous pouvez laisser des commentaires';
                     $this->twigController->getSingleTemplate(false,false,true,false,$id, false,$success);
@@ -237,7 +236,6 @@ class FrontendController{
 //        return $resetPassword;
             $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
             $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
-            var_dump($resetPassword);
         }
         if ($resetPassword == true) {
             $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
@@ -253,14 +251,11 @@ class FrontendController{
 
     function addComment($id)
     {
-
         if(Auth::isLogged()){
-
             if(!empty(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS))){
                 $comment = filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS);
                 $first_name = $this->sessionManager->vars['Auth']['first_name'];
                 $affectedLines = $this->commentManager->addComment($id, $first_name, $comment);
-
                 if ($affectedLines === false) {
                     $error = "Impossible d'ajouter votre commentaire";
                     $this->twigController->getSingleTemplate(false,false,true,false,$id,$error);
