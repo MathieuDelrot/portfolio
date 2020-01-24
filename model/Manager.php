@@ -2,6 +2,8 @@
 
 namespace Model;
 
+require '../vendor/autoload.php';
+
 
 class Manager
 {
