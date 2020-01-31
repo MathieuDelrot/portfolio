@@ -38,6 +38,8 @@ class BackendController{
 
     private $comManager;
 
+    private $memberManager;
+
 
     public function __construct()
     {
@@ -55,6 +57,9 @@ class BackendController{
 
         $comManager = new comManager();
         $this->comManager = $comManager;
+
+        $memberManager = new MemberManager();
+        $this->memberManager = $memberManager;
     }
 
 
@@ -195,11 +200,6 @@ class BackendController{
         }
 
     }
-    public function commentsList()
-    {
-        $comments = $this->comManager->getNewComments();
-        return $comments;
-    }
 
     public function getAdminComments()
     {
@@ -220,7 +220,7 @@ class BackendController{
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
-            $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
+            $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
     }
 
@@ -230,6 +230,42 @@ class BackendController{
         if (Auth::adminIsLogged()) {
             $this->comManager->deleteComment($id);
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
+        } else {
+            $error_connection = 'Mauvais identifiant ou mot de passe !';
+            $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
+        }
+    }
+
+    public function getNewMemberList()
+    {
+        $newMember = $this->memberManager->getNewMember();
+        if (Auth::adminIsLogged()) {
+            $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember]);
+        } else {
+            $error_connection = 'Mauvais identifiant ou mot de passe !';
+            $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
+        }
+    }
+
+
+    public function validMember($id)
+    {
+        $newMember = $this->memberManager->getNewMember();
+        if (Auth::adminIsLogged()) {
+            $this->memberManager->validAccount($id);
+            $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember]);
+        } else {
+            $error_connection = 'Mauvais identifiant ou mot de passe !';
+            $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
+        }
+    }
+
+    public function deleteMember($id)
+    {
+        $newMember = $this->memberManager->getNewMember();
+        if (Auth::adminIsLogged()) {
+            $this->memberManager->deleteAccount($id);
+            $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);

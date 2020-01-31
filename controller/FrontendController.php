@@ -178,8 +178,8 @@ class FrontendController{
             } else {
                 $inscription = $this->memberManager->createAccount(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS), filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL), filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
                 if($inscription == true){
-                    $success = 'Votre compte est créé vous pouvez laisser des commentaires';
-                    $this->twigController->getSingleTemplate(false,false,true,false,$id, false,$success);
+                    $success = 'Votre compte est en cours de validation vous recevrez un email quand votre compte sera validé, vous pourrez alors laisser des commentaires';
+                    $this->twigController->getSingleTemplate(true,true,false,false,$id, false,$success);
                 }else{
                     $error = 'Votre compte n\'a pas été créé';
                     $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
