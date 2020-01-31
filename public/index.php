@@ -127,6 +127,23 @@ $router->map( 'GET|POST', '/admin/commentaires/supprimer-[i:id]', function($id){
     $backendController->deleteComment($id);
 });
 
+
+$router->map( 'GET|POST', '/admin/membres', function(){
+    $backendController = new BackendController();
+    $backendController->getNewMemberList();
+});
+
+$router->map( 'GET|POST', '/admin/membres/valider-[i:id]', function($id){
+    $backendController = new BackendController();
+    $backendController->validMember($id);
+});
+
+$router->map( 'GET|POST', '/admin/membres/supprimer-[i:id]', function($id){
+    $backendController = new BackendController();
+    $backendController->deleteMember($id);
+});
+
+
 $match = $router->match();
 
 if($match !== null){

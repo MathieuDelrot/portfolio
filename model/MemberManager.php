@@ -14,22 +14,39 @@ class MemberManager extends Manager
     public function createAccount($first_name, $email, $password)
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->bdd->prepare('INSERT INTO member (first_name, email, password, password_key, key_date) VALUES(?,?,?,0,NULL)');
+        $stmt = $this->bdd->prepare('INSERT INTO member (first_name, email, password, password_key, key_date, validate) VALUES(?,?,?,0,NULL,0)');
         $stmt->bindParam(1, $first_name);
         $stmt->bindParam(2, $email);
         $stmt->bindParam(3, $hash);
         $stmt->execute();
-        $session = new SessionManager();
-        $session->vars['Auth'] = array(
-            'email' => $email,
-            'first_name' => $first_name,
-            'password' => $password
-        );
-        return true;
+        return $stmt;
     }
 
-    public function sendEmailSuccess($first_name, $email)
+
+    public function validAccount($id)
     {
+        $stmt = $this->bdd->prepare('UPDATE member SET Validate=1 WHERE id= ?');
+        $stmt->bindParam(1, $id);
+        $stmt->execute( );
+        $this->sendEmailSuccess($id);
+    }
+
+    public function deleteAccount($id)
+    {
+        $stmt = $this->bdd->prepare('DELETE FROM member WHERE id= ?');
+        $stmt->bindParam(1, $id);
+        $stmt->execute( );
+        $this->sendEmailSuccess($id);
+    }
+
+    public function sendEmailSuccess($id)
+    {
+        $stmt = $this->bdd->prepare('SELECT email, first_name FROM member WHERE id = ?');
+        $stmt->bindParam(1, $id);
+        $stmt->execute();
+        $member = $stmt->fetch();
+        $email = $member['email'];
+        $first_name = $member['first_name'];
         $to      = $email;
         $subject = 'Votre compte à été créé avec succès';
         $message = 'Bonjour '. $first_name .' vous pouvez désormais rédiger des commentaires sur les portfolios du site www.mathieu-delrot.fr';
@@ -40,6 +57,15 @@ class MemberManager extends Manager
 
         mail($to, $subject, $message, $headers);
     }
+
+
+    public function getNewMember()
+    {
+        $stmt = $this->bdd->prepare('SELECT * FROM member WHERE validate = 0 ORDER BY id DESC');
+        $stmt->execute();
+        return $stmt;
+    }
+
 
     public function connection($email, $password)
     {

@@ -40,7 +40,7 @@ class ComManager extends Manager
 
     public function getNewComments()
     {
-        $comments = $this->bdd->prepare('SELECT * FROM comment WHERE validate = 0');
+        $comments = $this->bdd->prepare('SELECT * FROM comment WHERE validate = 0 ORDER BY id DESC');
         $comments->execute();
         return $comments;
     }
