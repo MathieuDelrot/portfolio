@@ -3,6 +3,9 @@
 
 namespace Model;
 
+use Entity\MemberEntity;
+
+require_once  '../Entity/MemberEntity.php';
 require_once 'Manager.php';
 require_once 'FormManager.php';
 require_once 'SessionManager.php';
@@ -11,37 +14,39 @@ require_once 'SessionManager.php';
 class MemberManager extends Manager
 {
 
-    public function createAccount($first_name, $email, $password)
+
+    public function createAccount(MemberEntity $member)
     {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->bdd->prepare('INSERT INTO member (first_name, email, password, password_key, key_date, validate) VALUES(?,?,?,0,NULL,0)');
-        $stmt->bindParam(1, $first_name);
-        $stmt->bindParam(2, $email);
+        $hash = password_hash($member->getPassword(), PASSWORD_DEFAULT);
+        $stmt = $this->bdd->prepare('INSERT INTO member (firstName, email, password, passwordKey, keyDate, validate) VALUES(?,?,?,0,NULL,0)');
+        $stmt->bindParam(1, $member->getFirstName());
+        $stmt->bindParam(2, $member->getEmail());
         $stmt->bindParam(3, $hash);
         $stmt->execute();
         return $stmt;
     }
 
 
-    public function validAccount($id)
+    public function validAccount(MemberEntity $member)
     {
-        $stmt = $this->bdd->prepare('UPDATE member SET Validate=1 WHERE id= ?');
-        $stmt->bindParam(1, $id);
+        $stmt = $this->bdd->prepare('UPDATE member SET validate=1 WHERE id= ?');
+        $stmt->bindParam(1, $member->getId());
         $stmt->execute( );
-        $this->sendEmailSuccess($id);
+        $this->sendEmailSuccess($member->getId());
+
     }
 
-    public function deleteAccount($id)
+    public function deleteAccount(MemberEntity $member)
     {
         $stmt = $this->bdd->prepare('DELETE FROM member WHERE id= ?');
-        $stmt->bindParam(1, $id);
+        $stmt->bindParam(1, $member->getId());
         $stmt->execute( );
-        $this->sendEmailSuccess($id);
+        $this->sendEmailSuccess($member->getId());
     }
 
     public function sendEmailSuccess($id)
     {
-        $stmt = $this->bdd->prepare('SELECT email, first_name FROM member WHERE id = ?');
+        $stmt = $this->bdd->prepare('SELECT email, firstName FROM member WHERE id = ?');
         $stmt->bindParam(1, $id);
         $stmt->execute();
         $member = $stmt->fetch();
@@ -67,19 +72,19 @@ class MemberManager extends Manager
     }
 
 
-    public function connection($email, $password)
+    public function connection(MemberEntity $member)
     {
-        $stmt = $this->bdd->prepare('SELECT id, password, first_name FROM member WHERE email = ?');
-        $stmt->bindParam(1, $email);
+        $stmt = $this->bdd->prepare('SELECT id, password, firstName FROM member WHERE email = ?');
+        $stmt->bindParam(1, $member->getEmail());
         $stmt->execute();
         $data = $stmt->fetch();
         $first_name = $data['first_name'];
-        password_verify($password, $data['password']);
-        if(password_verify($password, $data['password'])) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
+        password_verify($member->getPassword(), $data['password']);
+        if(password_verify($member->getPassword(), $data['password'])) {
+            $password = password_hash($member->getPassword(), PASSWORD_DEFAULT);
             $session = new SessionManager();
             $session->vars['Auth'] = array(
-                'email' => $email,
+                'email' => $member->getEmail(),
                 'first_name' => $first_name,
                 'password' => $password
             );
@@ -88,31 +93,31 @@ class MemberManager extends Manager
         return false;
     }
 
-    public function forgotPassword($email, $id, $slug)
+    public function forgotPassword(MemberEntity $member, $id, $slug)
     {
-        $stmt = $this->bdd->prepare('SELECT id, password, first_name, password_key FROM member WHERE email = ?');
-        $stmt->bindParam(1, $email);
+        $stmt = $this->bdd->prepare('SELECT id, password, firstName, passwordKey FROM member WHERE email = ?');
+        $stmt->bindParam(1, $member->getEmail());
         $stmt->execute();
         if ($stmt->fetch()){
-            $password_key = uniqid();
-            $stmt = $this->bdd->prepare('UPDATE member SET password_key = ?, key_date = NOW() WHERE email = ?');
-            $stmt->bindParam(1, $password_key);
-            $stmt->bindParam(2, $email);
+            $member->__set('passwordKey', uniqid());
+            $stmt = $this->bdd->prepare('UPDATE member SET passwordKey = ?, keyDate = NOW() WHERE email = ?');
+            $stmt->bindParam(1, $member->getPasswordKey());
+            $stmt->bindParam(2, $member->getEmail());
             $stmt->execute();
-            $this->sendEmailResetPassword($email, $password_key, $slug, $id);
+            $this->sendEmailResetPassword($member->getEmail(), $member->getPasswordKey(), $slug, $id);
             return true;
         }else{
             return false;
         }
     }
 
-    public function findPasswordKey($key)
+    public function findPasswordKey(MemberEntity $member)
     {
         $validityDate = new \DateTime();
         $validityDate->modify('-24 hours');
         $v = $validityDate->format('Y-m-d H:i:s');
         $vd = strtotime($v);
-        $stmt = $this->bdd->prepare('SELECT key_date FROM member WHERE password_key = ?');
+        $stmt = $this->bdd->prepare('SELECT keyDate FROM member WHERE passwordKey = ?');
         $stmt->bindParam(1, $key);
         $stmt->execute();
         $date = $stmt->fetch();
@@ -120,7 +125,7 @@ class MemberManager extends Manager
         $dv = strtotime($d);
         $difference = $vd - $dv;
         if (isset($date) && $difference < 0){
-            $stmt = $this->bdd->prepare('SELECT * FROM member WHERE password_key = ?');
+            $stmt = $this->bdd->prepare('SELECT * FROM member WHERE passwordKey = ?');
             $stmt->bindParam(1, $key);
             $stmt->execute();
             if ($stmt->rowCount() > 0){

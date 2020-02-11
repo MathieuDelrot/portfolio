@@ -3,21 +3,23 @@
 
 namespace Model;
 
+use Entity\MessageEntity;
+
 require_once 'Manager.php';
 
 
 class MessageManager extends Manager
 {
 
-    public function addMessage($firstName, $lastName, $email, $message)
+    public function addMessage(MessageEntity $message)
     {
         $stmt = $this->bdd->prepare('INSERT INTO message (first_name, last_name, email, message) VALUES(?, ?, ?, ?)');
-        $stmt->bindParam(1, $firstName);
-        $stmt->bindParam(2, $lastName);
-        $stmt->bindParam(3, $email);
-        $stmt->bindParam(4, $message);
+        $stmt->bindParam(1, $message->getFirstName());
+        $stmt->bindParam(2, $message->getLastName());
+        $stmt->bindParam(3, $message->getEmail());
+        $stmt->bindParam(4, $message->getMessage());
         $stmt->execute();
-        $this->sendMessage($firstName, $lastName, $email, $message);
+        $this->sendMessage($message->getFirstName(), $message->getLastName(), $message->getEmail(), $message->getMessage());
     }
     public function sendMessage($firstName, $lastName, $email, $message)
     {
