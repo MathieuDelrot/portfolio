@@ -2,23 +2,27 @@
 
 namespace Model;
 
+use Entity\CommentEntity;
+
 require_once 'Manager.php';
+require_once  '../Entity/CommentEntity.php';
+
 
 class ComManager extends Manager
 {
 
-    public function addComment($projectId, $first_name, $content)
+    public function addComment(CommentEntity $comment, $id)
     {
-        $stmt = $this->bdd->prepare('INSERT INTO comment (project_id, comment_date, pseudo, content, validate) VALUES(?, NOW(),?, ?, 0)');
-        $stmt->bindParam(1, $projectId);
-        $stmt->bindParam(2, $first_name);
-        $stmt->bindParam(3, $content);
+        $stmt = $this->bdd->prepare('INSERT INTO comment (projectId, commentDate, pseudo, content, validate) VALUES(?, NOW(),?, ?, 0)');
+        $stmt->bindParam(1, $id);
+        $stmt->bindParam(2, $comment->getPseudo());
+        $stmt->bindParam(3, $comment->getContent());
         $stmt->execute();
     }
 
     public function validComment($id)
     {
-        $stmt = $this->bdd->prepare('UPDATE comment SET Validate=1 WHERE id= ?');
+        $stmt = $this->bdd->prepare('UPDATE comment SET validate=1 WHERE id= ?');
         $stmt->bindParam(1, $id);
         $stmt->execute( );
     }
@@ -32,17 +36,33 @@ class ComManager extends Manager
 
     public function getComments($id)
     {
-        $comments = $this->bdd->prepare('SELECT pseudo, content, comment_date FROM comment WHERE project_id = ? AND validate = 1 ORDER BY id DESC');
-        $comments->bindParam(1, $id);
-        $comments->execute();
-        return $comments;
+        $comment = [];
+
+        $q = $this->bdd->prepare('SELECT pseudo, content, commentDate FROM comment WHERE projectId = ? AND validate = 1 ORDER BY id DESC');
+        $q->bindParam(1, $id);
+        $q->execute();
+
+        while ($datas = $q->fetch(\PDO::FETCH_ASSOC))
+        {
+            $comment[] = new CommentEntity($datas);
+        }
+        return $comment;
+
     }
 
     public function getNewComments()
     {
-        $comments = $this->bdd->prepare('SELECT * FROM comment WHERE validate = 0 ORDER BY id DESC');
-        $comments->execute();
-        return $comments;
+        $comment = [];
+
+        $q = $this->bdd->prepare('SELECT * FROM comment WHERE validate = 0 ORDER BY id DESC');
+        $q->execute();
+
+        while ($datas = $q->fetch(\PDO::FETCH_ASSOC))
+        {
+            $comment[] = new CommentEntity($datas);
+        }
+        return $comment;
+
     }
 
 }

@@ -4,6 +4,20 @@
         {{ block("menuadmin", "adminMenu.twig") }}
         <div class="row">
             <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if error is defined %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                        {% if success is defined %}
+                            <div class="alert alert-success">
+                                {{ success }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
                 <h3>Les membres</h3>
                 {% for member in memberlist %}
                     <div class="row">
