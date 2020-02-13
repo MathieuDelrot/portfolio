@@ -7,7 +7,7 @@ use App\Controller\BackendController;
 use App\Router\AltoRouter;
 
 
-ini_set('display_errors', 1);
+//ini_set('display_errors', 1);
 
 $router = new AltoRouter();
 
