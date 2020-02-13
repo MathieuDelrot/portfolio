@@ -243,7 +243,7 @@ class FrontendController{
             $member = new MemberEntity();
             $member->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
             $member->setPasswordKey($key);
-            $resetPassword = $this->memberManager->changePassword($member);
+            $resetPassword = $this->memberManager->changePassword($member, $key);
             if ($resetPassword == true) {
                 $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
                 $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);

@@ -91,6 +91,7 @@ class TwigHelper
             'commentform' => $commentForm,
             'resetpasswordform' => $resetPasswordForm,
             'newpasswordform' => $newPasswordForm,
+            'key' => $k
         ]);
     }
 

@@ -182,13 +182,15 @@ class MemberManager extends Manager
         mail($to, $subject, $message, $headers);
     }
 
-    public function changePassword($password, $key)
+    public function changePassword(MemberEntity $member, $key)
     {
+        $password = $member->getPassword();
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $this->bdd->prepare('UPDATE member SET password = ? WHERE password_key = ?');
+        $stmt = $this->bdd->prepare('UPDATE member SET password = ? WHERE passwordKey = ?');
         $stmt->bindParam(1, $hash);
         $stmt->bindParam(2, $key);
-        $stmt->execute();
+        $st = $stmt->execute();
+        return $st;
     }
 
 

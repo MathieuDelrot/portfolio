@@ -103,7 +103,7 @@ class FormManager extends Manager
         $connection_form = array(
             "first_name_account" => $this->input('text', 'first_name_account', 'Prénom'),
             "email" => $this->input('email', 'email', 'Votre e-mail'),
-            "password" => $this->input('password', 'password', 'Votre mots de passe'),
+            "password" => $this->input('password', 'password', 'Votre mot de passe'),
             "submit" => $this->submit()
         );
 
@@ -122,7 +122,7 @@ class FormManager extends Manager
 
     public function getNewPasswordForm(){
         $new_password_form = array(
-            "password" => $this->input('password', 'password', 'Votre mots de passe'),
+            "password" => $this->input('password', 'password', 'Votre mot de passe'),
             "submit" => $this->submit()
         );
 
@@ -133,7 +133,7 @@ class FormManager extends Manager
 
         $connection_form = array(
             "email" => $this->input('email', 'email', 'Votre e-mail'),
-            "password" => $this->input('password', 'password', 'Votre mots de passe'),
+            "password" => $this->input('password', 'password', 'Votre mot de passe'),
             "submit" => $this->submit()
         );
 
