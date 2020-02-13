@@ -11,7 +11,7 @@ env:
     - DEPS=no
 
 before_install:
-    - phpenv config-rm xdebug.ini
+    - phpenv Config-rm xdebug.ini
 
 before_script:
     - if [ "$DEPS" == "low" ]; then composer --prefer-lowest --prefer-stable update; fi;

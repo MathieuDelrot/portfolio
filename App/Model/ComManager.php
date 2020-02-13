@@ -1,22 +1,21 @@
 <?php
 
-namespace Model;
+namespace App\Model;
 
-use Entity\CommentEntity;
-
-require_once 'Manager.php';
-require_once  '../Entity/CommentEntity.php';
-
+use App\Entity\CommentEntity;
 
 class ComManager extends Manager
 {
 
     public function addComment(CommentEntity $comment, $id)
     {
+        $pseudo = $comment->getPseudo();
+        $content = $comment->getContent();
+
         $stmt = $this->bdd->prepare('INSERT INTO comment (projectId, commentDate, pseudo, content, validate) VALUES(?, NOW(),?, ?, 0)');
         $stmt->bindParam(1, $id);
-        $stmt->bindParam(2, $comment->getPseudo());
-        $stmt->bindParam(3, $comment->getContent());
+        $stmt->bindParam(2, $pseudo);
+        $stmt->bindParam(3, $content);
         $stmt->execute();
     }
 

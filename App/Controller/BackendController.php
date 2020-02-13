@@ -1,32 +1,20 @@
 <?php
 
-namespace Controller;
+namespace App\Controller;
 
-require_once '../vendor/autoload.php';
-require_once '../Model/ProjectManager.php';
-require_once '../Model/FormManager.php';
-require_once '../Model/Auth.php';
-require_once '../Model/ComManager.php';
-require_once '../Model/MessageManager.php';
-require_once '../Model/Manager.php';
-require_once '../Model/MemberManager.php';
-require_once '../Model/SessionManager.php';
-require_once 'TwigController.php';
-
-
-use Entity\AdminEntity;
-use Entity\MemberEntity;
-use Entity\ProjectEntity;
-use Model\ComManager;
-use Model\MessageManager;
-use Model\FormManager;
-use Model\Manager;
-use Model\MemberManager;
-use Model\ProjectManager;
-use Model\Auth;
-use Model\SessionManager;
-use Model\AdminManager;
-use TwigController;
+use App\Entity\AdminEntity;
+use App\Entity\MemberEntity;
+use App\Entity\ProjectEntity;
+use App\Model\ComManager;
+use App\Model\MessageManager;
+use App\Model\FormManager;
+use App\Model\Manager;
+use App\Model\MemberManager;
+use App\Model\ProjectManager;
+use App\Model\Auth;
+use App\Model\SessionManager;
+use App\Model\AdminManager;
+use App\Helper\TwigHelper;
 
 
 class BackendController{
@@ -46,7 +34,7 @@ class BackendController{
 
     public function __construct()
     {
-        $twigController = new TwigController();
+        $twigController = new TwigHelper();
         $this->twigController = $twigController;
 
         $formManager = new FormManager();
@@ -63,6 +51,7 @@ class BackendController{
 
         $memberManager = new MemberManager();
         $this->memberManager = $memberManager;
+
     }
 
 
@@ -99,8 +88,8 @@ class BackendController{
             ]);
         } elseif (!empty(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))) {
             $admin = new AdminEntity();
-            $admin->__set('email', filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
-            $admin->__set('password', filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+            $admin->setEmail(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
+            $admin->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
             $connection = $this->adminManager->adminConnection($admin);
             if ($connection == true) {
                 $success_connection = 'Vous êtes connecté vous pouvez ajouter des portfolios et modérer les commentaires';
@@ -152,13 +141,13 @@ class BackendController{
     {
         if (!empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
             $project = new ProjectEntity();
-            $project->__set('title', filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->__set('content', filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->__set('realisationDate', filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->__set('technologies', filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->__set('url', filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->__set('intro', filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->__set('slug', preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($project->getTitle())));
+            $project->setTitle(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setContent(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setRealisationDate( filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setTechnologies(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setUrl(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setIntro(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setSlug(preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($project->getTitle())));
             if ($this->projectManager->createProject($project)) {
                 $success_add_project = 'Le projet est ajouté';
                 $this->twigController->useTwig('addSingle.twig', ['success_add_project' => $success_add_project]);
@@ -173,7 +162,7 @@ class BackendController{
     public function editProjectPage($id)
     {
         $project = $this->projectManager->getProject($id);
-        $form= $this->formManager->getEditProjectForm($project['id'],$project['title'],$project['content'], $project['realisation_date'], $project['technologies'], $project['url'], $project['intro']);
+        $form= $this->formManager->getEditProjectForm($project);
         if (Auth::adminIsLogged() && $id > 0) {
             $success_add_project = 'Vous pouvez modifier un projet';
             $this->twigController->useTwig('addSingle.twig', [
@@ -189,19 +178,25 @@ class BackendController{
     public function editProject()
     {
         if (Auth::adminIsLogged() && !empty(filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS)) && filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0 && !empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
-            $id = filter_input(INPUT_POST, 'id' , FILTER_SANITIZE_SPECIAL_CHARS);
-            $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS);
-            $content = filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS);
-            $realisation_date = filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS);
-            $technologies = filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS);
-            $url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS);
-            $intro = filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS);
-            $slug = preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($title));
-            if ($this->projectManager->editProject($id, $title, $slug, $content , $realisation_date, $technologies, $url, $intro)) {
+            $project = new ProjectEntity();
+            $project->setId(filter_input(INPUT_POST, 'id' , FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setTitle(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setContent(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setRealisationDate( filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setTechnologies(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setUrl(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setIntro(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setSlug(preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower($project->getTitle())));
+            if ($this->projectManager->editProject($project)) {
                 $success_add_project = 'Le projet est modifié';
                 $this->twigController->useTwig('addSingle.twig', ['success_add_project' => $success_add_project]);
+            } else {
+                $error_add_project = 'Tous les champs ne sont pas remplis !';
+                $this->twigController->useTwig('addSingle.twig', ['error_add_project' => $error_add_project]);
+
             }
-        } else {
+        }
+        else {
             $error_connection = 'Vous n\'êtes pas autorisé à modifier cet article ou les champs ne sont pas remplis';
             $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
@@ -261,7 +256,7 @@ class BackendController{
         $newMember = $this->memberManager->getNewMember();
         if (Auth::adminIsLogged()) {
             $member = new MemberEntity();
-            $member->__set('id', $id);
+            $member->setId( $id);
             $this->memberManager->validAccount($member);
             $success = 'le compte est validé';
             $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember, 'success' => $success]);
@@ -276,7 +271,7 @@ class BackendController{
         $newMember = $this->memberManager->getNewMember();
         if (Auth::adminIsLogged()) {
             $member = new MemberEntity();
-            $member->__set('id', $id);
+            $member->setId($id);
             $this->memberManager->deleteAccount($member);
             $success = 'le compte est supprimé';
             $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember, 'success' => $success]);

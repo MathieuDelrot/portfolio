@@ -5,7 +5,7 @@
  *
  * (c) Fabien Potencier
  *
- * For the full copyright and license information, please View the LICENSE
+ * For the full copyright and license information, please Views the LICENSE
  * file that was distributed with this source code.
  */
 

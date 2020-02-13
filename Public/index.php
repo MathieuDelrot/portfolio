@@ -1,11 +1,13 @@
 <?php
 
 require '../vendor/autoload.php';
-require_once '../AltoRouter.php';
 
-use Controller\FrontendController;
-use Controller\BackendController;
+use App\Controller\FrontendController;
+use App\Controller\BackendController;
+use App\Router\AltoRouter;
 
+
+ini_set('display_errors', 1);
 
 $router = new AltoRouter();
 

@@ -1,29 +1,21 @@
 <?php
 
-require_once '../vendor/autoload.php';
-require_once '../Model/AdminManager.php';
-require_once '../Model/Auth.php';
-require_once '../Model/Manager.php';
-require_once '../Model/ProjectManager.php';
-require_once '../Model/FormManager.php';
-require_once '../Model/ComManager.php';
-require_once '../vendor/autoload.php';
-require_once 'TwigController.php';
+namespace App\Helper;
 
-use Model\AdminManager;
-use Model\Auth;
-use Model\Manager;
-use Model\ComManager;
-use Model\FormManager;
-use Model\MemberManager;
-use Model\MessageManager;
-use Model\ProjectManager;
-use Model\SessionManager;
+use App\Model\AdminManager;
+use App\Model\Auth;
+use App\Model\Manager;
+use App\Model\ComManager;
+use App\Model\FormManager;
+use App\Model\MemberManager;
+use App\Model\MessageManager;
+use App\Model\ProjectManager;
+use App\Model\SessionManager;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 
-class TwigController
+class TwigHelper
 {
     private $projectManager;
 
@@ -52,7 +44,7 @@ class TwigController
     }
 
     public function useTwig($template, array $variables){
-        $loader = new FilesystemLoader('../View');
+        $loader = new FilesystemLoader('../App/Views');
         $twig = new Environment($loader, ['debug' => true]);
         print_r($twig->render($template, $variables));
     }
@@ -98,7 +90,6 @@ class TwigController
             'accountform' => $createAccount,
             'commentform' => $commentForm,
             'resetpasswordform' => $resetPasswordForm,
-            'key' => $k,
             'newpasswordform' => $newPasswordForm,
         ]);
     }

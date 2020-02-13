@@ -1,8 +1,6 @@
 <?php
 
-
-namespace Model;
-
+namespace App\Model;
 
 class SessionManager
 {

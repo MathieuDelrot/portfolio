@@ -12,7 +12,7 @@ env:
         - SYMFONY_PHPUNIT_DISABLE_RESULT_CACHE=1
 
 before_install:
-    - phpenv config-rm xdebug.ini || return 0
+    - phpenv Config-rm xdebug.ini || return 0
 
 install:
     - travis_retry composer install
