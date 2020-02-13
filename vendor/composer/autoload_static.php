@@ -24,7 +24,7 @@ class ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d
         ),
         'C' => 
         array (
-            'Controller\\' => 11,
+            'Config\\' => 7,
         ),
         'A' => 
         array (
@@ -49,13 +49,13 @@ class ComposerStaticInit13c57bde424dcc673cd89176f3c16c6d
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Controller\\' => 
+        'Config\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Controller',
+            0 => __DIR__ . '/../..' . '/Config',
         ),
         'App\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/Model',
+            0 => __DIR__ . '/../..' . '/App',
         ),
     );
 

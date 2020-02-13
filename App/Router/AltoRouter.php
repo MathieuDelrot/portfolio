@@ -1,4 +1,6 @@
 <?php
+
+namespace App\Router;
 /*
 MIT License
 
@@ -42,7 +44,7 @@ class AltoRouter
     ];
 
     /**
-     * Create router in one call from config.
+     * Create router in one call from Config.
      *
      * @param array $routes
      * @param string $basePath

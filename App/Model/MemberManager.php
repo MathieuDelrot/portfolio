@@ -1,15 +1,8 @@
 <?php
 
+namespace App\Model;
 
-namespace Model;
-
-use Entity\MemberEntity;
-
-require_once  '../Entity/MemberEntity.php';
-require_once 'Manager.php';
-require_once 'FormManager.php';
-require_once 'SessionManager.php';
-
+use App\Entity\MemberEntity;
 
 class MemberManager extends Manager
 {
@@ -17,10 +10,13 @@ class MemberManager extends Manager
 
     public function createAccount(MemberEntity $member)
     {
+        $firstName = $member->getFirstName();
+        $email = $member->getEmail();
+
         $hash = password_hash($member->getPassword(), PASSWORD_DEFAULT);
         $stmt = $this->bdd->prepare('INSERT INTO member (firstName, email, password, passwordKey, keyDate, validate) VALUES(?,?,?,0,NULL,0)');
-        $stmt->bindParam(1, $member->getFirstName());
-        $stmt->bindParam(2, $member->getEmail());
+        $stmt->bindParam(1, $firstName);
+        $stmt->bindParam(2, $email);
         $stmt->bindParam(3, $hash);
         $stmt->execute();
         return $stmt;
@@ -29,19 +25,23 @@ class MemberManager extends Manager
 
     public function validAccount(MemberEntity $member)
     {
+        $id = $member->getId();
+
         $stmt = $this->bdd->prepare('UPDATE member SET validate=1 WHERE id= ?');
-        $stmt->bindParam(1, $member->getId());
+        $stmt->bindParam(1, $id);
         $stmt->execute( );
-        $this->sendEmailSuccess($member->getId());
+        $this->sendEmailSuccess($id);
 
     }
 
     public function deleteAccount(MemberEntity $member)
     {
+        $id = $member->getId();
+
         $stmt = $this->bdd->prepare('DELETE FROM member WHERE id= ?');
-        $stmt->bindParam(1, $member->getId());
+        $stmt->bindParam(1, $id);
         $stmt->execute( );
-        $this->sendEmailSuccess($member->getId());
+        $this->sendEmailSuccess($id);
     }
 
     public function sendEmailSuccess($id)
@@ -66,16 +66,25 @@ class MemberManager extends Manager
 
     public function getNewMember()
     {
-        $stmt = $this->bdd->prepare('SELECT * FROM member WHERE validate = 0 ORDER BY id DESC');
-        $stmt->execute();
-        return $stmt;
+        $member = [];
+
+        $q = $this->bdd->prepare('SELECT * FROM member WHERE validate = 0 ORDER BY id DESC');
+        $q->execute();
+
+        while ($datas = $q->fetch(\PDO::FETCH_ASSOC))
+        {
+            $member[] = new MemberEntity($datas);
+        }
+        return $member;
     }
 
 
     public function connection(MemberEntity $member)
     {
+        $email = $member->getEmail();
+
         $stmt = $this->bdd->prepare('SELECT id, password, firstName FROM member WHERE email = ?');
-        $stmt->bindParam(1, $member->getEmail());
+        $stmt->bindParam(1, $email);
         $stmt->execute();
         $data = $stmt->fetch();
         $first_name = $data['first_name'];
@@ -84,7 +93,7 @@ class MemberManager extends Manager
             $password = password_hash($member->getPassword(), PASSWORD_DEFAULT);
             $session = new SessionManager();
             $session->vars['Auth'] = array(
-                'email' => $member->getEmail(),
+                'email' => $email,
                 'first_name' => $first_name,
                 'password' => $password
             );
@@ -95,16 +104,19 @@ class MemberManager extends Manager
 
     public function forgotPassword(MemberEntity $member, $id, $slug)
     {
+        $email = $member->getEmail();
+        $passwordKey = $member->getPasswordKey();
+
         $stmt = $this->bdd->prepare('SELECT id, password, firstName, passwordKey FROM member WHERE email = ?');
-        $stmt->bindParam(1, $member->getEmail());
+        $stmt->bindParam(1, $email);
         $stmt->execute();
         if ($stmt->fetch()){
-            $member->__set('passwordKey', uniqid());
+            $member->setPasswordKey(uniqid());
             $stmt = $this->bdd->prepare('UPDATE member SET passwordKey = ?, keyDate = NOW() WHERE email = ?');
-            $stmt->bindParam(1, $member->getPasswordKey());
-            $stmt->bindParam(2, $member->getEmail());
+            $stmt->bindParam(1, $passwordKey);
+            $stmt->bindParam(2, $email);
             $stmt->execute();
-            $this->sendEmailResetPassword($member->getEmail(), $member->getPasswordKey(), $slug, $id);
+            $this->sendEmailResetPassword($email, $passwordKey, $slug, $id);
             return true;
         }else{
             return false;

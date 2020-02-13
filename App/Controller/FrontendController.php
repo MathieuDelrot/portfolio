@@ -1,33 +1,22 @@
 <?php
 
-namespace Controller;
-
-require_once '../vendor/autoload.php';
-require_once '../Model/ProjectManager.php';
-require_once '../Model/FormManager.php';
-require_once '../Model/Auth.php';
-require_once '../Model/ComManager.php';
-require_once '../Model/MessageManager.php';
-require_once '../Model/Manager.php';
-require_once '../Model/MemberManager.php';
-require_once '../Model/SessionManager.php';
-require_once 'TwigController.php';
-require_once '../Entity/MemberEntity.php';
+namespace App\Controller;
 
 
-use Entity\CommentEntity;
-use Entity\MemberEntity;
-use Entity\MessageEntity;
-use Model\ComManager;
-use Model\MessageManager;
-use Model\FormManager;
-use Model\Manager;
-use Model\MemberManager;
-use Model\ProjectManager;
-use Model\Auth;
-use Model\SessionManager;
-use Model\AdminManager;
-use TwigController;
+use App\Entity\CommentEntity;
+use App\Entity\MemberEntity;
+use App\Entity\MessageEntity;
+use App\Entity\ProjectEntity;
+use App\Model\ComManager;
+use App\Model\MessageManager;
+use App\Model\FormManager;
+use App\Model\Manager;
+use App\Model\MemberManager;
+use App\Model\ProjectManager;
+use App\Model\Auth;
+use App\Model\SessionManager;
+use App\Model\AdminManager;
+use App\Helper\TwigHelper;
 
 class FrontendController{
 
@@ -68,7 +57,7 @@ class FrontendController{
         $sessionManager = new SessionManager();
         $this->sessionManager = $sessionManager;
 
-        $twigController = new TwigController();
+        $twigController = new TwigHelper();
         $this->twigController = $twigController;
 
     }
@@ -87,7 +76,7 @@ class FrontendController{
         $this->twigController->useTwig('projects.twig', ['projectlist' => $projects]);
     }
 
-    function getContactPage($error = null, $success = null)
+    public function getContactPage($error = null, $success = null)
     {
         $form = $this->formManager->getContactForm();
         if(isset($error)){
@@ -105,15 +94,14 @@ class FrontendController{
         }
     }
 
-    function sendMessage()
+    public function sendMessage()
     {
         if (!empty(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS)) and !empty(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS) and !empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS)))) {
            $message = new MessageEntity();
-           $message->__set('firstName', filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS));
-           $message->__set('lastname', filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS));
-           $message->__set('email', filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
-           $message->__set('message', filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS));
-
+           $message->setFirstName(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS));
+           $message->setLastName(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS));
+           $message->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+           $message->setMessage(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS));
             $affectedLines = $this->messageManager->addMessage($message);
 
             if ($affectedLines === false) {
@@ -131,7 +119,7 @@ class FrontendController{
 
     }
 
-    function getProjectPage($id)
+    public function getProjectPage($id)
     {
         if (Auth::isLogged() && $id > 0) {
             $this->twigController->getSingleTemplate(false, false, true, false, $id);
@@ -145,7 +133,7 @@ class FrontendController{
     }
 
 
-    function askConnection($slug, $id)
+    public function askConnection($slug, $id)
     {
 
         if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
@@ -155,8 +143,8 @@ class FrontendController{
 
             } else {
                 $member = new MemberEntity();
-                $member->__set('email', filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
-                $member->__set('password', filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+                $member->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+                $member->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
 
                 $this->memberManager->connection($member);
 
@@ -176,25 +164,25 @@ class FrontendController{
     }
 
 
-    function askInscription($slug, $id)
+    public function askInscription($slug, $id)
     {
         $member = new MemberEntity();
-        $member->__set('email', filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
-        $member->__set('password', filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
-        $this->memberManager->connection($member);
+        $member->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+        $member->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+        $connection = $this->memberManager->connection($member);
         if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
             if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
                 $error = "Format d'email erroné";
                 $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
 
-            } elseif ($this->memberManager->connection($member) == true) {
+            } elseif ($connection == true) {
                 $error = "Vous avez déja un compte, veuillez vous connecter";
                 $this->twigController->getSingleTemplate(true,true,false,false,$id,$error,false);
             } else {
                 $member= new MemberEntity();
-                $member->__set('firstName', filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS));
-                $member->__set('email', filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
-                $member->__set('password', filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+                $member->setFirstName(filter_input(INPUT_POST, 'first_name_account', FILTER_SANITIZE_SPECIAL_CHARS));
+                $member->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+                $member->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
                 $inscription = $this->memberManager->createAccount($member);
                 if($inscription == true){
                     $success = 'Votre compte est en cours de validation vous recevrez un email quand votre compte sera validé, vous pourrez alors laisser des commentaires';
@@ -211,7 +199,7 @@ class FrontendController{
         }
     }
 
-    function askDisconnection($slug, $id)
+    public function askDisconnection($slug, $id)
     {
         if(Auth::isLogged()){
             Auth::disconnect();
@@ -222,16 +210,16 @@ class FrontendController{
 
     }
 
-    function askResetingPassword($id)
+    public function askResetingPassword($id)
     {
         $success = "renseignez votre e-mail pour réinitialiser votre mot de passe";
         $this->twigController->getSingleTemplate(true,true,false,true,$id,$success,false);
     }
 
-    function askNewPassword($slug, $id)
+    public function askNewPassword($slug, $id)
     {
         $member = new MemberEntity();
-        $member->__set('email', filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
+        $member->setEmail(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS));
         $findAccount = $this->memberManager->forgotPassword($member, $id, $slug);
         if ($findAccount == true) {
             $success = 'Vous allez recevoir un email pour réinitialiser votre mot de passe';
@@ -243,18 +231,18 @@ class FrontendController{
         }
     }
 
-    function resetingPassword($id, $key)
+    public function resetingPassword($id, $key)
     {
         $success = "réinitialisez votre mot de passe";
         $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success, $key, true);
     }
 
-    function newPassword($id, $key)
+    public function newPassword($id, $key)
     {
         if (!empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
             $member = new MemberEntity();
-            $member->__set('password', filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
-            $member->__set('passwordKey', $key);
+            $member->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
+            $member->setPasswordKey($key);
             $resetPassword = $this->memberManager->changePassword($member);
             if ($resetPassword == true) {
                 $success = 'Votre nouveau mot de passe est enregistré avec succès, vous pouvez vous connecter';
@@ -269,13 +257,13 @@ class FrontendController{
 
 
 
-    function addComment($id)
+    public function addComment($id)
     {
         if(Auth::isLogged()){
             if(!empty(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS))){
                 $comment = new CommentEntity();
-                $comment->__set('comment', filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS));
-                $comment->__set('firstName', $this->sessionManager->vars['Auth']['first_name']);
+                $comment->setContent(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS));
+                $comment->setPseudo($this->sessionManager->vars['Auth']['first_name']);
                 $affectedLines = $this->commentManager->addComment($comment, $id);
                 if ($affectedLines === false) {
                     $error = "Impossible d'ajouter votre commentaire";

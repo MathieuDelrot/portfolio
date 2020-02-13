@@ -38,7 +38,7 @@ class MacroNode extends Node
     {
         $compiler
             ->addDebugInfo($this)
-            ->write(sprintf('public function macro_%s(', $this->getAttribute('name')))
+            ->write(sprintf('Public function macro_%s(', $this->getAttribute('name')))
         ;
 
         $count = \count($this->getNode('arguments'));

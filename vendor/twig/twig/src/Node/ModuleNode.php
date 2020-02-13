@@ -174,7 +174,7 @@ class ModuleNode extends Node
     protected function compileConstructor(Compiler $compiler)
     {
         $compiler
-            ->write("public function __construct(Environment \$env)\n", "{\n")
+            ->write("Public function __construct(Environment \$env)\n", "{\n")
             ->indent()
             ->subcompile($this->getNode('constructor_start'))
             ->write("parent::__construct(\$env);\n\n")
@@ -361,7 +361,7 @@ class ModuleNode extends Node
     protected function compileGetTemplateName(Compiler $compiler)
     {
         $compiler
-            ->write("public function getTemplateName()\n", "{\n")
+            ->write("Public function getTemplateName()\n", "{\n")
             ->indent()
             ->write('return ')
             ->repr($this->getSourceContext()->getName())
@@ -415,7 +415,7 @@ class ModuleNode extends Node
         }
 
         $compiler
-            ->write("public function isTraitable()\n", "{\n")
+            ->write("Public function isTraitable()\n", "{\n")
             ->indent()
             ->write(sprintf("return %s;\n", $traitable ? 'true' : 'false'))
             ->outdent()
@@ -426,7 +426,7 @@ class ModuleNode extends Node
     protected function compileDebugInfo(Compiler $compiler)
     {
         $compiler
-            ->write("public function getDebugInfo()\n", "{\n")
+            ->write("Public function getDebugInfo()\n", "{\n")
             ->indent()
             ->write(sprintf("return %s;\n", str_replace("\n", '', var_export(array_reverse($compiler->getDebugInfo(), true), true))))
             ->outdent()
@@ -437,7 +437,7 @@ class ModuleNode extends Node
     protected function compileGetSourceContext(Compiler $compiler)
     {
         $compiler
-            ->write("public function getSourceContext()\n", "{\n")
+            ->write("Public function getSourceContext()\n", "{\n")
             ->indent()
             ->write('return new Source(')
             ->string($compiler->getEnvironment()->isDebug() ? $this->getSourceContext()->getCode() : '')

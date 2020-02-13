@@ -1,28 +1,29 @@
 <?php
 
 
-namespace Model;
+namespace App\Model;
 
-use Entity\AdminEntity;
-
-require_once 'Manager.php';
-require_once  '../Entity/AdminEntity.php';
+use App\Entity\AdminEntity;
 
 class AdminManager extends Manager
 {
 
     public function adminConnection(AdminEntity $admin)
     {
+
+        $email = $admin->getEmail();
+        $password = $admin->getPassword();
+
         $stmt = $this->bdd->prepare('SELECT id, password FROM admin WHERE email = ?');
-        $stmt->bindParam(1, $admin->getEmail());
+        $stmt->bindParam(1, $email);
         $stmt->execute();
         $data = $stmt->fetch();
-        $ifAuthentificated = password_verify($admin->getPassword(), $data['password']);
+        $ifAuthentificated = password_verify($password, $data['password']);
         if($ifAuthentificated) {
-            $password = password_hash($admin->getPassword(), PASSWORD_DEFAULT);
+            $password = password_hash($password, PASSWORD_DEFAULT);
             $session = new SessionManager();
             $session->vars['AuthAdmin'] = array(
-                'email' => $admin->getEmail(),
+                'email' => $email,
                 'password' => $password
             );
         }

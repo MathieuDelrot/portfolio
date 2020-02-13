@@ -1,8 +1,6 @@
 <?php
 
-namespace Model;
-
-require_once 'SessionManager.php';
+namespace App\Model;
 
 class Auth
 {

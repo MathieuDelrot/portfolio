@@ -1,16 +1,14 @@
 <?php
 
-namespace Model;
+namespace App\Model;
 
-require_once 'Manager.php';
-require_once 'ProjectManager.php';
+use App\Entity\ProjectEntity;
 
 class FormManager extends Manager
 {
     private $data;
 
-
-    public function __construct($data = array())
+    public function __construct($data = array() )
     {
         $this->data = $data;
     }
@@ -60,17 +58,16 @@ class FormManager extends Manager
         return $project_form;
     }
 
-    public function getEditProjectForm($id,$title, $content, $realisation_date, $technologies, $url, $intro)
+    public function getEditProjectForm(ProjectEntity $project)
     {
-
         $project_form = array(
-            "id" => $this->input('hidden', 'id', 'id', $id),
-            "title" => $this->input('text', 'title', 'Titre', $title),
-            "intro" => $this->textarea('intro', 'Introduction', $intro),
-            "url" => $this->input('text', 'url', 'URL du projet', $url),
-            "technologies" => $this->input('text', 'technologies', 'Languages web', $technologies),
-            "realisation_date" => $this->input('text', 'realisation_date', 'Mois de mise en ligne', $realisation_date),
-            "content" => $this->textarea('content', 'Présentation du projet', $content),
+            "id" => $this->input('hidden', 'id', 'id', $project->getId()),
+            "title" => $this->input('text', 'title', 'Titre', $project->getTitle()),
+            "intro" => $this->textarea('intro', 'Introduction', $project->getIntro()),
+            "url" => $this->input('text', 'url', 'URL du projet', $project->getUrl()),
+            "technologies" => $this->input('text', 'technologies', 'Languages web', $project->getTechnologies()),
+            "realisation_date" => $this->input('text', 'realisation_date', 'Mois de mise en ligne',$project->getRealisationDate()),
+            "content" => $this->textarea('content', 'Présentation du projet', $project->getContent()),
             "submit" => $this->submit()
         );
 
