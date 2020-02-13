@@ -8,4 +8,4 @@ Ce site a été développé dans le cadre de  la formation d'OPEN CLASSROOMS dé
 2-Create or import a BDD MySQl with following architecture : [Diagramme de classes](https://drive.google.com/file/d/1Fkvd6pNQlTGfS8CDIlKXD9BBcjlzm7aa/view)
 
 
-3-Modified Model/Manager.php to connect your BDD
+3-Modified Config/Config.php to connect your BDD
