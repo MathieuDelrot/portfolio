@@ -105,8 +105,9 @@ class MemberManager extends Manager
     public function forgotPassword(MemberEntity $member, $id, $slug)
     {
         $email = $member->getEmail();
-        $key = uniqid();
-        $passwordKey = $member->setPasswordKey($key);
+        $uniqKey = uniqid();
+        $member->setPasswordKey($uniqKey);
+        $passwordKey = $member->getPasswordKey();
 
         $stmt = $this->bdd->prepare('SELECT id, password, firstName, passwordKey FROM member WHERE email = ?');
         $stmt->bindParam(1, $email);
