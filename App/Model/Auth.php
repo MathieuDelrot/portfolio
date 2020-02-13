@@ -1,8 +1,6 @@
 <?php
 
-namespace Model;
-
-require_once 'SessionManager.php';
+namespace App\Model;
 
 class Auth
 {
@@ -11,7 +9,7 @@ class Auth
     {
         $session = new SessionManager();
 
-        if (isset($session->vars['Auth']) && isset($session->vars['Auth']['email']) && isset($session->vars['Auth']['password']) && isset($session->vars['Auth']['first_name'])){
+        if (isset($session->vars['Auth']) && isset($session->vars['Auth']['email']) && isset($session->vars['Auth']['password']) && isset($session->vars['Auth']['firstName'])){
             return true;
         }
         return false;
@@ -21,7 +19,7 @@ class Auth
     {
         $session = new SessionManager();
 
-        if (isset($session->vars['Auth']) && isset($session->vars['Auth']['email']) && isset($session->vars['Auth']['password']) && isset($session->vars['Auth']['first_name'])){
+        if (isset($session->vars['Auth']) && isset($session->vars['Auth']['email']) && isset($session->vars['Auth']['password']) && isset($session->vars['Auth']['firstName'])){
             session_destroy();
         }
 

@@ -1,11 +1,13 @@
 <?php
 
 require '../vendor/autoload.php';
-require_once '../AltoRouter.php';
 
-use Controller\FrontendController;
-use Controller\BackendController;
+use App\Controller\FrontendController;
+use App\Controller\BackendController;
+use App\Router\AltoRouter;
 
+
+ini_set('display_errors', 1);
 
 $router = new AltoRouter();
 
@@ -126,6 +128,23 @@ $router->map( 'GET|POST', '/admin/commentaires/supprimer-[i:id]', function($id){
     $backendController = new BackendController();
     $backendController->deleteComment($id);
 });
+
+
+$router->map( 'GET|POST', '/admin/membres', function(){
+    $backendController = new BackendController();
+    $backendController->getNewMemberList();
+});
+
+$router->map( 'GET|POST', '/admin/membres/valider-[i:id]', function($id){
+    $backendController = new BackendController();
+    $backendController->validMember($id);
+});
+
+$router->map( 'GET|POST', '/admin/membres/supprimer-[i:id]', function($id){
+    $backendController = new BackendController();
+    $backendController->deleteMember($id);
+});
+
 
 $match = $router->match();
 

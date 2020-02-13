@@ -1,0 +1,38 @@
+{% extends "template.twig" %}
+{% block content %}
+    <div class="container margintop200">
+        {{ block("menuadmin", "adminMenu.twig") }}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if error is defined %}
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                        {% if success is defined %}
+                            <div class="alert alert-success">
+                                {{ success }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <h3>Les membres</h3>
+                {% for member in memberlist %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Id du membre : {{ member.id }}</h4>
+                            <h4>Nom du membre : {{ member.first_name }}</h4>
+                            <h4>Email du membre : {{ member.email }}</h4>
+                            <a class="btn btn-success" href="/admin/membres/valider-{{ member.id }}">Valider</a>
+                            <a class="btn btn-danger" href="/admin/membres/supprimer-{{ member.id }}">Supprimer</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

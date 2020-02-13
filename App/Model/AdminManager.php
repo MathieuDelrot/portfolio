@@ -1,15 +1,19 @@
 <?php
 
 
-namespace Model;
+namespace App\Model;
 
-require_once 'Manager.php';
+use App\Entity\AdminEntity;
 
 class AdminManager extends Manager
 {
 
-    public function adminConnection($email, $password)
+    public function adminConnection(AdminEntity $admin)
     {
+
+        $email = $admin->getEmail();
+        $password = $admin->getPassword();
+
         $stmt = $this->bdd->prepare('SELECT id, password FROM admin WHERE email = ?');
         $stmt->bindParam(1, $email);
         $stmt->execute();

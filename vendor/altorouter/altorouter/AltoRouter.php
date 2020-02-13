@@ -42,7 +42,7 @@ class AltoRouter
     ];
 
     /**
-     * Create router in one call from config.
+     * Create router in one call from Config.
      *
      * @param array $routes
      * @param string $basePath
