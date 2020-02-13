@@ -1,6 +1,10 @@
 # Site Mathieu DELROT
 
 Ce site a été développé dans le cadre de  la formation d'OPEN CLASSROOMS développeur d'applications PHP/Symfony
+
+## Badge sur Codacy
+B
+
 ## Installation
 
 1-Git clone the project
