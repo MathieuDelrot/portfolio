@@ -54,7 +54,7 @@ class MemberManager extends Manager
         $email = $member['email'];
         $first_name = $member['firstName'];
         $to      = $email;
-        $subject = 'Votre compte à été créé avec succès';
+        $subject = 'Votre compte a ete cree avec succes';
         $message = 'Bonjour '. $first_name .' vous pouvez désormais rédiger des commentaires sur les portfolios du site www.mathieu-delrot.fr';
         $headers = 'From: contact@mathieu-delrot.fr' . "\r\n" .
             'Reply-To: contact@mathieu-delrot.fr' . "\r\n" .
@@ -159,9 +159,8 @@ class MemberManager extends Manager
 
     public function sendEmailResetPassword($email, $key, $slug, $id)
     {
-        //Mettre le message dans un template
         $to      = $email;
-        $subject = 'Vous souhaitez réinitialiser votre mot de passe';
+        $subject = 'Vous souhaitez reinitialiser votre mot de passe';
         $message = '\'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                 <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
