@@ -30,7 +30,8 @@ class ComManager extends Manager
     {
         $stmt = $this->bdd->prepare('DELETE FROM comment WHERE id= ?');
         $stmt->bindParam(1, $id);
-        $stmt->execute();
+        $st = $stmt->execute();
+        return $st;
     }
 
     public function getComments($id)

@@ -217,9 +217,17 @@ class BackendController{
     public function validComment($id)
     {
         if (AuthHelper::adminIsLogged()) {
-            $this->comManager->validComment($id);
-            $newComments = $this->comManager->getNewComments();
-            $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
+            $validation = $this->comManager->validComment($id);
+            if($validation == true){
+                $newComments = $this->comManager->getNewComments();
+                $success = "le commentaire a été validé";
+                $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments, 'success' => $success]);
+            }else{
+                $newComments = $this->comManager->getNewComments();
+                $error = "le commentaire n'a pas été validé";
+                $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments, 'error' => $error]);
+            }
+
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
             $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
@@ -229,8 +237,16 @@ class BackendController{
     public function deleteComment($id)
     {
         if (AuthHelper::adminIsLogged()) {
-            $this->comManager->deleteComment($id);
-            $newComments = $this->comManager->getNewComments();
+            $delete = $this->comManager->deleteComment($id);
+            if($delete == true){
+                $newComments = $this->comManager->getNewComments();
+                $success = "le commentaire a été supprimé";
+                $this->twigController->useTwig('commentsListAdmin.twig', ['success' => $success, 'commentlist' => $newComments]);
+            }else{
+                $newComments = $this->comManager->getNewComments();
+                $error = "le commentaire n'a pas été supprimé";
+                $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments, 'error' => $error]);
+            }
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
