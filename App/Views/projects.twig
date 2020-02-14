@@ -8,7 +8,7 @@
                 {% for project in projectlist  %}
                     <div class="mb-5">
                         <a href="projet/{{ project.slug }}-{{ project.id }}"><h3>{{ project.title|raw }}</h3></a>
-                        <p>Modifié le : {{ project.modification_date|date("d/m/Y")  }}</p>
+                        <p>Modifié le : {{ project.modificationDate|date("d/m/Y")  }}</p>
                         <p>{{ project.intro|raw }}</p>
                     </div>
                 {% endfor %}

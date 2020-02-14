@@ -26,7 +26,7 @@
                     {% for comment in commentlist %}
                         <div class="mb-5">
                             <h4>{{ comment.pseudo|raw }}</h4>
-                            <h5>Date : {{ comment.comment_date }}</h5>
+                            <h5>Date : {{ comment.commentDate }}</h5>
                             <p>Commentaire : {{ comment.content|raw }}</p>
                         </div>
                     {% endfor %}
