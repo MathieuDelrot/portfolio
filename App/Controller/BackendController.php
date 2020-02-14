@@ -5,15 +5,15 @@ namespace App\Controller;
 use App\Entity\AdminEntity;
 use App\Entity\MemberEntity;
 use App\Entity\ProjectEntity;
-use App\Model\ComManager;
-use App\Model\MessageManager;
-use App\Model\FormManager;
-use App\Model\Manager;
-use App\Model\MemberManager;
-use App\Model\ProjectManager;
-use App\Model\Auth;
-use App\Model\SessionManager;
-use App\Model\AdminManager;
+use App\EntityManager\ComManager;
+use App\EntityManager\MessageManager;
+use App\Helper\FormHelper;
+use App\EntityManager\Manager;
+use App\EntityManager\MemberManager;
+use App\EntityManager\ProjectManager;
+use App\Helper\AuthHelper;
+use App\Helper\SessionHelper;
+use App\EntityManager\AdminManager;
 use App\Helper\TwigHelper;
 
 
@@ -37,7 +37,7 @@ class BackendController{
         $twigController = new TwigHelper();
         $this->twigController = $twigController;
 
-        $formManager = new FormManager();
+        $formManager = new FormHelper();
         $this->formManager = $formManager;
 
         $adminManager = new AdminManager();
@@ -59,7 +59,7 @@ class BackendController{
     {
         $form = $this->formManager->getAdminConnectionForm();
 
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
             $this->twigController->useTwig('homeAdmin.twig', [
                 'success_connection' => $success_connection
@@ -75,7 +75,7 @@ class BackendController{
     {
         $form = $this->formManager->getAdminConnectionForm();
 
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $success_connection = 'Vous pouvez ajouter des portfolios et modérer les commentaires';
             $this->twigController->useTwig('homeAdmin.twig', [
                 'success_connection' => $success_connection
@@ -106,7 +106,7 @@ class BackendController{
 
     public function getProjectsAdminPage()
     {
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $projects = $this->projectManager->getProjects();
 
             $this->twigController->useTwig('projectsListAdmin.twig', ['projectlist' => $projects]);
@@ -122,7 +122,7 @@ class BackendController{
     {
         $form = $this->formManager->getProjectForm();
 
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $success_add_project = 'Vous pouvez ajouter un projet';
             $this->twigController->useTwig('addSingle.twig', [
                 'addprojectform' => $form,
@@ -163,7 +163,7 @@ class BackendController{
     {
         $project = $this->projectManager->getProject($id);
         $form= $this->formManager->getEditProjectForm($project);
-        if (Auth::adminIsLogged() && $id > 0) {
+        if (AuthHelper::adminIsLogged() && $id > 0) {
             $success_add_project = 'Vous pouvez modifier un projet';
             $this->twigController->useTwig('addSingle.twig', [
                 'editprojectform' => $form,
@@ -177,7 +177,7 @@ class BackendController{
 
     public function editProject()
     {
-        if (Auth::adminIsLogged() && !empty(filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS)) && filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0 && !empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
+        if (AuthHelper::adminIsLogged() && !empty(filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS)) && filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0 && !empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
             $project = new ProjectEntity();
             $project->setId(filter_input(INPUT_POST, 'id' , FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setTitle(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -206,7 +206,7 @@ class BackendController{
     public function getAdminComments()
     {
         $newComments = $this->comManager->getNewComments();
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
@@ -217,7 +217,7 @@ class BackendController{
     public function validComment($id)
     {
         $newComments = $this->comManager->getNewComments();
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $this->comManager->validComment($id);
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
@@ -229,7 +229,7 @@ class BackendController{
     public function deleteComment($id)
     {
         $newComments = $this->comManager->getNewComments();
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $this->comManager->deleteComment($id);
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
@@ -242,7 +242,7 @@ class BackendController{
     {
         $newMember = $this->memberManager->getNewMember();
         
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
@@ -254,7 +254,7 @@ class BackendController{
     public function validMember($id)
     {
         $newMember = $this->memberManager->getNewMember();
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $member = new MemberEntity();
             $member->setId( $id);
             $this->memberManager->validAccount($member);
@@ -269,7 +269,7 @@ class BackendController{
     public function deleteMember($id)
     {
         $newMember = $this->memberManager->getNewMember();
-        if (Auth::adminIsLogged()) {
+        if (AuthHelper::adminIsLogged()) {
             $member = new MemberEntity();
             $member->setId($id);
             $this->memberManager->deleteAccount($member);

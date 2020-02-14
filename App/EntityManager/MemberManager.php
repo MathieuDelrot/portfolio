@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Model;
+namespace App\EntityManager;
 
 use App\Entity\MemberEntity;
+use App\Helper\SessionHelper;
 
 class MemberManager extends Manager
 {
@@ -51,7 +52,7 @@ class MemberManager extends Manager
         $stmt->execute();
         $member = $stmt->fetch();
         $email = $member['email'];
-        $first_name = $member['first_name'];
+        $first_name = $member['firstName'];
         $to      = $email;
         $subject = 'Votre compte à été créé avec succès';
         $message = 'Bonjour '. $first_name .' vous pouvez désormais rédiger des commentaires sur les portfolios du site www.mathieu-delrot.fr';
@@ -82,24 +83,26 @@ class MemberManager extends Manager
     public function connection(MemberEntity $member)
     {
         $email = $member->getEmail();
-
         $stmt = $this->bdd->prepare('SELECT id, password, firstName FROM member WHERE email = ?');
         $stmt->bindParam(1, $email);
         $stmt->execute();
         $data = $stmt->fetch();
-        $firstName = $data['firstName'];
-        password_verify($member->getPassword(), $data['password']);
-        if(password_verify($member->getPassword(), $data['password'])) {
-            $password = password_hash($member->getPassword(), PASSWORD_DEFAULT);
-            $session = new SessionManager();
-            $session->vars['Auth'] = array(
-                'email' => $email,
-                'firstName' => $firstName,
-                'password' => $password
-            );
-            return true;
+        if ($data != null) {
+            $firstName = $data['firstName'];
+            password_verify($member->getPassword(), $data['password']);
+            if (password_verify($member->getPassword(), $data['password'])) {
+                $password = password_hash($member->getPassword(), PASSWORD_DEFAULT);
+                $session = new SessionHelper();
+                $session->vars['AuthHelper'] = array(
+                    'email' => $email,
+                    'firstName' => $firstName,
+                    'password' => $password
+                );
+                return true;
+            }
+        } else {
+            return false;
         }
-        return false;
     }
 
     public function forgotPassword(MemberEntity $member, $id, $slug)

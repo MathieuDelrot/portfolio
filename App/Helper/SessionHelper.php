@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model;
+namespace App\Helper;
 
-class SessionManager
+class SessionHelper
 {
 
     public $vars;

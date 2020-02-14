@@ -7,15 +7,15 @@ use App\Entity\CommentEntity;
 use App\Entity\MemberEntity;
 use App\Entity\MessageEntity;
 use App\Entity\ProjectEntity;
-use App\Model\ComManager;
-use App\Model\MessageManager;
-use App\Model\FormManager;
-use App\Model\Manager;
-use App\Model\MemberManager;
-use App\Model\ProjectManager;
-use App\Model\Auth;
-use App\Model\SessionManager;
-use App\Model\AdminManager;
+use App\EntityManager\ComManager;
+use App\EntityManager\MessageManager;
+use App\Helper\FormHelper;
+use App\EntityManager\Manager;
+use App\EntityManager\MemberManager;
+use App\EntityManager\ProjectManager;
+use App\Helper\AuthHelper;
+use App\Helper\SessionHelper;
+use App\EntityManager\AdminManager;
 use App\Helper\TwigHelper;
 
 class FrontendController{
@@ -45,7 +45,7 @@ class FrontendController{
         $commentManager = new ComManager();
         $this->commentManager = $commentManager;
 
-        $formManager = new FormManager();
+        $formManager = new FormHelper();
         $this->formManager = $formManager;
 
         $memberManager = new MemberManager();
@@ -54,7 +54,7 @@ class FrontendController{
         $messageManager = new MessageManager();
         $this->messageManager = $messageManager;
 
-        $sessionManager = new SessionManager();
+        $sessionManager = new SessionHelper();
         $this->sessionManager = $sessionManager;
 
         $twigController = new TwigHelper();
@@ -121,7 +121,7 @@ class FrontendController{
 
     public function getProjectPage($id)
     {
-        if (Auth::isLogged() && $id > 0) {
+        if (AuthHelper::isLogged() && $id > 0) {
             $this->twigController->getSingleTemplate(false, false, true, false, $id);
 
         } elseif ($id > 0) {
@@ -135,7 +135,6 @@ class FrontendController{
 
     public function askConnection($slug, $id)
     {
-
         if (!empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS))){
             if (!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
                 $error = "Format d'email erroné";
@@ -146,9 +145,9 @@ class FrontendController{
                 $member->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
                 $member->setPassword(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS));
 
-                $this->memberManager->connection($member);
+                $memberConnexion = $this->memberManager->connection($member);
 
-                if ($member == true or Auth::isLogged()) {
+                if ($memberConnexion == true or AuthHelper::isLogged()) {
                     $success = 'Vous êtes connecté vous pouvez laisser des commentaires';
                     $this->twigController->getSingleTemplate(false,false,true,false,$id,false, $success);
 
@@ -201,8 +200,8 @@ class FrontendController{
 
     public function askDisconnection($slug, $id)
     {
-        if(Auth::isLogged()){
-            Auth::disconnect();
+        if(AuthHelper::isLogged()){
+            AuthHelper::disconnect();
             $success= "Vous êtes déconnecté";
             $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
         }
@@ -259,11 +258,11 @@ class FrontendController{
 
     public function addComment($id)
     {
-        if(Auth::isLogged()){
+        if(AuthHelper::isLogged()){
             if(!empty(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS))){
                 $comment = new CommentEntity();
                 $comment->setContent(filter_input(INPUT_POST, 'comment', FILTER_SANITIZE_SPECIAL_CHARS));
-                $comment->setPseudo($this->sessionManager->vars['Auth']['firstName']);
+                $comment->setPseudo($this->sessionManager->vars['AuthHelper']['firstName']);
                 $affectedLines = $this->commentManager->addComment($comment, $id);
                 if ($affectedLines === false) {
                     $error = "Impossible d'ajouter votre commentaire";

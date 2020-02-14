@@ -2,15 +2,15 @@
 
 namespace App\Helper;
 
-use App\Model\AdminManager;
-use App\Model\Auth;
-use App\Model\Manager;
-use App\Model\ComManager;
-use App\Model\FormManager;
-use App\Model\MemberManager;
-use App\Model\MessageManager;
-use App\Model\ProjectManager;
-use App\Model\SessionManager;
+use App\EntityManager\AdminManager;
+use App\Helper\AuthHelper;
+use App\EntityManager\Manager;
+use App\EntityManager\ComManager;
+use App\Helper\FormHelper;
+use App\EntityManager\MemberManager;
+use App\EntityManager\MessageManager;
+use App\EntityManager\ProjectManager;
+use App\Helper\SessionHelper;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -35,7 +35,7 @@ class TwigHelper
         $commentManager = new ComManager();
         $this->commentManager = $commentManager;
 
-        $formManager = new FormManager();
+        $formManager = new FormHelper();
         $this->formManager = $formManager;
 
         $memberManager = new MemberManager();
@@ -73,7 +73,7 @@ class TwigHelper
         }
 
         if($key == true) {
-            $k = $key;
+            $key = $key;
         }
 
         if($newPasswordForm == true) {
@@ -91,7 +91,7 @@ class TwigHelper
             'commentform' => $commentForm,
             'resetpasswordform' => $resetPasswordForm,
             'newpasswordform' => $newPasswordForm,
-            'key' => $k
+            'key' => $key,
         ]);
     }
 

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Model;
+namespace App\EntityManager;
 
 use App\Entity\ProjectEntity;
 
 class ProjectManager extends Manager
 {
-
 
     public function createProject(ProjectEntity $project)
     {

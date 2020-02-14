@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Helper;
 
 use App\Entity\ProjectEntity;
 
-class FormManager extends Manager
+class FormHelper
 {
     private $data;
 

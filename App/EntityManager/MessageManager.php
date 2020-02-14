@@ -1,7 +1,6 @@
 <?php
 
-
-namespace App\Model;
+namespace App\EntityManager;
 
 use App\Entity\MessageEntity;
 
