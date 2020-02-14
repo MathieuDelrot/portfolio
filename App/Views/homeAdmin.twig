@@ -16,6 +16,11 @@
                         {{ success_connection }}
                     </div>
                 {% endif %}
+                {% if success_disconnection is defined %}
+                    <div class="alert alert-success">
+                        {{ success_connection }}
+                    </div>
+                {% endif %}
                 {% if success_add_project is defined %}
                     <div class="alert alert-success">
                         {{ success_add_project }} <a href="/">Voir les portolios</a>

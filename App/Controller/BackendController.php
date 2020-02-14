@@ -301,9 +301,9 @@ class BackendController{
     {
         if(AuthHelper::adminIsLogged()){
             if(AuthHelper::disconnectAdmin()){
-            $succes_connection= "Vous êtes déconnecté";
+            $success_disconnection= "Vous êtes déconnecté";
             $form = $this->formManager->getAdminConnectionForm();
-            $this->twigController->useTwig('homeAdmin.twig', ['adminconnectionform' => $form, 'success_connection' => $succes_connection]);
+            $this->twigController->useTwig('homeAdmin.twig', ['adminconnectionform' => $form, 'success_disconnection' => $success_disconnection]);
             }else{
                 $error_connection= "Vous n'êtes pas déconnecté";
                 $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
