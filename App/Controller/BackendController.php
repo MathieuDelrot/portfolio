@@ -216,9 +216,9 @@ class BackendController{
 
     public function validComment($id)
     {
-        $newComments = $this->comManager->getNewComments();
         if (AuthHelper::adminIsLogged()) {
             $this->comManager->validComment($id);
+            $newComments = $this->comManager->getNewComments();
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
@@ -228,9 +228,9 @@ class BackendController{
 
     public function deleteComment($id)
     {
-        $newComments = $this->comManager->getNewComments();
         if (AuthHelper::adminIsLogged()) {
             $this->comManager->deleteComment($id);
+            $newComments = $this->comManager->getNewComments();
             $this->twigController->useTwig('commentsListAdmin.twig', ['commentlist' => $newComments]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
@@ -253,11 +253,11 @@ class BackendController{
 
     public function validMember($id)
     {
-        $newMember = $this->memberManager->getNewMember();
         if (AuthHelper::adminIsLogged()) {
             $member = new MemberEntity();
             $member->setId( $id);
             $this->memberManager->validAccount($member);
+            $newMember = $this->memberManager->getNewMember();
             $success = 'le compte est validé';
             $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember, 'success' => $success]);
         } else {
