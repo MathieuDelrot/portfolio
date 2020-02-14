@@ -139,11 +139,11 @@ class BackendController{
 
     public function addProject()
     {
-        if (!empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
+        if (!empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisationDate', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
             $project = new ProjectEntity();
             $project->setTitle(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setContent(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->setRealisationDate( filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setRealisationDate( filter_input(INPUT_POST, 'realisationDate', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setTechnologies(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setUrl(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setIntro(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -177,12 +177,12 @@ class BackendController{
 
     public function editProject()
     {
-        if (AuthHelper::adminIsLogged() && !empty(filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS)) && filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0 && !empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
+        if (AuthHelper::adminIsLogged() && !empty(filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS)) && filter_input(INPUT_POST, 'id', FILTER_SANITIZE_SPECIAL_CHARS) > 0 && !empty(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'realisationDate', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS)) && !empty(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS))) {
             $project = new ProjectEntity();
             $project->setId(filter_input(INPUT_POST, 'id' , FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setTitle(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setContent(filter_input(INPUT_POST, 'content', FILTER_SANITIZE_SPECIAL_CHARS));
-            $project->setRealisationDate( filter_input(INPUT_POST, 'realisation_date', FILTER_SANITIZE_SPECIAL_CHARS));
+            $project->setRealisationDate( filter_input(INPUT_POST, 'realisationDate', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setTechnologies(filter_input(INPUT_POST, 'technologies', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setUrl(filter_input(INPUT_POST, 'url', FILTER_SANITIZE_SPECIAL_CHARS));
             $project->setIntro(filter_input(INPUT_POST, 'intro', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -293,6 +293,23 @@ class BackendController{
             $this->twigController->useTwig('membersListAdmin.twig', ['memberlist' => $newMember, 'success' => $success]);
         } else {
             $error_connection = 'Mauvais identifiant ou mot de passe !';
+            $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
+        }
+    }
+
+    public function askAdminDisconnection()
+    {
+        if(AuthHelper::adminIsLogged()){
+            if(AuthHelper::disconnectAdmin()){
+            $succes_connection= "Vous êtes déconnecté";
+            $form = $this->formManager->getAdminConnectionForm();
+            $this->twigController->useTwig('homeAdmin.twig', ['adminconnectionform' => $form, 'success_connection' => $succes_connection]);
+            }else{
+                $error_connection= "Vous n'êtes pas déconnecté";
+                $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
+            }
+        }else{
+            $error_connection= "Vous n'êtes pas déconnecté";
             $this->twigController->useTwig('homeAdmin.twig', ['error_connection' => $error_connection]);
         }
     }

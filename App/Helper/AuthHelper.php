@@ -33,4 +33,17 @@ class AuthHelper
         }
         return false;
     }
+
+    static function disconnectAdmin()
+    {
+        $session = new SessionHelper();
+
+        if (isset($session->vars['AuthAdmin']) && isset($session->vars['AuthAdmin']['email']) && isset($session->vars['AuthAdmin']['password'])){
+            session_destroy();
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 }

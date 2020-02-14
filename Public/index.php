@@ -7,7 +7,7 @@ use App\Controller\BackendController;
 use App\Router\AltoRouter;
 
 
-//ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 $router = new AltoRouter();
 
@@ -143,6 +143,11 @@ $router->map( 'GET|POST', '/admin/membres/valider-[i:id]', function($id){
 $router->map( 'GET|POST', '/admin/membres/supprimer-[i:id]', function($id){
     $backendController = new BackendController();
     $backendController->deleteMember($id);
+});
+
+$router->map( 'GET|POST', '/admin/deconnexion', function(){
+    $frontController = new BackendController();
+    $frontController->askAdminDisconnection();
 });
 
 

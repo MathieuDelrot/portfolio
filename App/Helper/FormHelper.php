@@ -50,7 +50,7 @@ class FormHelper
             "intro" => $this->textarea('intro', 'Introduction'),
             "url" => $this->input('text', 'url', 'URL du projet'),
             "technologies" => $this->input('text', 'technologies', 'Languages web'),
-            "realisation_date" => $this->input('text', 'realisation_date', 'Mois de mise en ligne'),
+            "realisationDate" => $this->input('text', 'realisationDate', 'Mois de mise en ligne'),
             "content" => $this->textarea('content', 'Présentation du projet'),
             "submit" => $this->submit()
         );
@@ -66,7 +66,7 @@ class FormHelper
             "intro" => $this->textarea('intro', 'Introduction', $project->getIntro()),
             "url" => $this->input('text', 'url', 'URL du projet', $project->getUrl()),
             "technologies" => $this->input('text', 'technologies', 'Languages web', $project->getTechnologies()),
-            "realisation_date" => $this->input('text', 'realisation_date', 'Mois de mise en ligne',$project->getRealisationDate()),
+            "realisationDate" => $this->input('text', 'realisationDate', 'Mois de mise en ligne',$project->getRealisationDate()),
             "content" => $this->textarea('content', 'Présentation du projet', $project->getContent()),
             "submit" => $this->submit()
         );

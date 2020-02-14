@@ -23,7 +23,8 @@ class ComManager extends Manager
     {
         $stmt = $this->bdd->prepare('UPDATE comment SET validate=1 WHERE id= ?');
         $stmt->bindParam(1, $id);
-        $stmt->execute( );
+        $st = $stmt->execute( );
+        return $st;
     }
 
     public function deleteComment($id)

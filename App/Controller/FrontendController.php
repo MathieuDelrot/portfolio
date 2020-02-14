@@ -204,9 +204,9 @@ class FrontendController{
             AuthHelper::disconnect();
             $success= "Vous êtes déconnecté";
             $this->twigController->getSingleTemplate(true,true,false,false,$id,false,$success);
+        }else{
+            $this->twigController->getSingleTemplate(true,true,false,false,$id,false,false);
         }
-        $this->twigController->getSingleTemplate(true,true,false,false,$id,false,false);
-
     }
 
     public function askResetingPassword($id)
