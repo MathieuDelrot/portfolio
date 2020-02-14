@@ -32,8 +32,8 @@ class FormHelper
     public function getContactForm()
     {
         $form= array(
-            "first_name" => $this->input('text', 'firstname', 'Prénom'),
-            "last_name" => $this->input('text', 'lastname', 'Nom'),
+            "firstName" => $this->input('text', 'firstName', 'Prénom'),
+            "lastName" => $this->input('text', 'lastName', 'Nom'),
             "email" => $this->input('email', 'email', 'E-mail'),
             "message" => $this->textarea('message', 'Votre message'),
             "submit" => $this->submit()

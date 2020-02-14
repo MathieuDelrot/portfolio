@@ -17,8 +17,8 @@
             <form action="/contact/message" method="POST">
                 {% autoescape %}
                     {{ contactform.security|raw }}
-                    {{ contactform.first_name|raw }}
-                    {{ contactform.last_name|raw }}
+                    {{ contactform.firstName|raw }}
+                    {{ contactform.lastName|raw }}
                     {{ contactform.email|raw }}
                     {{ contactform.message|raw }}
                     {{ contactform.submit|raw }}

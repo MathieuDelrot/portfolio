@@ -96,12 +96,12 @@ class FrontendController{
 
     public function sendMessage()
     {
-        if (!empty(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS)) and !empty(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS) and !empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS)))) {
-           $message = new MessageEntity();
-           $message->setFirstName(filter_input(INPUT_POST, 'firstname', FILTER_SANITIZE_SPECIAL_CHARS));
-           $message->setLastName(filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS));
-           $message->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
-           $message->setMessage(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS));
+        if (!empty(filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_SPECIAL_CHARS)) and !empty(filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_SPECIAL_CHARS) and !empty(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) and !empty(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS)))) {
+            $message = new MessageEntity();
+            $message->setFirstName(filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_SPECIAL_CHARS));
+            $message->setLastName(filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_SPECIAL_CHARS));
+            $message->setEmail(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+            $message->setMessage(filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS));
             $affectedLines = $this->messageManager->addMessage($message);
 
             if ($affectedLines === false) {

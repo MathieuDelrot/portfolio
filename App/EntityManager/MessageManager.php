@@ -12,15 +12,15 @@ class MessageManager extends Manager
         $firstName = $message->getFirstName();
         $lastName = $message->getLastName();
         $email = $message->getEmail();
-        $message = $message->getMessage();
+        $msg = $message->getMessage();
 
         $stmt = $this->bdd->prepare('INSERT INTO message (first_name, last_name, email, message) VALUES(?, ?, ?, ?)');
         $stmt->bindParam(1, $firstName);
         $stmt->bindParam(2, $lastName);
         $stmt->bindParam(3, $email);
-        $stmt->bindParam(4, $message);
+        $stmt->bindParam(4, $msg);
         $stmt->execute();
-        $this->sendMessage($message->getFirstName(), $message->getLastName(), $message->getEmail(), $message->getMessage());
+        $this->sendMessage($message);
     }
     public function sendMessage(MessageEntity $message)
     {
